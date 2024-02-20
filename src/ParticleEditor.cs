@@ -12,7 +12,7 @@ using ICannotDie.Plugins.Common.Extensions;
 
 namespace ICannotDie.Plugins
 {
-	public class ParticleEditor : MVRScript
+	internal sealed class ParticleEditor : MVRScript
 	{
 		// Currently selected Atom/Components
 		// private Atom _currentAtom;
@@ -47,18 +47,28 @@ namespace ICannotDie.Plugins
 		// public UIDynamicButton SelectParticleImageButton;
 		// private string _lastAccessedDirectoryPath = "";
 
+		public static ParticleEditor ParticleEditorScript { get; private set; }
 		public bool? Initialised { get; private set; }
 
 		public UIManager UiManager { get; private set; }
 		public ParticleSystemManager ParticleSystemManager { get; private set; }
 		public bool IsInitialised { get; set; } = false;
 
-		public void Init()
+		public override void Init()
 		{
-			StartCoroutine(SetupRoutine());
+			try
+			{
+				ParticleEditorScript = this;
+				StartCoroutine(DeferInit());
+			}
+			catch (Exception e)
+			{
+				enabled = false;
+				Utility.LogError($"{nameof(Init)}: {e}");
+			}
 		}
 
-		IEnumerator SetupRoutine()
+		IEnumerator DeferInit()
 		{
 			yield return new WaitForEndOfFrame();
 			while (SuperController.singleton.isLoading)
@@ -717,15 +727,15 @@ namespace ICannotDie.Plugins
 
 		#region Utility
 
-		private void LogDebug(string message)
-		{
-			SuperController.LogMessage(message);
-		}
+		// private void LogDebug(string message)
+		// {
+		// 	SuperController.LogMessage(message);
+		// }
 
-		private void LogError(string message)
-		{
-			SuperController.LogError(message);
-		}
+		// private void LogError(string message)
+		// {
+		// 	SuperController.LogError(message);
+		// }
 
 		// // Macgruber PostMagic
 		// // Get directory path where the plugin is located. Based on Alazi's & VAMDeluxe's method.

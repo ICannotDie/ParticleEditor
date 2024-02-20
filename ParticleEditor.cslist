@@ -1,6 +1,7 @@
 src\ParticleEditor.cs
 src\ParticleSystems\ParticleSystemManager.cs
 src\Common\Constants.cs
+src\Common\Utility.cs
 src\Common\Extensions\AtomExtensions.cs
 src\UI\UIManager.cs
 src\UI\ModuleEditors\MainModuleEditor.cs
