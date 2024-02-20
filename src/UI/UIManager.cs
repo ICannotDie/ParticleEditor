@@ -11,7 +11,7 @@ namespace ICannotDie.Plugins.UI
 {
     public class UIManager
     {
-        private ParticleEditor ParticleEditor;
+        private ParticleEditor _particleEditorScript;
 
         // UI
         public UIDynamicButton AddParticleSystemButton;
@@ -41,97 +41,97 @@ namespace ICannotDie.Plugins.UI
 
         public UIManager(ParticleEditor particleEditor)
         {
-            ParticleEditor = particleEditor;
+            _particleEditorScript = particleEditor;
         }
 
         private void ClearUI()
         {
-            RemoveButton(AddParticleSystemButton);
-            RemoveButton(FindParticleSystemsButton);
+            _particleEditorScript.RemoveButton(AddParticleSystemButton);
+            _particleEditorScript.RemoveButton(FindParticleSystemsButton);
 
             if (ParticleSystemChooser != null)
             {
-                RemovePopup(ParticleSystemChooser);
-                DeregisterStringChooser(ParticleSystemChooser);
+                _particleEditorScript.RemovePopup(ParticleSystemChooser);
+                _particleEditorScript.DeregisterStringChooser(ParticleSystemChooser);
             }
 
-            RemoveButton(SelectParticleSystemAtomButton);
-            RemoveButton(RemoveSelectedParticleSystemButton);
+            _particleEditorScript.RemoveButton(SelectParticleSystemAtomButton);
+            _particleEditorScript.RemoveButton(RemoveSelectedParticleSystemButton);
 
             // Particle System Main
             if (MainLabel != null)
             {
-                RemoveTextField(MainLabel);
+                _particleEditorScript.RemoveTextField(MainLabel);
             }
 
             if (IsPlaying != null)
             {
-                RemoveToggle(IsPlaying);
-                DeregisterBool(IsPlaying);
+                _particleEditorScript.RemoveToggle(IsPlaying);
+                _particleEditorScript.DeregisterBool(IsPlaying);
             }
 
             if (IsLooping != null)
             {
-                RemoveToggle(IsLooping);
-                DeregisterBool(IsLooping);
+                _particleEditorScript.RemoveToggle(IsLooping);
+                _particleEditorScript.DeregisterBool(IsLooping);
             }
 
             if (Prewarm != null)
             {
-                RemoveToggle(Prewarm);
-                DeregisterBool(Prewarm);
+                _particleEditorScript.RemoveToggle(Prewarm);
+                _particleEditorScript.DeregisterBool(Prewarm);
             }
 
             if (Duration != null)
             {
-                RemoveSlider(Duration);
-                DeregisterFloat(Duration);
+                _particleEditorScript.RemoveSlider(Duration);
+                _particleEditorScript.DeregisterFloat(Duration);
             }
 
             if (StartDelay != null)
             {
-                RemoveSlider(StartDelay);
-                DeregisterFloat(StartDelay);
+                _particleEditorScript.RemoveSlider(StartDelay);
+                _particleEditorScript.DeregisterFloat(StartDelay);
             }
 
             if (StartDelayMultiplier != null)
             {
-                RemoveSlider(StartDelayMultiplier);
-                DeregisterFloat(StartDelayMultiplier);
+                _particleEditorScript.RemoveSlider(StartDelayMultiplier);
+                _particleEditorScript.DeregisterFloat(StartDelayMultiplier);
             }
 
             if (StartLifetime != null)
             {
-                RemoveSlider(StartLifetime);
-                DeregisterFloat(StartLifetime);
+                _particleEditorScript.RemoveSlider(StartLifetime);
+                _particleEditorScript.DeregisterFloat(StartLifetime);
             }
 
             if (StartLifetimeMultiplier != null)
             {
-                RemoveSlider(StartLifetimeMultiplier);
-                DeregisterFloat(StartLifetimeMultiplier);
+                _particleEditorScript.RemoveSlider(StartLifetimeMultiplier);
+                _particleEditorScript.DeregisterFloat(StartLifetimeMultiplier);
             }
 
             if (StartSpeed != null)
             {
-                RemoveSlider(StartSpeed);
-                DeregisterFloat(StartSpeed);
+                _particleEditorScript.RemoveSlider(StartSpeed);
+                _particleEditorScript.DeregisterFloat(StartSpeed);
             }
 
             if (StartSpeedMultiplier != null)
             {
-                RemoveSlider(StartSpeedMultiplier);
-                DeregisterFloat(StartSpeedMultiplier);
+                _particleEditorScript.RemoveSlider(StartSpeedMultiplier);
+                _particleEditorScript.DeregisterFloat(StartSpeedMultiplier);
             }
 
             if (StartSize != null)
             {
-                RemoveSlider(StartSize);
-                DeregisterFloat(StartSize);
+                _particleEditorScript.RemoveSlider(StartSize);
+                _particleEditorScript.DeregisterFloat(StartSize);
             }
 
             // Particle System Renderer
-            RemoveButton(SelectParticleImageButton);
+            _particleEditorScript.RemoveButton(SelectParticleImageButton);
         }
 
         public void BuildUI()
@@ -141,17 +141,17 @@ namespace ICannotDie.Plugins.UI
             ClearUI();
 
             // Add Particle System Button
-            AddParticleSystemButton = CreateButton("Add Particle System");
+            AddParticleSystemButton = _particleEditorScript.CreateButton("Add Particle System");
             AddParticleSystemButton.button.onClick.AddListener(() =>
             {
-                StartCoroutine(ParticleEditor.ParticleSystemManager.CreateAtomCoroutine());
+                _particleEditorScript.StartCoroutine(_particleEditorScript.ParticleSystemManager.CreateAtomCoroutine());
             });
 
             // Find Particle Systems Button
-            FindParticleSystemsButton = CreateButton("Find Particle Systems");
+            FindParticleSystemsButton = _particleEditorScript.CreateButton("Find Particle Systems");
             FindParticleSystemsButton.button.onClick.AddListener(() =>
             {
-                ParticleEditor.ParticleSystemManager.FindParticleSystems();
+                _particleEditorScript.ParticleSystemManager.FindParticleSystems();
                 BuildUI();
             });
 
@@ -159,35 +159,35 @@ namespace ICannotDie.Plugins.UI
             ParticleSystemChooser = new JSONStorableStringChooser
             (
                 "ParticleSystemChooser",
-                ParticleEditor.ParticleSystemManager.ParticleSystemUids,
-                ParticleEditor.ParticleSystemManager.CurrentAtom ? ParticleEditor.ParticleSystemManager.CurrentAtom.uid : null,
+                _particleEditorScript.ParticleSystemManager.ParticleSystemUids,
+                _particleEditorScript.ParticleSystemManager.CurrentAtom ? _particleEditorScript.ParticleSystemManager.CurrentAtom.uid : null,
                 "Particle Systems",
                 (selectedParticleSystemUid) =>
                 {
-                    ParticleEditor.ParticleSystemManager.SetCurrentAtom(selectedParticleSystemUid);
-                    ParticleEditor.ParticleSystemManager.FindParticleSystems();
+                    _particleEditorScript.ParticleSystemManager.SetCurrentAtom(selectedParticleSystemUid);
+                    _particleEditorScript.ParticleSystemManager.FindParticleSystems();
                     BuildUI();
                 }
             );
 
-            CreatePopup(ParticleSystemChooser);
-            RegisterStringChooser(ParticleSystemChooser);
+            _particleEditorScript.CreatePopup(ParticleSystemChooser);
+            _particleEditorScript.RegisterStringChooser(ParticleSystemChooser);
 
             // Select Particle System Atom Button
-            SelectParticleSystemAtomButton = CreateButton("Select Particle System Atom");
+            SelectParticleSystemAtomButton = _particleEditorScript.CreateButton("Select Particle System Atom");
             SelectParticleSystemAtomButton.button.onClick.AddListener(() =>
             {
-                if (ParticleEditor.ParticleSystemManager.CurrentAtom != null)
+                if (_particleEditorScript.ParticleSystemManager.CurrentAtom != null)
                 {
-                    SuperController.singleton.SelectController(ParticleEditor.ParticleSystemManager.CurrentAtom.uid, "control");
+                    SuperController.singleton.SelectController(_particleEditorScript.ParticleSystemManager.CurrentAtom.uid, "control");
                 }
             });
 
             // Remove Particle System Button
-            RemoveSelectedParticleSystemButton = CreateButton("Remove Selected Particle System");
+            RemoveSelectedParticleSystemButton = _particleEditorScript.CreateButton("Remove Selected Particle System");
             RemoveSelectedParticleSystemButton.button.onClick.AddListener(() =>
             {
-                StartCoroutine(ParticleEditor.ParticleSystemManager.RemoveAtomCoroutine(ParticleEditor.ParticleSystemManager.CurrentAtom.uid));
+                _particleEditorScript.StartCoroutine(_particleEditorScript.ParticleSystemManager.RemoveAtomCoroutine(_particleEditorScript.ParticleSystemManager.CurrentAtom.uid));
             });
 
             // Main Label
@@ -201,23 +201,23 @@ namespace ICannotDie.Plugins.UI
                 isPlayingDefaultValue,
                 (isPlaying) =>
                 {
-                    if (ParticleEditor.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
                         if (isPlaying)
                         {
-                            ParticleEditor.ParticleSystemManager.CurrentParticleSystem.Play();
+                            _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.Play();
                         }
                         else
                         {
-                            ParticleEditor.ParticleSystemManager.CurrentParticleSystem.Stop();
+                            _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.Stop();
                         }
                     }
                 }
             );
-            IsPlaying.SetVal(ParticleEditor.ParticleSystemManager.CurrentParticleSystem ? ParticleEditor.ParticleSystemManager.CurrentParticleSystem.isPlaying : isPlayingDefaultValue);
+            IsPlaying.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.isPlaying : isPlayingDefaultValue);
 
-            CreateToggle(IsPlaying, true);
-            RegisterBool(IsPlaying);
+            _particleEditorScript.CreateToggle(IsPlaying, true);
+            _particleEditorScript.RegisterBool(IsPlaying);
 
             // Is Looping Toggle
             var isLoopingDefaultValue = true;
@@ -227,17 +227,17 @@ namespace ICannotDie.Plugins.UI
                 isLoopingDefaultValue,
                 (isLooping) =>
                 {
-                    if (ParticleEditor.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
                         main.loop = isLooping;
                     }
                 }
             );
-            IsLooping.SetVal(ParticleEditor.ParticleSystemManager.CurrentParticleSystem ? ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main.loop : isLoopingDefaultValue);
+            IsLooping.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.loop : isLoopingDefaultValue);
 
-            CreateToggle(IsLooping, true);
-            RegisterBool(IsLooping);
+            _particleEditorScript.CreateToggle(IsLooping, true);
+            _particleEditorScript.RegisterBool(IsLooping);
 
             // Prewarm
             var prewarmDefaultValue = false;
@@ -247,17 +247,17 @@ namespace ICannotDie.Plugins.UI
                 prewarmDefaultValue,
                 (prewarm) =>
                 {
-                    if (ParticleEditor.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
                         main.prewarm = prewarm;
                     }
                 }
             );
-            Prewarm.SetVal(ParticleEditor.ParticleSystemManager.CurrentParticleSystem ? ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main.prewarm : prewarmDefaultValue);
+            Prewarm.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.prewarm : prewarmDefaultValue);
 
-            CreateToggle(Prewarm, true);
-            RegisterBool(Prewarm);
+            _particleEditorScript.CreateToggle(Prewarm, true);
+            _particleEditorScript.RegisterBool(Prewarm);
 
             // Duration Slider
             var durationDefaultValue = 5.0f;
@@ -267,15 +267,15 @@ namespace ICannotDie.Plugins.UI
                 durationDefaultValue,
                 (duration) =>
                 {
-                    if (ParticleEditor.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
 
-                        if (ParticleEditor.ParticleSystemManager.CurrentParticleSystem.isPlaying)
+                        if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem.isPlaying)
                         {
-                            ParticleEditor.ParticleSystemManager.CurrentParticleSystem.Stop();
+                            _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.Stop();
                             main.duration = duration;
-                            ParticleEditor.ParticleSystemManager.CurrentParticleSystem.Play();
+                            _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.Play();
                         }
                         else
                         {
@@ -286,10 +286,10 @@ namespace ICannotDie.Plugins.UI
                 0f,
                 60.0f
             );
-            Duration.SetVal(ParticleEditor.ParticleSystemManager.CurrentParticleSystem ? ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main.duration : durationDefaultValue);
+            Duration.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.duration : durationDefaultValue);
 
-            CreateSlider(Duration, true);
-            RegisterFloat(Duration);
+            _particleEditorScript.CreateSlider(Duration, true);
+            _particleEditorScript.RegisterFloat(Duration);
 
             // Start Delay Slider - MinMaxCurve
             var startDelayDefaultValue = 0f;
@@ -299,19 +299,19 @@ namespace ICannotDie.Plugins.UI
                 startDelayDefaultValue,
                 (startDelay) =>
                 {
-                    if (ParticleEditor.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startDelay = startDelay;
                     }
                 },
                 0f,
                 60.0f
             );
-            StartDelay.SetVal(ParticleEditor.ParticleSystemManager.CurrentParticleSystem ? ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main.startDelay.constant : startDelayDefaultValue);
+            StartDelay.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startDelay.constant : startDelayDefaultValue);
 
-            CreateSlider(StartDelay, true);
-            RegisterFloat(StartDelay);
+            _particleEditorScript.CreateSlider(StartDelay, true);
+            _particleEditorScript.RegisterFloat(StartDelay);
 
             // Start Delay Multiplier Slider
             var startDelayMultiplierDefaultValue = 0.0f;
@@ -321,19 +321,19 @@ namespace ICannotDie.Plugins.UI
                 startDelayMultiplierDefaultValue,
                 (startDelayMultiplier) =>
                 {
-                    if (ParticleEditor.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startDelayMultiplier = startDelayMultiplier;
                     }
                 },
                 0f,
                 100.0f
             );
-            StartDelayMultiplier.SetVal(ParticleEditor.ParticleSystemManager.CurrentParticleSystem ? ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main.startDelayMultiplier : startDelayMultiplierDefaultValue);
+            StartDelayMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startDelayMultiplier : startDelayMultiplierDefaultValue);
 
-            CreateSlider(StartDelayMultiplier, true);
-            RegisterFloat(StartDelayMultiplier);
+            _particleEditorScript.CreateSlider(StartDelayMultiplier, true);
+            _particleEditorScript.RegisterFloat(StartDelayMultiplier);
 
             // Start Lifetime Slider - MinMaxCurve
             var startLifetimeDefaultValue = 5.0f;
@@ -343,19 +343,19 @@ namespace ICannotDie.Plugins.UI
                 startLifetimeDefaultValue,
                 (startLifetime) =>
                 {
-                    if (ParticleEditor.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startLifetime = startLifetime;
                     }
                 },
                 0f,
                 60.0f
             );
-            StartLifetime.SetVal(ParticleEditor.ParticleSystemManager.CurrentParticleSystem ? ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main.startLifetime.constant : startLifetimeDefaultValue);
+            StartLifetime.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startLifetime.constant : startLifetimeDefaultValue);
 
-            CreateSlider(StartLifetime, true);
-            RegisterFloat(StartLifetime);
+            _particleEditorScript.CreateSlider(StartLifetime, true);
+            _particleEditorScript.RegisterFloat(StartLifetime);
 
             // Start Lifetime Multiplier Slider
             var startLifetimeMultiplierDefaultValue = 5.0f;
@@ -365,19 +365,19 @@ namespace ICannotDie.Plugins.UI
                 startLifetimeMultiplierDefaultValue,
                 (startLifetimeMultiplier) =>
                 {
-                    if (ParticleEditor.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startLifetimeMultiplier = startLifetimeMultiplier;
                     }
                 },
                 0f,
                 100.0f
             );
-            StartLifetimeMultiplier.SetVal(ParticleEditor.ParticleSystemManager.CurrentParticleSystem ? ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main.startLifetimeMultiplier : startLifetimeMultiplierDefaultValue);
+            StartLifetimeMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startLifetimeMultiplier : startLifetimeMultiplierDefaultValue);
 
-            CreateSlider(StartLifetimeMultiplier, true);
-            RegisterFloat(StartLifetimeMultiplier);
+            _particleEditorScript.CreateSlider(StartLifetimeMultiplier, true);
+            _particleEditorScript.RegisterFloat(StartLifetimeMultiplier);
 
             // Start Speed Slider - MinMaxCurve
             var startSpeedDefaultValue = 5.0f;
@@ -387,19 +387,19 @@ namespace ICannotDie.Plugins.UI
                 startSpeedDefaultValue,
                 (startSpeed) =>
                 {
-                    if (ParticleEditor.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startSpeed = startSpeed;
                     }
                 },
                 0f,
                 60.0f
             );
-            StartSpeed.SetVal(ParticleEditor.ParticleSystemManager.CurrentParticleSystem ? ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main.startSpeed.constant : startSpeedDefaultValue);
+            StartSpeed.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startSpeed.constant : startSpeedDefaultValue);
 
-            CreateSlider(StartSpeed, true);
-            RegisterFloat(StartSpeed);
+            _particleEditorScript.CreateSlider(StartSpeed, true);
+            _particleEditorScript.RegisterFloat(StartSpeed);
 
             // Start Speed Multiplier Slider
             var startSpeedMultiplierDefaultValue = 5.0f;
@@ -409,19 +409,19 @@ namespace ICannotDie.Plugins.UI
                 startSpeedMultiplierDefaultValue,
                 (startSpeedMultiplier) =>
                 {
-                    if (ParticleEditor.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startSpeedMultiplier = startSpeedMultiplier;
                     }
                 },
                 0f,
                 100.0f
             );
-            StartSpeedMultiplier.SetVal(ParticleEditor.ParticleSystemManager.CurrentParticleSystem ? ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main.startSpeedMultiplier : startSpeedMultiplierDefaultValue);
+            StartSpeedMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startSpeedMultiplier : startSpeedMultiplierDefaultValue);
 
-            CreateSlider(StartSpeedMultiplier, true);
-            RegisterFloat(StartSpeedMultiplier);
+            _particleEditorScript.CreateSlider(StartSpeedMultiplier, true);
+            _particleEditorScript.RegisterFloat(StartSpeedMultiplier);
 
             // Start Size Slider
             var startSizeDefaultValue = 1.0f;
@@ -431,22 +431,22 @@ namespace ICannotDie.Plugins.UI
                 startSizeDefaultValue,
                 (startSize) =>
                 {
-                    if (ParticleEditor.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = ParticleEditor.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startSize = startSize;
                     }
                 },
                 0f,
                 10.0f
             );
-            StartSize.SetVal(ParticleEditor.ParticleSystemManager.CurrentParticleSystem ? ParticleEditor.ParticleSystemManager.CurrentParticleSystem.startSize : startSizeDefaultValue);
+            StartSize.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.startSize : startSizeDefaultValue);
 
-            CreateSlider(StartSize, true);
-            RegisterFloat(StartSize);
+            _particleEditorScript.CreateSlider(StartSize, true);
+            _particleEditorScript.RegisterFloat(StartSize);
 
             // Select Particle Image Buttom
-            SelectParticleImageButton = CreateButton("Select Particle Image", true);
+            SelectParticleImageButton = _particleEditorScript.CreateButton("Select Particle Image", true);
             SelectParticleImageButton.button.onClick.AddListener(() =>
             {
                 if (_lastAccessedDirectoryPath == string.Empty)
@@ -460,7 +460,7 @@ namespace ICannotDie.Plugins.UI
                     {
                         if (!string.IsNullOrEmpty(path))
                         {
-                            ParticleEditor.ParticleSystemManager.CurrentParticleSystemRenderer.material = ParticleEditor.ParticleSystemManager.GetMaterial(Constants.ShaderName_ParticlesAdditive, path);
+                            _particleEditorScript.ParticleSystemManager.CurrentParticleSystemRenderer.material = _particleEditorScript.ParticleSystemManager.GetMaterial(Constants.ShaderName_ParticlesAdditive, path);
                         }
                     },
                     filter: "png|jpg|jpeg",
@@ -481,7 +481,7 @@ namespace ICannotDie.Plugins.UI
         private JSONStorableString CreateLabel(string id, string text, bool isRightSide = false)
         {
             var jsonStorableString = new JSONStorableString(id, text);
-            var uiDynamic = CreateTextField(jsonStorableString, isRightSide);
+            var uiDynamic = _particleEditorScript.CreateTextField(jsonStorableString, isRightSide);
             uiDynamic.height = 12;
             uiDynamic.backgroundColor = Color.clear;
             uiDynamic.textColor = Color.black;

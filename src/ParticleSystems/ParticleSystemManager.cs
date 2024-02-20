@@ -11,9 +11,9 @@ using ICannotDie.Plugins.Common.Extensions;
 
 namespace ICannotDie.Plugins.ParticleSystems
 {
-    public class ParticleSystemManager : MVRScript
+    public class ParticleSystemManager
     {
-        private ParticleEditor ParticleEditor;
+        private ParticleEditor _particleEditorScript;
 
         public Atom CurrentAtom;
         public ParticleSystem CurrentParticleSystem => CurrentAtom != null ? CurrentAtom.GetComponentInChildren<ParticleSystem>() : null;
@@ -33,7 +33,7 @@ namespace ICannotDie.Plugins.ParticleSystems
 
         public ParticleSystemManager(ParticleEditor particleEditor)
         {
-            ParticleEditor = particleEditor;
+            _particleEditorScript = particleEditor;
         }
 
         public void SetCurrentAtom(string uid) => SetCurrentAtom(SuperController.singleton.GetAtomByUid(uid));
@@ -102,7 +102,7 @@ namespace ICannotDie.Plugins.ParticleSystems
             SetParticleSystemDefaults(CurrentParticleSystem);
             SetParticleSystemRendererDefaults(CurrentParticleSystemRenderer);
 
-            ParticleEditor.UiManager.BuildUI();
+            _particleEditorScript.UiManager.BuildUI();
         }
 
         private void AddParticleSystemToAtom(Atom atom)
@@ -130,7 +130,7 @@ namespace ICannotDie.Plugins.ParticleSystems
 
         private void SetParticleSystemRendererDefaults(ParticleSystemRenderer particleSystemRenderer)
         {
-            var texturePath = $"{GetPackagePath(this)}{Constants.DefaultShaderTextureFolderPath}/{Constants.DefaultShaderTextureName}";
+            var texturePath = $"{GetPackagePath(_particleEditorScript)}{Constants.DefaultShaderTextureFolderPath}/{Constants.DefaultShaderTextureName}";
             particleSystemRenderer.material = GetMaterial(Constants.ShaderName_ParticlesAdditive, texturePath);
         }
 
@@ -164,7 +164,7 @@ namespace ICannotDie.Plugins.ParticleSystems
             FindParticleSystems();
             SetCurrentAtom(nextAtom);
 
-            ParticleEditor.UiManager.BuildUI();
+            _particleEditorScript.UiManager.BuildUI();
         }
 
         public void FindParticleSystems(bool findAll = false)
@@ -181,7 +181,7 @@ namespace ICannotDie.Plugins.ParticleSystems
             else
             {
                 // Finds active particle systems, not those that are disabled or inside assetbundles
-                foundParticleSystems = FindObjectsOfType<ParticleSystem>().ToList();
+                foundParticleSystems = _particleEditorScript.FindParticleSystems();
             }
 
             foreach (var particleSystem in foundParticleSystems)
