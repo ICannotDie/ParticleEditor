@@ -14,8 +14,6 @@
     <a href="https://github.com/ICannotDie/ParticleEditor/wiki"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/ICannotDie/ParticleEditor">View Demo</a>
-    |
     <a href="https://github.com/ICannotDie/ParticleEditor/issues">Report Bug</a>
     |
     <a href="https://github.com/ICannotDie/ParticleEditor/issues">Request Feature</a>
