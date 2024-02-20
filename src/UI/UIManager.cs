@@ -11,13 +11,12 @@ namespace ICannotDie.Plugins.UI
 {
     public class UIManager
     {
-        private ParticleEditor _particleEditorScript;
+        // TODO: Split each of these property sections into their own module editor
 
-        // UI
+        // Plugin Actions
         public UIDynamicButton AddParticleSystemButton;
         public UIDynamicButton FindParticleSystemsButton;
         public JSONStorableStringChooser ParticleSystemChooser;
-        private string _previouslySelectedParticleSystemUid = null;
         private UIDynamicButton SelectParticleSystemAtomButton;
         private UIDynamicButton RemoveSelectedParticleSystemButton;
 
@@ -37,6 +36,9 @@ namespace ICannotDie.Plugins.UI
 
         // Particle System Renderer
         public UIDynamicButton SelectParticleImageButton;
+
+        // Local
+        private ParticleEditor _particleEditorScript;
         private string _lastAccessedDirectoryPath = "";
 
         public UIManager(ParticleEditor particleEditor)
@@ -46,6 +48,7 @@ namespace ICannotDie.Plugins.UI
 
         private void ClearUI()
         {
+            // Plugin Actions
             _particleEditorScript.RemoveButton(AddParticleSystemButton);
             _particleEditorScript.RemoveButton(FindParticleSystemsButton);
 
@@ -136,10 +139,10 @@ namespace ICannotDie.Plugins.UI
 
         public void BuildUI()
         {
-            SuperController.LogError("Entered BuildUI");
-
+            // Clear before build so we replace existing UI, rather than duplicate it
             ClearUI();
 
+            // Plugin Actions
             // Add Particle System Button
             AddParticleSystemButton = _particleEditorScript.CreateButton("Add Particle System");
             AddParticleSystemButton.button.onClick.AddListener(() =>
@@ -190,6 +193,7 @@ namespace ICannotDie.Plugins.UI
                 _particleEditorScript.StartCoroutine(_particleEditorScript.ParticleSystemManager.RemoveAtomCoroutine(_particleEditorScript.ParticleSystemManager.CurrentAtom.uid));
             });
 
+            // Particle Systems
             // Main Label
             MainLabel = CreateLabel("mainLabel", "Main", true);
 
@@ -445,6 +449,7 @@ namespace ICannotDie.Plugins.UI
             _particleEditorScript.CreateSlider(StartSize, true);
             _particleEditorScript.RegisterFloat(StartSize);
 
+            // Particle System Renderer
             // Select Particle Image Buttom
             SelectParticleImageButton = _particleEditorScript.CreateButton("Select Particle Image", true);
             SelectParticleImageButton.button.onClick.AddListener(() =>

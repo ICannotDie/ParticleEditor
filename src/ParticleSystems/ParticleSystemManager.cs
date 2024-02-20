@@ -13,13 +13,18 @@ namespace ICannotDie.Plugins.ParticleSystems
 {
     public class ParticleSystemManager
     {
-        private ParticleEditor _particleEditorScript;
-
-        public Atom CurrentAtom;
+        public Atom CurrentAtom { get; private set; }
         public ParticleSystem CurrentParticleSystem => CurrentAtom != null ? CurrentAtom.GetComponentInChildren<ParticleSystem>() : null;
         public ParticleSystemRenderer CurrentParticleSystemRenderer => CurrentParticleSystem != null ? CurrentParticleSystem.GetComponent<ParticleSystemRenderer>() : null;
-        public List<Atom> ParticleSystemAtoms = new List<Atom>();
+        public List<Atom> ParticleSystemAtoms { get; private set; } = new List<Atom>();
         public List<string> ParticleSystemUids => ParticleSystemAtoms.Any() ? ParticleSystemAtoms.OrderBy(atom => atom.UidAsInt()).Select(atom => atom.uid).ToList() : new List<string>();
+
+        private ParticleEditor _particleEditorScript;
+
+        public ParticleSystemManager(ParticleEditor particleEditor)
+        {
+            _particleEditorScript = particleEditor;
+        }
 
         public void Initialise()
         {
@@ -29,11 +34,6 @@ namespace ICannotDie.Plugins.ParticleSystems
             {
                 SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault());
             }
-        }
-
-        public ParticleSystemManager(ParticleEditor particleEditor)
-        {
-            _particleEditorScript = particleEditor;
         }
 
         public void SetCurrentAtom(string uid) => SetCurrentAtom(SuperController.singleton.GetAtomByUid(uid));
