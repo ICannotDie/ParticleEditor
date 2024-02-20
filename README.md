@@ -2,7 +2,9 @@
 <br />
 <div align="center">
   <a href="https://github.com/github_username/repo_name">
-    <img src="images/ICannotDie_Logo_1500x1500.png" alt="Logo" width="200" height="200" style="clip-path: circle();">
+    <div style="overflow: hidden; height: 200px; width: 200px; border-radius: 50%;">
+      <img src="images/ICannotDie_Logo_1500x1500.png" alt="Logo" style="width: 100%;">
+    </div>
   </a>
 
 <h3 align="center">ParticleEditor</h3>
