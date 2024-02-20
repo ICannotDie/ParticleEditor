@@ -2,9 +2,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/ICannotDie/ParticleEditor">
-    <div style="overflow: hidden; height: 200px; width: 200px; border-radius: 50%;">
-      <img src="images/ICannotDie_Logo_1500x1500.png" alt="Logo" style="width: 100%;">
-    </div>
+    <img src="images/ICannotDie_Logo_1500x1500.png" alt="Logo" width="200px" height="200px" style="border-radius: 50%;">
   </a>
 
 <h3 align="center">ParticleEditor</h3>
