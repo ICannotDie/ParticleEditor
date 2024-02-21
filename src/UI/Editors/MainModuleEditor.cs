@@ -9,7 +9,6 @@ namespace ICannotDie.Plugins.UI.Editors
     public class MainModuleEditor : EditorBase
     {
         public JSONStorableString MainLabel;
-        public JSONStorableBool IsPlaying;
         public JSONStorableBool IsLooping;
         public JSONStorableBool Prewarm;
         public JSONStorableFloat Duration;
@@ -56,12 +55,6 @@ namespace ICannotDie.Plugins.UI.Editors
             if (MainLabel != null)
             {
                 _particleEditorScript.RemoveTextField(MainLabel);
-            }
-
-            if (IsPlaying != null)
-            {
-                _particleEditorScript.RemoveToggle(IsPlaying);
-                _particleEditorScript.DeregisterBool(IsPlaying);
             }
 
             if (IsLooping != null)
@@ -269,32 +262,6 @@ namespace ICannotDie.Plugins.UI.Editors
         {
             // Main Label
             MainLabel = CreateLabel("mainLabel", "Main", true);
-
-            // Is Playing Toggle
-            var isPlayingDefaultValue = true;
-            IsPlaying = new JSONStorableBool
-            (
-                "Is Playing",
-                isPlayingDefaultValue,
-                (selectedIsPlaying) =>
-                {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
-                    {
-                        if (selectedIsPlaying)
-                        {
-                            _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.Play();
-                        }
-                        else
-                        {
-                            _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.Stop();
-                        }
-                    }
-                }
-            );
-            IsPlaying.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.isPlaying : isPlayingDefaultValue);
-
-            _particleEditorScript.CreateToggle(IsPlaying, true);
-            _particleEditorScript.RegisterBool(IsPlaying);
 
             // Is Looping Toggle
             var isLoopingDefaultValue = true;

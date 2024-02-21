@@ -36,6 +36,31 @@ namespace ICannotDie.Plugins.ParticleSystems
             }
         }
 
+        public void RegisterEventHandlers()
+        {
+            SuperController.singleton.onAtomRemovedHandlers += OnAtomRemoved;
+        }
+
+        public void DeregisterEventHandlers()
+        {
+            SuperController.singleton.onAtomRemovedHandlers -= OnAtomRemoved;
+        }
+
+        public void Destroy()
+        {
+            DeregisterEventHandlers();
+        }
+
+        private void OnAtomRemoved(Atom atom)
+        {
+            Utility.LogMessage($"OnAtomRemoved: {atom.uid}");
+
+            if (ParticleSystemAtoms.Any() && ParticleSystemAtoms.Contains(atom))
+            {
+                RemoveAndRebuild(atom);
+            }
+        }
+
         public void SetCurrentAtom(string uid) => SetCurrentAtom(SuperController.singleton.GetAtomByUid(uid));
 
         public void SetCurrentAtom(Atom atom)
@@ -153,12 +178,17 @@ namespace ICannotDie.Plugins.ParticleSystems
                 throw new NullReferenceException("Atom was not removed");
             }
 
+            RemoveAndRebuild(atomToRemove);
+        }
+
+        private void RemoveAndRebuild(Atom atom)
+        {
             // Choose a new atom to be set as current, or set null
             // Do this before we change the list to ensurre we select correctly
-            var nextAtom = GetAtomBefore(atomToRemove);
+            var nextAtom = GetAtomBefore(atom);
 
             // Remove the atom from the local list
-            ParticleSystemAtoms.Remove(atomToRemove);
+            ParticleSystemAtoms.Remove(atom);
 
             // Find, Set & Build
             FindParticleSystems();

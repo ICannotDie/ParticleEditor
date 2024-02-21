@@ -12,6 +12,7 @@ namespace ICannotDie.Plugins.UI
     public class UIManager
     {
         private ParticleEditor _particleEditorScript;
+        private ParticleSystemEditor _particleSystemEditor;
         private ParticleSystemAtomEditor _particleSystemAtomEditor;
         private ParticleSystemRendererEditor _particleSystemRendererEditor;
         private MainModuleEditor _mainModuleEditor;
@@ -20,6 +21,7 @@ namespace ICannotDie.Plugins.UI
         {
             _particleEditorScript = particleEditor;
 
+            _particleSystemEditor = new ParticleSystemEditor(_particleEditorScript, this);
             _particleSystemAtomEditor = new ParticleSystemAtomEditor(_particleEditorScript, this);
             _mainModuleEditor = new MainModuleEditor(_particleEditorScript, this);
             _particleSystemRendererEditor = new ParticleSystemRendererEditor(_particleEditorScript, this);
@@ -27,6 +29,7 @@ namespace ICannotDie.Plugins.UI
 
         private void ClearUI()
         {
+            _particleSystemEditor.Clear();
             _particleSystemAtomEditor.Clear();
             _mainModuleEditor.Clear();
             _particleSystemRendererEditor.Clear();
@@ -38,6 +41,7 @@ namespace ICannotDie.Plugins.UI
             ClearUI();
 
             // Call Build() on all editors
+            _particleSystemEditor.Build();
             _particleSystemAtomEditor.Build();
             _mainModuleEditor.Build();
             _particleSystemRendererEditor.Build();

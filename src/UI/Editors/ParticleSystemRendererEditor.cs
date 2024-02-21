@@ -22,6 +22,11 @@ namespace ICannotDie.Plugins.UI.Editors
 
         public override void Clear()
         {
+            if (RendererLabel != null)
+            {
+                _particleEditorScript.RemoveTextField(RendererLabel);
+            }
+
             _particleEditorScript.RemoveButton(SelectParticleImageButton);
         }
 
