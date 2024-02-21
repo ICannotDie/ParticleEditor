@@ -1,6 +1,7 @@
 using UnityEngine;
 using ICannotDie.Plugins;
 using ICannotDie.Plugins.UI;
+using ICannotDie.Plugins.Common;
 using System.Collections.Generic;
 using Random = System.Random;
 
@@ -1000,10 +1001,10 @@ namespace ICannotDie.Plugins.UI.Editors
             _particleEditorScript.CreateToggle(AutoRandomSeed, true);
             _particleEditorScript.RegisterBool(AutoRandomSeed);
 
-            // Seed Slider - this is a uint in the Unity docs, but in the Unity editor the Reseed button can go negative, which is not possible for unsigned integrals...
+            // Seed Slider - this is a uint in the Unity docs, but in the Unity editor the Reseed button can go negative, which is not possible for unsigned integers...
             var seedDefaultValue = 0f;
-            var intMinAsFloat = (float)uint.MaxValue * -1;
-            var intMaxAsFloat = (float)uint.MaxValue;
+            var uintNegativeMaxAsFloat = (float)uint.MaxValue * -1;
+            var uintPositiveMaxAsFloat = (float)uint.MaxValue;
 
             Seed = new JSONStorableFloat
             (
@@ -1016,9 +1017,12 @@ namespace ICannotDie.Plugins.UI.Editors
                         _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.randomSeed = (uint)selectedSeed;
                     }
                 },
-                intMinAsFloat,
-                intMaxAsFloat
+                uintNegativeMaxAsFloat,
+                uintPositiveMaxAsFloat
             );
+
+            _particleEditorScript.LogForDebug($"randomSeed: {_particleEditorScript.ParticleSystemManager.CurrentParticleSystem.randomSeed}");
+
             Seed.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.randomSeed : seedDefaultValue);
 
             _particleEditorScript.CreateSlider(Seed, true);
@@ -1033,7 +1037,7 @@ namespace ICannotDie.Plugins.UI.Editors
                 if (Seed != null)
                 {
                     AutoRandomSeed.SetVal(false);
-                    Seed.SetVal(GetRandomUInt());
+                    Seed.SetVal(Utility.GetRandomUInt());
                 }
             });
 
@@ -1073,22 +1077,6 @@ namespace ICannotDie.Plugins.UI.Editors
 
             _particleEditorScript.CreatePopup(StopAction, true);
             _particleEditorScript.RegisterStringChooser(StopAction);
-        }
-
-        private float GetRandomUInt()
-        {
-            Random random = new Random();
-            float sample = random.Next(0, 100);
-            uint thirtyBits = (uint)random.Next(1 << 30);
-            uint twoBits = (uint)random.Next(1 << 2);
-            uint fullRange = (thirtyBits << 2) | twoBits;
-
-            if (sample >= 50)
-            {
-                return (float)fullRange * -1;
-            }
-
-            return (float)fullRange;
         }
 
     }

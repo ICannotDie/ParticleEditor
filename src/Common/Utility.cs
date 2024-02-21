@@ -65,5 +65,25 @@ namespace ICannotDie.Plugins.Common
             .DefaultIfEmpty(list.Any() ? list[0] : null)
             .FirstOrDefault();
         }
+
+        /// <summary>
+        /// Gets a random float between uint.MaxValue and -uint.MaxValue
+        /// </summary>
+        /// <returns>A float between uint.MaxValue and -uint.MaxValue</returns>
+        public static float GetRandomUInt()
+        {
+            Random random = new Random();
+            float sample = random.Next(0, 100);
+            uint thirtyBits = (uint)random.Next(1 << 30);
+            uint twoBits = (uint)random.Next(1 << 2);
+            uint fullRange = (thirtyBits << 2) | twoBits;
+
+            if (sample >= 50)
+            {
+                return (float)fullRange * -1;
+            }
+
+            return (float)fullRange;
+        }
     }
 }
