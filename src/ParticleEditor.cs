@@ -15,10 +15,10 @@ namespace ICannotDie.Plugins
 	public class ParticleEditor : MVRScript
 	{
 		public static ParticleEditor ParticleEditorScript { get; private set; }
-		public bool? Initialised { get; private set; }
+		public bool? IsInitialised { get; private set; }
 		public UIManager UiManager { get; private set; }
 		public ParticleSystemManager ParticleSystemManager { get; private set; }
-		public bool IsInitialised { get; set; } = false;
+		public bool EnableDebug { get; private set; } = false;
 
 		public override void Init()
 		{
@@ -59,16 +59,23 @@ namespace ICannotDie.Plugins
 				ParticleSystemManager.Initialise();
 				UiManager.BuildUI();
 
-				Initialised = true;
+				IsInitialised = true;
 			}
 			catch (Exception e)
 			{
 				Utility.LogError($"{nameof(DeferInit)}: {e}");
-				Initialised = false;
+				IsInitialised = false;
 			}
 		}
 
 		public List<ParticleSystem> FindParticleSystems() => FindObjectsOfType<ParticleSystem>().ToList();
 
+		public void LogForDebug(params string[] args)
+		{
+			if (EnableDebug)
+			{
+				Utility.LogMessage(args);
+			}
+		}
 	}
 }

@@ -17,7 +17,7 @@ namespace ICannotDie.Plugins.UI.Editors
         public ParticleSystemRendererEditor(ParticleEditor particleEditor, UIManager uiManager)
         : base(particleEditor, uiManager)
         {
-
+            _particleEditorScript.LogForDebug($"Constructed {nameof(ParticleSystemRendererEditor)}");
         }
 
         public override void Clear()

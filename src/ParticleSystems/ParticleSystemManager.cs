@@ -20,20 +20,29 @@ namespace ICannotDie.Plugins.ParticleSystems
         public List<string> ParticleSystemUids => ParticleSystemAtoms.Any() ? ParticleSystemAtoms.OrderBy(atom => atom.UidAsInt()).Select(atom => atom.uid).ToList() : new List<string>();
 
         private ParticleEditor _particleEditorScript;
+        private Atom _atomToRemove;
 
         public ParticleSystemManager(ParticleEditor particleEditor)
         {
             _particleEditorScript = particleEditor;
+
+            _particleEditorScript.LogForDebug($"Constructed {nameof(ParticleSystemManager)}");
         }
 
         public void Initialise()
         {
+            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Initialising");
+
             FindParticleSystems();
 
             if (ParticleSystemAtoms.Any())
             {
                 SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault());
             }
+
+            RegisterEventHandlers();
+
+            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Initialised");
         }
 
         public void RegisterEventHandlers()
@@ -46,14 +55,26 @@ namespace ICannotDie.Plugins.ParticleSystems
             SuperController.singleton.onAtomRemovedHandlers -= OnAtomRemoved;
         }
 
-        public void Destroy()
+        public void OnDestroy()
         {
             DeregisterEventHandlers();
+
+            foreach (var atom in ParticleSystemAtoms)
+            {
+                _particleEditorScript.StartCoroutine(RemoveAtomCoroutine(atom.uid));
+            }
         }
 
         private void OnAtomRemoved(Atom atom)
         {
-            Utility.LogMessage($"OnAtomRemoved: {atom.uid}");
+            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: OnAtomRemoved invoked for {atom.uid}");
+
+            // We're removing this atom ourselves so we don't need to rebuild again
+            if (_atomToRemove != null && _atomToRemove == atom)
+            {
+                _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: OnAtomRemoved ignored for {atom.uid} as we're removing it ourselves");
+                return;
+            }
 
             if (ParticleSystemAtoms.Any() && ParticleSystemAtoms.Contains(atom))
             {
@@ -67,39 +88,22 @@ namespace ICannotDie.Plugins.ParticleSystems
         {
             if (atom != null)
             {
+                _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Setting Current Atom to {atom.uid}");
                 CurrentAtom = atom;
             }
             else
             {
+                _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Setting Current Atom to null");
                 CurrentAtom = null;
             }
         }
 
-        public string GetNextAtomUID()
-        {
-            var usedUIDs = ParticleSystemAtoms.Select(x => x.uid).ToList();
-
-            if (!usedUIDs.Contains(Constants.RootObjectName))
-            {
-                return Constants.RootObjectName;
-            }
-
-            for (int i = 2; i < 1000; i++)
-            {
-                var uid = $"{Constants.RootObjectName}#{i}";
-                if (!usedUIDs.Contains(uid))
-                {
-                    return uid;
-                }
-            }
-
-            return Constants.RootObjectName + Guid.NewGuid();
-        }
-
         public IEnumerator CreateAtomCoroutine()
         {
+            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Adding Atom");
+
             // Get a new UID for the atom
-            var nextUID = GetNextAtomUID();
+            var nextUID = Utility.GetNextAtomUID(Constants.RootObjectName, ParticleSystemAtoms.Select(x => x.uid).ToList());
 
             // Add an atom by type (always an Empty)
             var atomEnumerator = SuperController.singleton.AddAtomByType(Constants.EmptyAtomTypeName, nextUID, true);
@@ -128,6 +132,8 @@ namespace ICannotDie.Plugins.ParticleSystems
             SetParticleSystemRendererDefaults(CurrentParticleSystemRenderer);
 
             _particleEditorScript.UiManager.BuildUI();
+
+            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Added Atom: {atom.uid}");
         }
 
         private void AddParticleSystemToAtom(Atom atom)
@@ -159,46 +165,66 @@ namespace ICannotDie.Plugins.ParticleSystems
             particleSystemRenderer.material = GetMaterial(Constants.ShaderName_ParticlesAdditive, texturePath);
         }
 
-        public IEnumerator RemoveAtomCoroutine(string uid)
+        public IEnumerator RemoveAtomCoroutine(string uid, bool forDestroy = false)
         {
+            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Removing Atom: {uid}");
+
             // Get atom to remove by uid
-            var atomToRemove = SuperController.singleton.GetAtomByUid(uid);
+            _atomToRemove = SuperController.singleton.GetAtomByUid(uid);
 
             // Remove the atom
-            SuperController.singleton.RemoveAtom(atomToRemove);
+            SuperController.singleton.RemoveAtom(_atomToRemove);
 
             // Yield now so the atom gets removed before we continue 
             yield return new WaitForEndOfFrame();
 
             // Get the atom by uid again, to confirm it was removed
-            var atom = SuperController.singleton.GetAtomByUid(uid);
-
-            if (atom != null)
+            if (!forDestroy)
             {
-                throw new NullReferenceException("Atom was not removed");
+                var atom = SuperController.singleton.GetAtomByUid(uid);
+
+                if (atom != null)
+                {
+                    throw new NullReferenceException("Atom was not removed");
+                }
             }
 
-            RemoveAndRebuild(atomToRemove);
+            RemoveAndRebuild(_atomToRemove, forDestroy);
         }
 
-        private void RemoveAndRebuild(Atom atom)
+        private void RemoveAndRebuild(Atom atom, bool forDestroy = false)
         {
             // Choose a new atom to be set as current, or set null
             // Do this before we change the list to ensurre we select correctly
-            var nextAtom = GetAtomBefore(atom);
+            Atom nextAtom = null;
+
+            if (!forDestroy)
+            {
+                nextAtom = Utility.GetAtomBefore(atom, ParticleSystemAtoms);
+            }
 
             // Remove the atom from the local list
             ParticleSystemAtoms.Remove(atom);
 
-            // Find, Set & Build
-            FindParticleSystems();
-            SetCurrentAtom(nextAtom);
+            if (!forDestroy)
+            {
+                // Find, Set & Build
+                FindParticleSystems();
+                SetCurrentAtom(nextAtom);
 
-            _particleEditorScript.UiManager.BuildUI();
+                _particleEditorScript.UiManager.BuildUI();
+            }
+
+            // Reset _atomToRemove
+            _atomToRemove = null;
+
+            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Removed Atom: {atom.uid}");
         }
 
         public void FindParticleSystems(bool findAll = false)
         {
+            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Finding Particle Systems");
+
             ParticleSystemAtoms.Clear();
 
             List<ParticleSystem> foundParticleSystems = new List<ParticleSystem>();
@@ -227,32 +253,34 @@ namespace ICannotDie.Plugins.ParticleSystems
             }
 
             ParticleSystemAtoms = ParticleSystemAtoms.OrderBy(atom => atom.UidAsInt()).ToList();
+
+            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Found {foundParticleSystems.Count} Particle Systems");
         }
 
-        /// <summary>
-        /// Get the atom before the specified one in the list 
-        /// Circular - if the first atom in list is specified, this will return the last atom in the list
-        /// </summary>
-        private Atom GetAtomBefore(Atom atom)
-        {
-            return ParticleSystemAtoms
-            .TakeWhile(x => x.UidAsInt() != atom.UidAsInt())
-            .DefaultIfEmpty(ParticleSystemAtoms.Any() ? ParticleSystemAtoms[ParticleSystemAtoms.Count - 1] : null)
-            .LastOrDefault();
-        }
+        // /// <summary>
+        // /// Get the atom before the specified one in the list 
+        // /// Circular - if the first atom in list is specified, this will return the last atom in the list
+        // /// </summary>
+        // private Atom GetAtomBefore(Atom atom)
+        // {
+        //     return ParticleSystemAtoms
+        //     .TakeWhile(x => x.UidAsInt() != atom.UidAsInt())
+        //     .DefaultIfEmpty(ParticleSystemAtoms.Any() ? ParticleSystemAtoms[ParticleSystemAtoms.Count - 1] : null)
+        //     .LastOrDefault();
+        // }
 
-        /// <summary>
-        /// Get the atom after the specified one in the list 
-        /// Circular - if the last atom in list is specified, this will return the first atom in the list
-        /// </summary>
-        private Atom GetAtomAfter(Atom atom)
-        {
-            return ParticleSystemAtoms
-            .SkipWhile(x => x.UidAsInt() != atom.UidAsInt())
-            .Skip(1)
-            .DefaultIfEmpty(ParticleSystemAtoms.Any() ? ParticleSystemAtoms[0] : null)
-            .FirstOrDefault();
-        }
+        // /// <summary>
+        // /// Get the atom after the specified one in the list 
+        // /// Circular - if the last atom in list is specified, this will return the first atom in the list
+        // /// </summary>
+        // private Atom GetAtomAfter(Atom atom)
+        // {
+        //     return ParticleSystemAtoms
+        //     .SkipWhile(x => x.UidAsInt() != atom.UidAsInt())
+        //     .Skip(1)
+        //     .DefaultIfEmpty(ParticleSystemAtoms.Any() ? ParticleSystemAtoms[0] : null)
+        //     .FirstOrDefault();
+        // }
 
         #region Shaders/Textures
 
