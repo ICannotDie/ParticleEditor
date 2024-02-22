@@ -25,49 +25,14 @@ namespace ICannotDie.Plugins
 		{
 			base.Init();
 
-			try
-			{
-				ParticleEditorScript = this;
-				ContainingAtom = this.containingAtom;
-				StartCoroutine(DeferInit());
-			}
-			catch (Exception e)
-			{
-				enabled = false;
-				Utility.LogError($"{nameof(Init)}: {e}");
-			}
-		}
+			ParticleEditorScript = this;
+			ContainingAtom = this.containingAtom;
 
-		private IEnumerator DeferInit()
-		{
-			yield return new WaitForEndOfFrame();
-			while (SuperController.singleton.isLoading)
-			{
-				yield return null;
-			}
+			UiManager = new UIManager(this);
+			ParticleSystemManager = new ParticleSystemManager(this);
 
-			// Wait for other plugin permissions to be accepted
-			var confirmPanel = SuperController.singleton.errorLogPanel.parent.Find(Constants.UserConfirmCanvas);
-			while (confirmPanel != null && confirmPanel.childCount > 0)
-			{
-				yield return null;
-			}
-
-			try
-			{
-				UiManager = new UIManager(this);
-				ParticleSystemManager = new ParticleSystemManager(this);
-
-				ParticleSystemManager.Initialise();
-				UiManager.BuildUI();
-
-				IsInitialised = true;
-			}
-			catch (Exception e)
-			{
-				Utility.LogError($"{nameof(DeferInit)}: {e}");
-				IsInitialised = false;
-			}
+			ParticleSystemManager.Initialise();
+			UiManager.BuildUI();
 		}
 
 		public List<ParticleSystem> FindParticleSystems() => FindObjectsOfType<ParticleSystem>().ToList();

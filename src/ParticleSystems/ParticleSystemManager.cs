@@ -122,6 +122,13 @@ namespace ICannotDie.Plugins.ParticleSystems
                 throw new NullReferenceException("Atom did not spawn");
             }
 
+            MVRPluginManager manager = atom.GetStorableByID("PluginManager") as MVRPluginManager;
+            var plugin = manager.CreatePlugin();
+
+            var path = GetPluginPath(_particleEditorScript);
+
+            plugin.pluginURLJSON.val = $"{path}//ParticleEditor.cslist";
+
             // Add the particle system to the atom
             AddParticleSystemToAtom(atom);
 
@@ -257,31 +264,6 @@ namespace ICannotDie.Plugins.ParticleSystems
             _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Found {foundParticleSystems.Count} Particle Systems");
         }
 
-        // /// <summary>
-        // /// Get the atom before the specified one in the list 
-        // /// Circular - if the first atom in list is specified, this will return the last atom in the list
-        // /// </summary>
-        // private Atom GetAtomBefore(Atom atom)
-        // {
-        //     return ParticleSystemAtoms
-        //     .TakeWhile(x => x.UidAsInt() != atom.UidAsInt())
-        //     .DefaultIfEmpty(ParticleSystemAtoms.Any() ? ParticleSystemAtoms[ParticleSystemAtoms.Count - 1] : null)
-        //     .LastOrDefault();
-        // }
-
-        // /// <summary>
-        // /// Get the atom after the specified one in the list 
-        // /// Circular - if the last atom in list is specified, this will return the first atom in the list
-        // /// </summary>
-        // private Atom GetAtomAfter(Atom atom)
-        // {
-        //     return ParticleSystemAtoms
-        //     .SkipWhile(x => x.UidAsInt() != atom.UidAsInt())
-        //     .Skip(1)
-        //     .DefaultIfEmpty(ParticleSystemAtoms.Any() ? ParticleSystemAtoms[0] : null)
-        //     .FirstOrDefault();
-        // }
-
         #region Shaders/Textures
 
         public Material GetMaterial(string shaderName, string texturePath)
@@ -293,6 +275,10 @@ namespace ICannotDie.Plugins.ParticleSystems
 
             return material;
         }
+
+        #endregion
+
+        #region Package Helpers
 
         // Macgruber PostMagic
         // Get directory path where the plugin is located. Based on Alazi's & VAMDeluxe's method.
