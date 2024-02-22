@@ -1021,8 +1021,6 @@ namespace ICannotDie.Plugins.UI.Editors
                 uintPositiveMaxAsFloat
             );
 
-            _particleEditorScript.LogForDebug($"randomSeed: {_particleEditorScript.ParticleSystemManager.CurrentParticleSystem.randomSeed}");
-
             Seed.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.randomSeed : seedDefaultValue);
 
             _particleEditorScript.CreateSlider(Seed, true);

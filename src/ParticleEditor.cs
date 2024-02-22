@@ -15,10 +15,11 @@ namespace ICannotDie.Plugins
 	public class ParticleEditor : MVRScript
 	{
 		public static ParticleEditor ParticleEditorScript { get; private set; }
+		public Atom ContainingAtom { get; private set; }
 		public bool? IsInitialised { get; private set; }
 		public UIManager UiManager { get; private set; }
 		public ParticleSystemManager ParticleSystemManager { get; private set; }
-		public bool EnableDebug { get; private set; } = true;
+		public bool EnableDebug { get; private set; } = false;
 
 		public override void Init()
 		{
@@ -27,6 +28,7 @@ namespace ICannotDie.Plugins
 			try
 			{
 				ParticleEditorScript = this;
+				ContainingAtom = this.containingAtom;
 				StartCoroutine(DeferInit());
 			}
 			catch (Exception e)
