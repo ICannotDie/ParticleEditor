@@ -8,7 +8,7 @@
 <h3 align="center">ParticleEditor</h3>
 
   <p align="center">
-    A script for Virt-A-Mate to allow mannagement and editing of Unity Particle Systems. 
+    A script for Virt-A-Mate to allow creation, management and editing of Unity Particle Systems. 
     <br />
     <br />
     <a href="https://github.com/ICannotDie/ParticleEditor/wiki"><strong>Explore the docs »</strong></a>
