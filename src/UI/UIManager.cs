@@ -1,10 +1,3 @@
-using UnityEngine;
-using UnityEngine.UI;
-using MeshVR;
-using System.Linq;
-using System.Collections.Generic;
-using ICannotDie.Plugins.Common;
-using ICannotDie.Plugins.ParticleSystems;
 using ICannotDie.Plugins.UI.Editors;
 
 namespace ICannotDie.Plugins.UI

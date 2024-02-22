@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using ICannotDie.Plugins;
-using ICannotDie.Plugins.UI;
 
 namespace ICannotDie.Plugins.UI.Editors
 {
@@ -14,6 +12,16 @@ namespace ICannotDie.Plugins.UI.Editors
         {
             _particleEditorScript = particleEditor;
             _uiManager = uiManager;
+        }
+
+        public virtual void RegisterStorables()
+        {
+
+        }
+
+        public virtual void DeregisterStorables()
+        {
+
         }
 
         public virtual void Clear()

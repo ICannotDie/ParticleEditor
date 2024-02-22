@@ -1,10 +1,3 @@
-using UnityEngine;
-using MVR.FileManagementSecure;
-using ICannotDie.Plugins;
-using ICannotDie.Plugins.Common;
-using ICannotDie.Plugins.UI;
-using System.Collections.Generic;
-
 namespace ICannotDie.Plugins.UI.Editors
 {
     public class ParticleSystemEditor : EditorBase

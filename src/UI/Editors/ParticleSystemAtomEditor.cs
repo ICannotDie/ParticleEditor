@@ -1,7 +1,3 @@
-using UnityEngine;
-using ICannotDie.Plugins;
-using ICannotDie.Plugins.UI;
-
 namespace ICannotDie.Plugins.UI.Editors
 {
     public class ParticleSystemAtomEditor : EditorBase

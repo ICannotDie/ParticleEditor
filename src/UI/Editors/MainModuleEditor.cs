@@ -1,9 +1,6 @@
 using UnityEngine;
-using ICannotDie.Plugins;
-using ICannotDie.Plugins.UI;
 using ICannotDie.Plugins.Common;
 using System.Collections.Generic;
-using Random = System.Random;
 
 namespace ICannotDie.Plugins.UI.Editors
 {

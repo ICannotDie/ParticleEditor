@@ -1,11 +1,8 @@
 using UnityEngine;
-using MeshVR;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ICannotDie.Plugins;
-using ICannotDie.Plugins.UI;
 using ICannotDie.Plugins.Common;
 using ICannotDie.Plugins.Common.Extensions;
 
