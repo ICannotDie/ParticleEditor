@@ -11,7 +11,7 @@ using ICannotDie.Plugins.Common.Extensions;
 
 namespace ICannotDie.Plugins.ParticleSystems
 {
-    public class ParticleSystemManager
+    public class ParticleSystemManager : MonoBehaviour
     {
         public Atom CurrentAtom { get; private set; }
         public ParticleSystem CurrentParticleSystem => CurrentAtom != null ? CurrentAtom.GetComponentInChildren<ParticleSystem>() : null;

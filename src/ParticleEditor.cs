@@ -18,7 +18,7 @@ namespace ICannotDie.Plugins
 		public bool? IsInitialised { get; private set; }
 		public UIManager UiManager { get; private set; }
 		public ParticleSystemManager ParticleSystemManager { get; private set; }
-		public bool EnableDebug { get; private set; } = false;
+		public bool EnableDebug { get; private set; } = true;
 
 		public override void Init()
 		{
