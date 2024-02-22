@@ -14,7 +14,6 @@ namespace ICannotDie.Plugins
 {
 	public class ParticleEditor : MVRScript
 	{
-		public static ParticleEditor ParticleEditorScript { get; private set; }
 		public Atom ContainingAtom { get; private set; }
 		public bool? IsInitialised { get; private set; }
 		public UIManager UiManager { get; private set; }
@@ -25,7 +24,6 @@ namespace ICannotDie.Plugins
 		{
 			base.Init();
 
-			ParticleEditorScript = this;
 			ContainingAtom = this.containingAtom;
 
 			UiManager = new UIManager(this);

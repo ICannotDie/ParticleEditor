@@ -1,3 +1,4 @@
+using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,7 +73,7 @@ namespace ICannotDie.Plugins.Common
         /// <returns>A float between uint.MaxValue and -uint.MaxValue</returns>
         public static float GetRandomUInt()
         {
-            Random random = new Random();
+            System.Random random = new System.Random();
             float sample = random.Next(0, 100);
             uint thirtyBits = (uint)random.Next(1 << 30);
             uint twoBits = (uint)random.Next(1 << 2);
@@ -84,6 +85,33 @@ namespace ICannotDie.Plugins.Common
             }
 
             return (float)fullRange;
+        }
+
+        /// <summary>
+        /// Recursively search transforms for a child with a specifiec name
+        /// </summary>
+        /// <param name="parent">The transform to begin searching from</param>
+        /// <param name="name">The name to search for</param>
+        /// <returns>The first transform with the specified name, or null if none are found</returns>
+        public static Transform GetChildByName(Transform parent, string name)
+        {
+            foreach (Transform child in parent)
+            {
+                if (child.name == name)
+                {
+                    return child;
+                }
+                else
+                {
+                    Transform grandchild = GetChildByName(child, name);
+                    if (grandchild != null)
+                    {
+                        return grandchild;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

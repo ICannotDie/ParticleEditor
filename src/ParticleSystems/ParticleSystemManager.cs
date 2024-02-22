@@ -150,14 +150,14 @@ namespace ICannotDie.Plugins.ParticleSystems
                 throw new ArgumentException(nameof(atom));
             }
 
-            // Gets the Empty atom's sphere collider
-            var sphereCollider = atom.transform.GetComponentsInChildren<SphereCollider>().First();
+            // Gets the Empty atom's rescaleObject
+            var rescaleObject = Utility.GetChildByName(atom.transform, Constants.RescaleObjectName);
 
-            if (sphereCollider != null)
+            if (rescaleObject != null)
             {
-                // Add a ParticleSystem to the sphere collider
+                // Add a ParticleSystem to the rescaleObject
                 ParticleSystemAtoms.Add(atom);
-                sphereCollider.transform.gameObject.AddComponent<ParticleSystem>();
+                rescaleObject.transform.gameObject.AddComponent<ParticleSystem>();
             }
         }
 
