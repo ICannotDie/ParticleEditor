@@ -10,7 +10,7 @@ namespace ICannotDie.Plugins.Common
         public const string PluginManagerName = "PluginManager";
         public const string EmptyAtomTypeName = "Empty";
         public const string PluginCSListFilename = "ParticleEditor.cslist";
-        public const string ShaderMaterialTestureAllowedFileTypes = "png|jpg|jpeg";
+        public const string ShaderMaterialTextureAllowedFileTypes = "png|jpg|jpeg";
         public const string DefaultShaderTextureFolderPath = "Custom/Assets/ICannotDie/ParticleEditor";
         public const string DefaultShaderTextureName = "default-particle.png";
     }

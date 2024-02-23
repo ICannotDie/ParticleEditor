@@ -7,7 +7,9 @@ namespace ICannotDie.Plugins.UI.Editors
     public class ParticleSystemRendererEditor : EditorBase
     {
         public JSONStorableString RendererLabel;
-        public UIDynamicButton SelectParticleImageButton;
+        public UIDynamicButton SelectParticleTextureButton;
+        public JSONStorableString MaterialTexturePath;
+        public JSONStorableString MaterialTextureLabel;
 
         private string _lastAccessedDirectoryPath = "";
 
@@ -20,16 +22,20 @@ namespace ICannotDie.Plugins.UI.Editors
         public override void Clear()
         {
             _particleEditorScript.RemoveTextField(RendererLabel);
-            _particleEditorScript.RemoveButton(SelectParticleImageButton);
+            _particleEditorScript.RemoveTextField(MaterialTextureLabel);
+            _particleEditorScript.RemoveButton(SelectParticleTextureButton);
         }
 
         public override void Build()
         {
             // Renderer Label
-            RendererLabel = CreateLabel("rendererLabel", "Renderer", true);
+            RendererLabel = CreateLabel("RendererLabel", "Renderer", true);
 
-            SelectParticleImageButton = _particleEditorScript.CreateButton("Select Particle Image", true);
-            SelectParticleImageButton.button.onClick.AddListener(() =>
+            // Material Texture Label
+            MaterialTextureLabel = CreateLabel("MaterialTextureLabel", $"Material Texture: {MaterialTexturePath.val}", true);
+
+            SelectParticleTextureButton = _particleEditorScript.CreateButton("Select Particle Texture", true);
+            SelectParticleTextureButton.button.onClick.AddListener(() =>
             {
                 if (_lastAccessedDirectoryPath == string.Empty)
                 {
@@ -42,10 +48,11 @@ namespace ICannotDie.Plugins.UI.Editors
                     {
                         if (!string.IsNullOrEmpty(path))
                         {
-                            _particleEditorScript.ParticleSystemManager.CurrentParticleSystemRenderer.material = _particleEditorScript.ParticleSystemManager.GetMaterial(ShaderNames.ParticlesAdditive, path);
+                            MaterialTexturePath.SetVal(path);
+                            SetMaterial(ShaderNames.ParticlesAdditive, path);
                         }
                     },
-                    filter: Constants.ShaderMaterialTestureAllowedFileTypes,
+                    filter: Constants.ShaderMaterialTextureAllowedFileTypes,
                     suggestedFolder: _lastAccessedDirectoryPath,
                     fullComputerBrowse: true,
                     showDirs: true,
@@ -58,16 +65,44 @@ namespace ICannotDie.Plugins.UI.Editors
                 );
 
             });
+
         }
 
         public override void RegisterStorables()
         {
+            // Material Texture Path
+            MaterialTexturePath = new JSONStorableString
+            (
+                "MaterialTexturePath",
+                string.Empty,
+                (selectedMaterialTexturePath) =>
+                {
+                    SetMaterial(ShaderNames.ParticlesAdditive, selectedMaterialTexturePath);
+                }
+            );
+            MaterialTexturePath.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystemRenderer ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystemRenderer.material.mainTexture.name : GetFullTexturePath());
 
+            _particleEditorScript.RegisterString(MaterialTexturePath);
         }
 
         public override void DeregisterStorables()
         {
-
+            _particleEditorScript.DeregisterString(MaterialTexturePath);
         }
+
+        private string GetFullTexturePath(string shader = Constants.DefaultShaderTextureFolderPath, string path = Constants.DefaultShaderTextureName)
+        {
+            return $"{Utility.GetPackagePath(_particleEditorScript)}{shader}/{path}";
+        }
+
+        private void SetMaterial(string shader, string path)
+        {
+            if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystemRenderer)
+            {
+                _particleEditorScript.ParticleSystemManager.CurrentParticleSystemRenderer.material = Utility.GetMaterial(shader, path);
+            }
+        }
+
+
     }
 }

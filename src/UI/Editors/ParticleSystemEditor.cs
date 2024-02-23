@@ -84,8 +84,8 @@ namespace ICannotDie.Plugins.UI.Editors
 
         public override void DeregisterStorables()
         {
-            _particleEditorScript.UiManager.DeregisterBool(IsPlaying);
-            _particleEditorScript.UiManager.DeregisterBool(IsStopped);
+            _particleEditorScript.DeregisterBool(IsPlaying);
+            _particleEditorScript.DeregisterBool(IsStopped);
         }
     }
 }

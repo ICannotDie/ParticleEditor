@@ -1,4 +1,3 @@
-using ICannotDie.Plugins.Common;
 using ICannotDie.Plugins.UI.Editors;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,8 +47,6 @@ namespace ICannotDie.Plugins.UI
 
         public void BuildUI()
         {
-            Utility.LogMessage("BuildUI called");
-
             ClearUI();
 
             if (_particleEditor.ParticleSystemManager.CurrentAtom)
@@ -65,6 +62,11 @@ namespace ICannotDie.Plugins.UI
         public void Deregister(JSONStorableBool storable)
         {
             if (storable != null) DeregisterBool(storable);
+        }
+
+        public void Deregister(JSONStorableString storable)
+        {
+            if (storable != null) DeregisterString(storable);
         }
 
         public void Deregister(JSONStorableFloat storable)

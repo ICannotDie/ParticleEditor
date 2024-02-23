@@ -117,8 +117,6 @@ namespace ICannotDie.Plugins.ParticleSystems
             // Find, Set & Build
             FindParticleSystems();
             SetCurrentAtom(atom);
-            SetParticleSystemDefaults(CurrentParticleSystem);
-            SetParticleSystemRendererDefaults(CurrentParticleSystemRenderer);
 
             _particleEditorScript.UiManager.BuildUI();
 
@@ -129,7 +127,7 @@ namespace ICannotDie.Plugins.ParticleSystems
         {
             var pluginManager = atom.GetStorableByID(Constants.PluginManagerName) as MVRPluginManager;
             var plugin = pluginManager.CreatePlugin();
-            var pluginPath = GetPluginPath(_particleEditorScript);
+            var pluginPath = Utility.GetPluginPath(_particleEditorScript);
 
             plugin.pluginURLJSON.val = $"{pluginPath}//{Constants.PluginCSListFilename}";
         }
@@ -150,17 +148,6 @@ namespace ICannotDie.Plugins.ParticleSystems
                 ParticleSystemAtoms.Add(atom);
                 rescaleObject.transform.gameObject.AddComponent<ParticleSystem>();
             }
-        }
-
-        private void SetParticleSystemDefaults(ParticleSystem particleSystem)
-        {
-
-        }
-
-        private void SetParticleSystemRendererDefaults(ParticleSystemRenderer particleSystemRenderer)
-        {
-            var texturePath = $"{GetPackagePath(_particleEditorScript)}{Constants.DefaultShaderTextureFolderPath}/{Constants.DefaultShaderTextureName}";
-            particleSystemRenderer.material = GetMaterial(ShaderNames.ParticlesAdditive, texturePath);
         }
 
         public IEnumerator RemoveAtomCoroutine(string uid)
@@ -237,44 +224,5 @@ namespace ICannotDie.Plugins.ParticleSystems
             ParticleSystemAtoms = ParticleSystemAtoms.OrderBy(atom => atom.UidAsInt()).ToList();
         }
 
-        #region Shaders/Textures
-
-        public Material GetMaterial(string shaderName, string texturePath)
-        {
-            Texture2D texture2D = TextureLoader.LoadTexture(texturePath);
-
-            var material = new Material(Shader.Find(shaderName))
-            {
-                mainTexture = texture2D
-            };
-
-            return material;
-        }
-
-        #endregion
-
-        #region Package Helpers
-
-        // Macgruber PostMagic
-        // Get directory path where the plugin is located. Based on Alazi's & VAMDeluxe's method.
-        public static string GetPluginPath(MVRScript self)
-        {
-            var id = self.name.Substring(0, self.name.IndexOf('_'));
-            var filename = self.manager.GetJSON()["plugins"][id].Value;
-
-            return filename.Substring(0, filename.LastIndexOfAny(new char[] { '/', '\\' }));
-        }
-
-        // Macgruber PostMagic
-        // Get path prefix of the package that contains our plugin.
-        public static string GetPackagePath(MVRScript self)
-        {
-            var filename = GetPluginPath(self);
-            var index = filename.IndexOf(":/");
-
-            return index >= 0 ? filename.Substring(0, index + 2) : string.Empty;
-        }
-
-        #endregion
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace ICannotDie.Plugins.Common
 {
@@ -57,6 +58,44 @@ namespace ICannotDie.Plugins.Common
             }
 
             return (float)fullRange;
+        }
+
+        /// <summary>
+        /// Creates a Material from the specified texture path and shader name
+        /// </summary>
+        /// <param name="shaderName">The name of the shader</param>
+        /// <param name="texturePath">The path to the texture</param>
+        /// <returns>A <see cref="Material"/> configured with the specified texture and shader/></returns>
+        public static Material GetMaterial(string shaderName, string texturePath)
+        {
+            Texture2D texture2D = TextureLoader.LoadTexture(texturePath);
+
+            var material = new Material(Shader.Find(shaderName))
+            {
+                mainTexture = texture2D
+            };
+
+            return material;
+        }
+
+        // Macgruber PostMagic
+        // Get directory path where the plugin is located. Based on Alazi's & VAMDeluxe's method.
+        public static string GetPluginPath(MVRScript self)
+        {
+            var id = self.name.Substring(0, self.name.IndexOf('_'));
+            var filename = self.manager.GetJSON()["plugins"][id].Value;
+
+            return filename.Substring(0, filename.LastIndexOfAny(new char[] { '/', '\\' }));
+        }
+
+        // Macgruber PostMagic
+        // Get path prefix of the package that contains our plugin.
+        public static string GetPackagePath(MVRScript self)
+        {
+            var filename = GetPluginPath(self);
+            var index = filename.IndexOf(":/");
+
+            return index >= 0 ? filename.Substring(0, index + 2) : string.Empty;
         }
 
     }
