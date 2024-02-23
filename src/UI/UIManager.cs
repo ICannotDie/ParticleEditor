@@ -1,53 +1,76 @@
 using ICannotDie.Plugins.UI.Editors;
+using System.Collections.Generic;
 
 namespace ICannotDie.Plugins.UI
 {
-    public class UIManager
+    public class UIManager : JSONStorable
     {
-        private ParticleEditor _particleEditorScript;
         private ParticleSystemEditor _particleSystemEditor;
         private ParticleSystemAtomEditor _particleSystemAtomEditor;
         private ParticleSystemRendererEditor _particleSystemRendererEditor;
         private MainModuleEditor _mainModuleEditor;
+        private List<EditorBase> _editors = new List<EditorBase>();
+        private ParticleEditor _particleEditor;
 
         public UIManager(ParticleEditor particleEditor)
         {
-            _particleEditorScript = particleEditor;
+            _particleEditor = particleEditor;
+        }
 
-            _particleSystemEditor = new ParticleSystemEditor(_particleEditorScript, this);
-            _particleSystemAtomEditor = new ParticleSystemAtomEditor(_particleEditorScript, this);
-            _mainModuleEditor = new MainModuleEditor(_particleEditorScript, this);
-            _particleSystemRendererEditor = new ParticleSystemRendererEditor(_particleEditorScript, this);
+        public void Initialise()
+        {
+            _particleSystemAtomEditor = new ParticleSystemAtomEditor(_particleEditor);
+            _editors.Add(_particleSystemAtomEditor);
 
-            _particleEditorScript.LogForDebug($"Constructed {nameof(UIManager)}");
+            _particleSystemEditor = new ParticleSystemEditor(_particleEditor);
+            _editors.Add(_particleSystemEditor);
+
+            _mainModuleEditor = new MainModuleEditor(_particleEditor);
+            _editors.Add(_mainModuleEditor);
+
+            _particleSystemRendererEditor = new ParticleSystemRendererEditor(_particleEditor);
+            _editors.Add(_particleSystemRendererEditor);
+        }
+
+        public void RegisterStorables()
+        {
+            _editors.ForEach(editor => editor.RegisterStorables());
         }
 
         private void ClearUI()
         {
-            _particleEditorScript.LogForDebug($"{nameof(UIManager)}: Clearing UI");
-
-            _particleSystemEditor.Clear();
-            _particleSystemAtomEditor.Clear();
-            _mainModuleEditor.Clear();
-            _particleSystemRendererEditor.Clear();
-
-            _particleEditorScript.LogForDebug($"{nameof(UIManager)}: Cleared UI");
+            _editors.ForEach(editor => editor.Clear());
         }
 
         public void BuildUI()
         {
-            _particleEditorScript.LogForDebug($"{nameof(UIManager)}: Building UI");
-
-            // Clear before build so we replace existing UI, rather than duplicate it
             ClearUI();
+            _editors.ForEach(editor => editor.Build());
+        }
 
-            // Call Build() on all editors
-            _particleSystemEditor.Build();
-            _particleSystemAtomEditor.Build();
-            _mainModuleEditor.Build();
-            _particleSystemRendererEditor.Build();
+        public void Deregister(JSONStorableBool storable)
+        {
+            if (storable != null) DeregisterBool(storable);
+        }
 
-            _particleEditorScript.LogForDebug($"{nameof(UIManager)}: Built UI");
+        public void Deregister(JSONStorableFloat storable)
+        {
+            if (storable != null) DeregisterFloat(storable);
+        }
+
+        public void Deregister(JSONStorableStringChooser storable)
+        {
+            if (storable != null) DeregisterStringChooser(storable);
+        }
+
+        public void Deregister(JSONStorableColor storable)
+        {
+            if (storable != null) DeregisterColor(storable);
+        }
+
+        public void OnDestroy()
+        {
+            _editors.ForEach(editor => editor.DeregisterStorables());
         }
 
     }

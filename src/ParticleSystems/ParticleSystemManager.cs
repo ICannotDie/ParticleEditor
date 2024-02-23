@@ -1,10 +1,10 @@
-using UnityEngine;
+using ICannotDie.Plugins.Common;
+using ICannotDie.Plugins.Common.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ICannotDie.Plugins.Common;
-using ICannotDie.Plugins.Common.Extensions;
+using UnityEngine;
 
 namespace ICannotDie.Plugins.ParticleSystems
 {
@@ -17,29 +17,33 @@ namespace ICannotDie.Plugins.ParticleSystems
         public List<string> ParticleSystemUids => ParticleSystemAtoms.Any() ? ParticleSystemAtoms.OrderBy(atom => atom.UidAsInt()).Select(atom => atom.uid).ToList() : new List<string>();
 
         private ParticleEditor _particleEditorScript;
+
         private Atom _atomToRemove;
 
         public ParticleSystemManager(ParticleEditor particleEditor)
         {
             _particleEditorScript = particleEditor;
-
-            _particleEditorScript.LogForDebug($"Constructed {nameof(ParticleSystemManager)}");
         }
 
         public void Initialise()
         {
-            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Initialising");
-
             FindParticleSystems();
 
             if (ParticleSystemAtoms.Any())
             {
+                //if (_particleEditorScript?.containingAtom?.GetComponentInChildren<ParticleSystem>() != null)
+                //{
+                //    SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault(atom => atom.uid == _particleEditorScript.containingAtom.uid));
+                //}
+                //else
+                //{
+                //    SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault());
+                //}
+
                 SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault());
             }
 
             RegisterEventHandlers();
-
-            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Initialised");
         }
 
         public void RegisterEventHandlers()
@@ -64,12 +68,9 @@ namespace ICannotDie.Plugins.ParticleSystems
 
         private void OnAtomRemoved(Atom atom)
         {
-            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: OnAtomRemoved invoked for {atom.uid}");
-
             // We're removing this atom ourselves so we don't need to rebuild again
             if (_atomToRemove != null && _atomToRemove == atom)
             {
-                _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: OnAtomRemoved ignored for {atom.uid} as we're removing it ourselves");
                 return;
             }
 
@@ -85,20 +86,16 @@ namespace ICannotDie.Plugins.ParticleSystems
         {
             if (atom != null)
             {
-                _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Setting Current Atom to {atom.uid}");
                 CurrentAtom = atom;
             }
             else
             {
-                _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Setting Current Atom to null");
                 CurrentAtom = null;
             }
         }
 
         public IEnumerator CreateAtomCoroutine()
         {
-            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Adding Atom");
-
             // Get a new UID for the atom
             var nextUID = Utility.GetNextAtomUID(Constants.RootObjectName, ParticleSystemAtoms.Select(x => x.uid).ToList());
 
@@ -119,12 +116,8 @@ namespace ICannotDie.Plugins.ParticleSystems
                 throw new NullReferenceException("Atom did not spawn");
             }
 
-            MVRPluginManager manager = atom.GetStorableByID("PluginManager") as MVRPluginManager;
-            var plugin = manager.CreatePlugin();
-
-            var path = GetPluginPath(_particleEditorScript);
-
-            plugin.pluginURLJSON.val = $"{path}//ParticleEditor.cslist";
+            // Load a ParticleEditor plugin on the atom
+            //CreateAndLoadPlugin(atom);
 
             // Add the particle system to the atom
             AddParticleSystemToAtom(atom);
@@ -136,8 +129,15 @@ namespace ICannotDie.Plugins.ParticleSystems
             SetParticleSystemRendererDefaults(CurrentParticleSystemRenderer);
 
             _particleEditorScript.UiManager.BuildUI();
+        }
 
-            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Added Atom: {atom.uid}");
+        private void CreateAndLoadPlugin(Atom atom)
+        {
+            var pluginManager = atom.GetStorableByID(Constants.PluginManagerName) as MVRPluginManager;
+            var plugin = pluginManager.CreatePlugin();
+            var pluginPath = GetPluginPath(_particleEditorScript);
+
+            plugin.pluginURLJSON.val = $"{pluginPath}//{Constants.PluginCSListFilename}";
         }
 
         private void AddParticleSystemToAtom(Atom atom)
@@ -166,13 +166,11 @@ namespace ICannotDie.Plugins.ParticleSystems
         private void SetParticleSystemRendererDefaults(ParticleSystemRenderer particleSystemRenderer)
         {
             var texturePath = $"{GetPackagePath(_particleEditorScript)}{Constants.DefaultShaderTextureFolderPath}/{Constants.DefaultShaderTextureName}";
-            particleSystemRenderer.material = GetMaterial(Constants.ShaderName_ParticlesAdditive, texturePath);
+            particleSystemRenderer.material = GetMaterial(ShaderNames.ParticlesAdditive, texturePath);
         }
 
         public IEnumerator RemoveAtomCoroutine(string uid, bool forDestroy = false)
         {
-            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Removing Atom: {uid}");
-
             // Get atom to remove by uid
             _atomToRemove = SuperController.singleton.GetAtomByUid(uid);
 
@@ -221,19 +219,15 @@ namespace ICannotDie.Plugins.ParticleSystems
 
             // Reset _atomToRemove
             _atomToRemove = null;
-
-            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Removed Atom: {atom.uid}");
         }
 
         public void FindParticleSystems(bool findAll = false)
         {
-            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Finding Particle Systems");
-
             ParticleSystemAtoms.Clear();
 
             List<ParticleSystem> foundParticleSystems = new List<ParticleSystem>();
 
-            if (findAll = false)
+            if (findAll == false)
             {
                 // Finds ALL particle systems, even if they're disabled or inside assetbundles
                 foundParticleSystems = (Resources.FindObjectsOfTypeAll(typeof(ParticleSystem)) as ParticleSystem[]).ToList();
@@ -243,6 +237,8 @@ namespace ICannotDie.Plugins.ParticleSystems
                 // Finds active particle systems, not those that are disabled or inside assetbundles
                 foundParticleSystems = _particleEditorScript.FindParticleSystems();
             }
+
+            Utility.LogMessage($"Found {foundParticleSystems.Count} particle systems");
 
             foreach (var particleSystem in foundParticleSystems)
             {
@@ -257,8 +253,6 @@ namespace ICannotDie.Plugins.ParticleSystems
             }
 
             ParticleSystemAtoms = ParticleSystemAtoms.OrderBy(atom => atom.UidAsInt()).ToList();
-
-            _particleEditorScript.LogForDebug($"{nameof(ParticleSystemManager)}: Found {foundParticleSystems.Count} Particle Systems");
         }
 
         #region Shaders/Textures

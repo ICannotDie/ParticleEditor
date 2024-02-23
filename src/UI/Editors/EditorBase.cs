@@ -3,36 +3,19 @@ using UnityEngine.UI;
 
 namespace ICannotDie.Plugins.UI.Editors
 {
-    public abstract class EditorBase
+    public abstract class EditorBase : IEditorBase
     {
         protected ParticleEditor _particleEditorScript;
-        protected UIManager _uiManager;
 
-        public EditorBase(ParticleEditor particleEditor, UIManager uiManager)
+        public EditorBase(ParticleEditor particleEditor)
         {
             _particleEditorScript = particleEditor;
-            _uiManager = uiManager;
         }
 
-        public virtual void RegisterStorables()
-        {
-
-        }
-
-        public virtual void DeregisterStorables()
-        {
-
-        }
-
-        public virtual void Clear()
-        {
-
-        }
-
-        public virtual void Build()
-        {
-
-        }
+        public abstract void Build();
+        public abstract void Clear();
+        public abstract void DeregisterStorables();
+        public abstract void RegisterStorables();
 
         protected JSONStorableString CreateLabel(string id, string text, bool isRightSide = false)
         {

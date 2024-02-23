@@ -1,8 +1,8 @@
-using UnityEngine;
+using ICannotDie.Plugins.Common.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ICannotDie.Plugins.Common.Extensions;
+using UnityEngine;
 
 namespace ICannotDie.Plugins.Common
 {
@@ -10,6 +10,11 @@ namespace ICannotDie.Plugins.Common
     {
         public static void LogError(params object[] args) => SuperController.LogError(Format(args));
         public static void LogMessage(params object[] args) => SuperController.LogMessage(Format(args));
+        public static void LogForDebug(bool enableDebug = false, params string[] args)
+        {
+            if (enableDebug) LogMessage(args);
+        }
+
         private static string Format(IEnumerable<object> args) => $"{nameof(ParticleEditor)}: {string.Join(" ", args.Select(arg => arg.ToString()).ToArray())}";
 
         /// <summary>

@@ -1,3 +1,5 @@
+using ICannotDie.Plugins.Common;
+
 namespace ICannotDie.Plugins.UI.Editors
 {
     public class ParticleSystemEditor : EditorBase
@@ -6,46 +8,42 @@ namespace ICannotDie.Plugins.UI.Editors
         public JSONStorableBool IsPlaying;
         public JSONStorableBool IsStopped;
 
-        public ParticleSystemEditor(ParticleEditor particleEditor, UIManager uiManager)
-        : base(particleEditor, uiManager)
+        public ParticleSystemEditor(ParticleEditor particleEditor)
+        : base(particleEditor)
         {
-            _particleEditorScript.LogForDebug($"Constructed {nameof(ParticleSystemEditor)}");
+
         }
 
         public override void Clear()
         {
-            if (ParticleSystemLabel != null)
-            {
-                _particleEditorScript.RemoveTextField(ParticleSystemLabel);
-            }
-
-            if (IsPlaying != null)
-            {
-                _particleEditorScript.RemoveToggle(IsPlaying);
-                _particleEditorScript.DeregisterBool(IsPlaying);
-            }
-
-            if (IsStopped != null)
-            {
-                _particleEditorScript.RemoveToggle(IsStopped);
-                _particleEditorScript.DeregisterBool(IsStopped);
-            }
+            _particleEditorScript.RemoveTextField(ParticleSystemLabel);
+            _particleEditorScript.RemoveToggle(IsPlaying);
+            _particleEditorScript.RemoveToggle(IsStopped);
         }
 
         public override void Build()
         {
-            // Renderer Label
             ParticleSystemLabel = CreateLabel("particleSystemLabel", "Particle System", true);
+            _particleEditorScript.CreateToggle(IsPlaying, true);
+            _particleEditorScript.CreateToggle(IsStopped, true);
+        }
 
+        public override void DeregisterStorables()
+        {
+            _particleEditorScript.UiManager.DeregisterBool(IsPlaying);
+            _particleEditorScript.UiManager.DeregisterBool(IsStopped);
+        }
+
+        public override void RegisterStorables()
+        {
             // Is Playing Toggle
-            var isPlayingDefaultValue = true;
             IsPlaying = new JSONStorableBool
             (
                 "Is Playing",
-                isPlayingDefaultValue,
+                ParticleSystemEditorDefaults.IsPlaying,
                 (selectedIsPlaying) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null)
                     {
                         if (selectedIsPlaying)
                         {
@@ -58,20 +56,19 @@ namespace ICannotDie.Plugins.UI.Editors
                     }
                 }
             );
-            IsPlaying.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.isPlaying : isPlayingDefaultValue);
 
-            _particleEditorScript.CreateToggle(IsPlaying, true);
+            IsPlaying.SetVal(_particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.isPlaying : ParticleSystemEditorDefaults.IsPlaying);
+
             _particleEditorScript.RegisterBool(IsPlaying);
 
             // Is Stopped Toggle
-            var isStoppedDefaultValue = true;
             IsStopped = new JSONStorableBool
             (
                 "Is Stopped",
-                isStoppedDefaultValue,
+                ParticleSystemEditorDefaults.IsStopped,
                 (selectedIsStopped) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null)
                     {
                         if (selectedIsStopped)
                         {
@@ -84,10 +81,11 @@ namespace ICannotDie.Plugins.UI.Editors
                     }
                 }
             );
-            IsStopped.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.isStopped : isStoppedDefaultValue);
 
-            _particleEditorScript.CreateToggle(IsStopped, true);
+            IsStopped.SetVal(_particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.isStopped : ParticleSystemEditorDefaults.IsStopped);
+
             _particleEditorScript.RegisterBool(IsStopped);
+
         }
     }
 }

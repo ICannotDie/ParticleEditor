@@ -1,5 +1,5 @@
-using MVR.FileManagementSecure;
 using ICannotDie.Plugins.Common;
+using MVR.FileManagementSecure;
 using System.Collections.Generic;
 
 namespace ICannotDie.Plugins.UI.Editors
@@ -11,19 +11,15 @@ namespace ICannotDie.Plugins.UI.Editors
 
         private string _lastAccessedDirectoryPath = "";
 
-        public ParticleSystemRendererEditor(ParticleEditor particleEditor, UIManager uiManager)
-        : base(particleEditor, uiManager)
+        public ParticleSystemRendererEditor(ParticleEditor particleEditor)
+        : base(particleEditor)
         {
-            _particleEditorScript.LogForDebug($"Constructed {nameof(ParticleSystemRendererEditor)}");
+
         }
 
         public override void Clear()
         {
-            if (RendererLabel != null)
-            {
-                _particleEditorScript.RemoveTextField(RendererLabel);
-            }
-
+            _particleEditorScript.RemoveTextField(RendererLabel);
             _particleEditorScript.RemoveButton(SelectParticleImageButton);
         }
 
@@ -46,7 +42,7 @@ namespace ICannotDie.Plugins.UI.Editors
                     {
                         if (!string.IsNullOrEmpty(path))
                         {
-                            _particleEditorScript.ParticleSystemManager.CurrentParticleSystemRenderer.material = _particleEditorScript.ParticleSystemManager.GetMaterial(Constants.ShaderName_ParticlesAdditive, path);
+                            _particleEditorScript.ParticleSystemManager.CurrentParticleSystemRenderer.material = _particleEditorScript.ParticleSystemManager.GetMaterial(ShaderNames.ParticlesAdditive, path);
                         }
                     },
                     filter: Constants.ShaderMaterialTestureAllowedFileTypes,
@@ -62,6 +58,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 );
 
             });
+        }
+
+        public override void DeregisterStorables()
+        {
+
+        }
+
+        public override void RegisterStorables()
+        {
+
         }
     }
 }

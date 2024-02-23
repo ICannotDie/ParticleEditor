@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -92,17 +92,20 @@
     <Compile Include="src\Common\Constants.cs" />
     <Compile Include="src\Common\Utility.cs" />
     <Compile Include="src\Common\Extensions\AtomExtensions.cs" />
+    <Compile Include="src\UI\Editors\IEditorBase.cs" />
     <Compile Include="src\UI\UIManager.cs" />
     <Compile Include="src\UI\Editors\ParticleSystemEditor.cs" />
     <Compile Include="src\UI\Editors\EditorBase.cs" />
     <Compile Include="src\UI\Editors\MainModuleEditor.cs" />
     <Compile Include="src\UI\Editors\ParticleSystemAtomEditor.cs" />
-    <Compile Include="src\UI\Editors\ParticleSystemRendererEditor.cs" />    
+    <Compile Include="src\UI\Editors\ParticleSystemRendererEditor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ParticleEditor.cslist" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".gitignore" />
     <Content Include="scripts\generate_cslist.sh" />
     <Content Include="scripts\package.sh" />
   </ItemGroup>
