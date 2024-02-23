@@ -8,8 +8,8 @@ namespace ICannotDie.Plugins.UI.Editors
         public JSONStorableBool IsPlaying;
         public JSONStorableBool IsStopped;
 
-        public ParticleSystemEditor(ParticleEditor particleEditor)
-        : base(particleEditor)
+        public ParticleSystemEditor(ParticleEditor particleEditor, UIManager uiManager)
+        : base(particleEditor, uiManager)
         {
 
         }
@@ -43,7 +43,7 @@ namespace ICannotDie.Plugins.UI.Editors
                 ParticleSystemEditorDefaults.IsPlaying,
                 (selectedIsPlaying) =>
                 {
-                    if (_particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null)
+                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
                         if (selectedIsPlaying)
                         {
@@ -57,7 +57,7 @@ namespace ICannotDie.Plugins.UI.Editors
                 }
             );
 
-            IsPlaying.SetVal(_particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.isPlaying : ParticleSystemEditorDefaults.IsPlaying);
+            IsPlaying.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.isPlaying : ParticleSystemEditorDefaults.IsPlaying);
 
             _particleEditorScript.RegisterBool(IsPlaying);
 
@@ -68,7 +68,7 @@ namespace ICannotDie.Plugins.UI.Editors
                 ParticleSystemEditorDefaults.IsStopped,
                 (selectedIsStopped) =>
                 {
-                    if (_particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null)
+                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
                         if (selectedIsStopped)
                         {
@@ -82,7 +82,7 @@ namespace ICannotDie.Plugins.UI.Editors
                 }
             );
 
-            IsStopped.SetVal(_particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.isStopped : ParticleSystemEditorDefaults.IsStopped);
+            IsStopped.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.isStopped : ParticleSystemEditorDefaults.IsStopped);
 
             _particleEditorScript.RegisterBool(IsStopped);
 

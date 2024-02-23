@@ -11,8 +11,8 @@ namespace ICannotDie.Plugins.UI.Editors
 
         private string _lastAccessedDirectoryPath = "";
 
-        public ParticleSystemRendererEditor(ParticleEditor particleEditor)
-        : base(particleEditor)
+        public ParticleSystemRendererEditor(ParticleEditor particleEditor, UIManager uiManager)
+        : base(particleEditor, uiManager)
         {
 
         }

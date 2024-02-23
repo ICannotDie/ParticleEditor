@@ -18,7 +18,6 @@ namespace ICannotDie.Plugins
             ParticleSystemManager = new ParticleSystemManager(this);
 
             ParticleSystemManager.Initialise();
-            UiManager.Initialise();
             UiManager.RegisterStorables();
             UiManager.BuildUI();
         }

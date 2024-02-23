@@ -1,5 +1,7 @@
+using ICannotDie.Plugins.Common;
 using ICannotDie.Plugins.UI.Editors;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ICannotDie.Plugins.UI
 {
@@ -15,20 +17,17 @@ namespace ICannotDie.Plugins.UI
         public UIManager(ParticleEditor particleEditor)
         {
             _particleEditor = particleEditor;
-        }
 
-        public void Initialise()
-        {
-            _particleSystemAtomEditor = new ParticleSystemAtomEditor(_particleEditor);
+            _particleSystemAtomEditor = new ParticleSystemAtomEditor(_particleEditor, this);
             _editors.Add(_particleSystemAtomEditor);
 
-            _particleSystemEditor = new ParticleSystemEditor(_particleEditor);
+            _particleSystemEditor = new ParticleSystemEditor(_particleEditor, this);
             _editors.Add(_particleSystemEditor);
 
-            _mainModuleEditor = new MainModuleEditor(_particleEditor);
+            _mainModuleEditor = new MainModuleEditor(_particleEditor, this);
             _editors.Add(_mainModuleEditor);
 
-            _particleSystemRendererEditor = new ParticleSystemRendererEditor(_particleEditor);
+            _particleSystemRendererEditor = new ParticleSystemRendererEditor(_particleEditor, this);
             _editors.Add(_particleSystemRendererEditor);
         }
 
@@ -37,15 +36,25 @@ namespace ICannotDie.Plugins.UI
             _editors.ForEach(editor => editor.RegisterStorables());
         }
 
-        private void ClearUI()
+        public void ClearUI()
         {
             _editors.ForEach(editor => editor.Clear());
         }
 
         public void BuildUI()
         {
+            Utility.LogMessage("BuildUI called");
+
             ClearUI();
-            _editors.ForEach(editor => editor.Build());
+
+            if (_particleEditor.ParticleSystemManager.CurrentAtom)
+            {
+                _editors.ForEach(editor => editor.Build());
+            }
+            else
+            {
+                _editors.Single(x => x is ParticleSystemAtomEditor).Build();
+            }
         }
 
         public void Deregister(JSONStorableBool storable)
@@ -66,11 +75,6 @@ namespace ICannotDie.Plugins.UI
         public void Deregister(JSONStorableColor storable)
         {
             if (storable != null) DeregisterColor(storable);
-        }
-
-        public void OnDestroy()
-        {
-            _editors.ForEach(editor => editor.DeregisterStorables());
         }
 
     }

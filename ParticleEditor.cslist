@@ -6,7 +6,6 @@ src\Common\Extensions\AtomExtensions.cs
 src\UI\UIManager.cs
 src\UI\Editors\ParticleSystemEditor.cs
 src\UI\Editors\EditorBase.cs
-src\UI\Editors\IEditorBase.cs
 src\UI\Editors\MainModuleEditor.cs
 src\UI\Editors\ParticleSystemAtomEditor.cs
 src\UI\Editors\ParticleSystemRendererEditor.cs

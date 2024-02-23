@@ -18,8 +18,6 @@ namespace ICannotDie.Plugins.ParticleSystems
 
         private ParticleEditor _particleEditorScript;
 
-        private Atom _atomToRemove;
-
         public ParticleSystemManager(ParticleEditor particleEditor)
         {
             _particleEditorScript = particleEditor;
@@ -68,12 +66,6 @@ namespace ICannotDie.Plugins.ParticleSystems
 
         private void OnAtomRemoved(Atom atom)
         {
-            // We're removing this atom ourselves so we don't need to rebuild again
-            if (_atomToRemove != null && _atomToRemove == atom)
-            {
-                return;
-            }
-
             if (ParticleSystemAtoms.Any() && ParticleSystemAtoms.Contains(atom))
             {
                 RemoveAndRebuild(atom);
@@ -96,6 +88,8 @@ namespace ICannotDie.Plugins.ParticleSystems
 
         public IEnumerator CreateAtomCoroutine()
         {
+            Utility.LogMessage("Creating Atom");
+
             // Get a new UID for the atom
             var nextUID = Utility.GetNextAtomUID(Constants.RootObjectName, ParticleSystemAtoms.Select(x => x.uid).ToList());
 
@@ -129,6 +123,8 @@ namespace ICannotDie.Plugins.ParticleSystems
             SetParticleSystemRendererDefaults(CurrentParticleSystemRenderer);
 
             _particleEditorScript.UiManager.BuildUI();
+
+            Utility.LogMessage("Created Atom");
         }
 
         private void CreateAndLoadPlugin(Atom atom)
@@ -169,10 +165,12 @@ namespace ICannotDie.Plugins.ParticleSystems
             particleSystemRenderer.material = GetMaterial(ShaderNames.ParticlesAdditive, texturePath);
         }
 
-        public IEnumerator RemoveAtomCoroutine(string uid, bool forDestroy = false)
+        public IEnumerator RemoveAtomCoroutine(string uid)
         {
+            Utility.LogMessage("Removing Atom");
+
             // Get atom to remove by uid
-            _atomToRemove = SuperController.singleton.GetAtomByUid(uid);
+            var _atomToRemove = SuperController.singleton.GetAtomByUid(uid);
 
             // Remove the atom
             SuperController.singleton.RemoveAtom(_atomToRemove);
@@ -181,26 +179,23 @@ namespace ICannotDie.Plugins.ParticleSystems
             yield return new WaitForEndOfFrame();
 
             // Get the atom by uid again, to confirm it was removed
-            if (!forDestroy)
-            {
-                var atom = SuperController.singleton.GetAtomByUid(uid);
+            var atom = SuperController.singleton.GetAtomByUid(uid);
 
-                if (atom != null)
-                {
-                    throw new NullReferenceException("Atom was not removed");
-                }
+            if (atom != null)
+            {
+                throw new NullReferenceException("Atom was not removed");
             }
 
-            RemoveAndRebuild(_atomToRemove, forDestroy);
+            RemoveAndRebuild(_atomToRemove);
         }
 
-        private void RemoveAndRebuild(Atom atom, bool forDestroy = false)
+        private void RemoveAndRebuild(Atom atom)
         {
             // Choose a new atom to be set as current, or set null
-            // Do this before we change the list to ensurre we select correctly
-            Atom nextAtom = null;
+            // Do this before we change the list to ensure we select correctly
+            Atom nextAtom = _particleEditorScript.ParticleSystemManager.CurrentAtom;
 
-            if (!forDestroy)
+            if (_particleEditorScript.ParticleSystemManager.CurrentAtom == atom)
             {
                 nextAtom = Utility.GetAtomBefore(atom, ParticleSystemAtoms);
             }
@@ -208,17 +203,12 @@ namespace ICannotDie.Plugins.ParticleSystems
             // Remove the atom from the local list
             ParticleSystemAtoms.Remove(atom);
 
-            if (!forDestroy)
-            {
-                // Find, Set & Build
-                FindParticleSystems();
-                SetCurrentAtom(nextAtom);
+            // Find, Set & Build
+            FindParticleSystems();
+            SetCurrentAtom(nextAtom);
+            _particleEditorScript.UiManager.BuildUI();
 
-                _particleEditorScript.UiManager.BuildUI();
-            }
-
-            // Reset _atomToRemove
-            _atomToRemove = null;
+            Utility.LogMessage("Removed Atom");
         }
 
         public void FindParticleSystems(bool findAll = false)

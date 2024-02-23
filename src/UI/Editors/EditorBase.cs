@@ -3,13 +3,15 @@ using UnityEngine.UI;
 
 namespace ICannotDie.Plugins.UI.Editors
 {
-    public abstract class EditorBase : IEditorBase
+    public abstract class EditorBase
     {
         protected ParticleEditor _particleEditorScript;
+        protected UIManager _uiManager;
 
-        public EditorBase(ParticleEditor particleEditor)
+        public EditorBase(ParticleEditor particleEditor, UIManager uiManager)
         {
             _particleEditorScript = particleEditor;
+            _uiManager = uiManager;
         }
 
         public abstract void Build();

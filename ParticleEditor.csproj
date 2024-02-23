@@ -92,7 +92,6 @@
     <Compile Include="src\Common\Constants.cs" />
     <Compile Include="src\Common\Utility.cs" />
     <Compile Include="src\Common\Extensions\AtomExtensions.cs" />
-    <Compile Include="src\UI\Editors\IEditorBase.cs" />
     <Compile Include="src\UI\UIManager.cs" />
     <Compile Include="src\UI\Editors\ParticleSystemEditor.cs" />
     <Compile Include="src\UI\Editors\EditorBase.cs" />
