@@ -88,8 +88,6 @@ namespace ICannotDie.Plugins.ParticleSystems
 
         public IEnumerator CreateAtomCoroutine()
         {
-            Utility.LogMessage("Creating Atom");
-
             // Get a new UID for the atom
             var nextUID = Utility.GetNextAtomUID(Constants.RootObjectName, ParticleSystemAtoms.Select(x => x.uid).ToList());
 
@@ -144,7 +142,7 @@ namespace ICannotDie.Plugins.ParticleSystems
             }
 
             // Gets the Empty atom's rescaleObject
-            var rescaleObject = Utility.GetChildByName(atom.transform, Constants.RescaleObjectName);
+            var rescaleObject = atom.transform.GetChildByName(Constants.RescaleObjectName);
 
             if (rescaleObject != null)
             {
@@ -167,8 +165,6 @@ namespace ICannotDie.Plugins.ParticleSystems
 
         public IEnumerator RemoveAtomCoroutine(string uid)
         {
-            Utility.LogMessage("Removing Atom");
-
             // Get atom to remove by uid
             var _atomToRemove = SuperController.singleton.GetAtomByUid(uid);
 
@@ -197,7 +193,7 @@ namespace ICannotDie.Plugins.ParticleSystems
 
             if (_particleEditorScript.ParticleSystemManager.CurrentAtom == atom)
             {
-                nextAtom = Utility.GetAtomBefore(atom, ParticleSystemAtoms);
+                nextAtom = ParticleSystemAtoms.GetAtomBefore(atom);
             }
 
             // Remove the atom from the local list
@@ -207,8 +203,6 @@ namespace ICannotDie.Plugins.ParticleSystems
             FindParticleSystems();
             SetCurrentAtom(nextAtom);
             _particleEditorScript.UiManager.BuildUI();
-
-            Utility.LogMessage("Removed Atom");
         }
 
         public void FindParticleSystems(bool findAll = false)
@@ -227,8 +221,6 @@ namespace ICannotDie.Plugins.ParticleSystems
                 // Finds active particle systems, not those that are disabled or inside assetbundles
                 foundParticleSystems = _particleEditorScript.FindParticleSystems();
             }
-
-            Utility.LogMessage($"Found {foundParticleSystems.Count} particle systems");
 
             foreach (var particleSystem in foundParticleSystems)
             {
@@ -251,8 +243,10 @@ namespace ICannotDie.Plugins.ParticleSystems
         {
             Texture2D texture2D = TextureLoader.LoadTexture(texturePath);
 
-            var material = new Material(Shader.Find(shaderName));
-            material.mainTexture = (Texture)texture2D;
+            var material = new Material(Shader.Find(shaderName))
+            {
+                mainTexture = texture2D
+            };
 
             return material;
         }

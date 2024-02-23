@@ -7,12 +7,14 @@ namespace ICannotDie.Plugins.UI
 {
     public class UIManager : JSONStorable
     {
-        private ParticleSystemEditor _particleSystemEditor;
-        private ParticleSystemAtomEditor _particleSystemAtomEditor;
-        private ParticleSystemRendererEditor _particleSystemRendererEditor;
-        private MainModuleEditor _mainModuleEditor;
-        private List<EditorBase> _editors = new List<EditorBase>();
-        private ParticleEditor _particleEditor;
+        private readonly ParticleSystemAtomEditor _particleSystemAtomEditor;
+        private readonly ParticleSystemEditor _particleSystemEditor;
+        private readonly MainModuleEditor _mainModuleEditor;
+        private readonly ParticleSystemRendererEditor _particleSystemRendererEditor;
+        private readonly EmissionModuleEditor _emissionModuleEditor;
+
+        private readonly List<EditorBase> _editors = new List<EditorBase>();
+        private readonly ParticleEditor _particleEditor;
 
         public UIManager(ParticleEditor particleEditor)
         {
@@ -29,6 +31,9 @@ namespace ICannotDie.Plugins.UI
 
             _particleSystemRendererEditor = new ParticleSystemRendererEditor(_particleEditor, this);
             _editors.Add(_particleSystemRendererEditor);
+
+            _emissionModuleEditor = new EmissionModuleEditor(_particleEditor, this);
+            _editors.Add(_emissionModuleEditor);
         }
 
         public void RegisterStorables()

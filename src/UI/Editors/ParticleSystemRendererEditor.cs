@@ -60,12 +60,12 @@ namespace ICannotDie.Plugins.UI.Editors
             });
         }
 
-        public override void DeregisterStorables()
+        public override void RegisterStorables()
         {
 
         }
 
-        public override void RegisterStorables()
+        public override void DeregisterStorables()
         {
 
         }

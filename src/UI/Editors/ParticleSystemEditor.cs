@@ -23,15 +23,9 @@ namespace ICannotDie.Plugins.UI.Editors
 
         public override void Build()
         {
-            ParticleSystemLabel = CreateLabel("particleSystemLabel", "Particle System", true);
+            ParticleSystemLabel = CreateLabel("ParticleSystemLabel", "Particle System", true);
             _particleEditorScript.CreateToggle(IsPlaying, true);
             _particleEditorScript.CreateToggle(IsStopped, true);
-        }
-
-        public override void DeregisterStorables()
-        {
-            _particleEditorScript.UiManager.DeregisterBool(IsPlaying);
-            _particleEditorScript.UiManager.DeregisterBool(IsStopped);
         }
 
         public override void RegisterStorables()
@@ -86,6 +80,12 @@ namespace ICannotDie.Plugins.UI.Editors
 
             _particleEditorScript.RegisterBool(IsStopped);
 
+        }
+
+        public override void DeregisterStorables()
+        {
+            _particleEditorScript.UiManager.DeregisterBool(IsPlaying);
+            _particleEditorScript.UiManager.DeregisterBool(IsStopped);
         }
     }
 }

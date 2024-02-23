@@ -31,9 +31,7 @@ namespace ICannotDie.Plugins.UI.Editors
 
         public override void Build()
         {
-            Utility.LogMessage("ParticleSystemAtomEditor.Build called");
-
-            ParticleSystemAtomsLabel = CreateLabel("particleSystemAtomsLabel", "Particle System Atoms", false);
+            ParticleSystemAtomsLabel = CreateLabel("ParticleSystemAtomsLabel", "Particle System Atoms", false);
 
             // Add Particle System Button
             AddParticleSystemButton = _particleEditorScript.CreateButton("Add Particle System");
@@ -81,11 +79,6 @@ namespace ICannotDie.Plugins.UI.Editors
             });
         }
 
-        public override void DeregisterStorables()
-        {
-            _particleEditorScript.DeregisterStringChooser(ParticleSystemChooser);
-        }
-
         public override void RegisterStorables()
         {
             ParticleSystemChooser = new JSONStorableStringChooser
@@ -98,6 +91,11 @@ namespace ICannotDie.Plugins.UI.Editors
             );
 
             _particleEditorScript.RegisterStringChooser(ParticleSystemChooser);
+        }
+
+        public override void DeregisterStorables()
+        {
+            _particleEditorScript.DeregisterStringChooser(ParticleSystemChooser);
         }
     }
 }

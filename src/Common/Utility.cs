@@ -1,8 +1,6 @@
-using ICannotDie.Plugins.Common.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace ICannotDie.Plugins.Common
 {
@@ -10,7 +8,7 @@ namespace ICannotDie.Plugins.Common
     {
         public static void LogError(params object[] args) => SuperController.LogError(Format(args));
         public static void LogMessage(params object[] args) => SuperController.LogMessage(Format(args));
-        public static void LogForDebug(bool enableDebug = false, params string[] args)
+        public static void LogForDebug(bool enableDebug = false, params object[] args)
         {
             if (enableDebug) LogMessage(args);
         }
@@ -42,37 +40,6 @@ namespace ICannotDie.Plugins.Common
         }
 
         /// <summary>
-        /// Get the atom before the specified one in the list 
-        /// Circular - if the first atom in list is specified, this will return the last atom in the list
-        /// </summary>
-        /// <param name="atom">The atom whose position we will start at</param>
-        /// <param name="list">The list of atoms to check against</param>
-        /// <returns>An atom in the specified list that appears immediately before the specified atom, or the last atom in the list if the first was specified</returns>
-        public static Atom GetAtomBefore(Atom atom, List<Atom> list)
-        {
-            return list
-            .TakeWhile(x => x.UidAsInt() != atom.UidAsInt())
-            .DefaultIfEmpty(list.Any() ? list[list.Count - 1] : null)
-            .LastOrDefault();
-        }
-
-        /// <summary>
-        /// Get the atom after the specified one in the list 
-        /// Circular - if the last atom in list is specified, this will return the first atom in the list
-        /// </summary>
-        /// <param name="atom">The atom whose position we will start at</param>
-        /// <param name="list">The list of atoms to check against</param>
-        /// <returns>An atom in the specified list that appears immediately after the specified atom, or the first atom in the list if the last was specified</returns>
-        public static Atom GetAtomAfter(Atom atom, List<Atom> list)
-        {
-            return list
-            .SkipWhile(x => x.UidAsInt() != atom.UidAsInt())
-            .Skip(1)
-            .DefaultIfEmpty(list.Any() ? list[0] : null)
-            .FirstOrDefault();
-        }
-
-        /// <summary>
         /// Gets a random float between uint.MaxValue and -uint.MaxValue
         /// </summary>
         /// <returns>A float between uint.MaxValue and -uint.MaxValue</returns>
@@ -92,31 +59,5 @@ namespace ICannotDie.Plugins.Common
             return (float)fullRange;
         }
 
-        /// <summary>
-        /// Recursively search transforms for a child with a specifiec name
-        /// </summary>
-        /// <param name="parent">The transform to begin searching from</param>
-        /// <param name="name">The name to search for</param>
-        /// <returns>The first transform with the specified name, or null if none are found</returns>
-        public static Transform GetChildByName(Transform parent, string name)
-        {
-            foreach (Transform child in parent)
-            {
-                if (child.name == name)
-                {
-                    return child;
-                }
-                else
-                {
-                    Transform grandchild = GetChildByName(child, name);
-                    if (grandchild != null)
-                    {
-                        return grandchild;
-                    }
-                }
-            }
-
-            return null;
-        }
     }
 }

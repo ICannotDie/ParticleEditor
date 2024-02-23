@@ -20,6 +20,39 @@ namespace ICannotDie.Plugins.Common
         public const string ParticlesAdditive = "Particles/Additive";
     }
 
+    public static class SimulationSpaceOptions
+    {
+        public const string Local = "Local";
+        public const string World = "World";
+    }
+
+    public static class DeltaTimeOptions
+    {
+        public const string Scaled = "Scaled";
+        public const string Unscaled = "Unscaled";
+    }
+
+    public static class ScalingModeOptions
+    {
+        public const string Hierarchy = "Hierarchy";
+        public const string Local = "Local";
+        public const string Shape = "Shape";
+    }
+
+    public static class EmitterVelocityModeOptions
+    {
+        public const string Transform = "Transform";
+        public const string Rigidbody = "Rigidbody";
+    }
+
+    public static class ParticleSystemStopActionOptions
+    {
+        public const string None = "None";
+        public const string Disable = "Disable";
+        public const string Destroy = "Destroy";
+        public const string Callback = "Callback";
+    }
+
     public static class ParticleSystemAtomEditorDefaults
     {
 
@@ -54,9 +87,9 @@ namespace ICannotDie.Plugins.Common
         public const float StartRotation = 0.0f;
         public const float StartRotationMultiplier = 0.0f;
         public const float FlipRotation = 0.0f;
-        public const float StartColorH = 255f;
-        public const float StartColorS = 255f;
-        public const float StartColorV = 255f;
+        public const float StartColorH = 0.0f;
+        public const float StartColorS = 0.0f;
+        public const float StartColorV = 100.0f;
         public const float GravityModifier = 0.0f;
         public const float GravityModifierMultiplier = 0.0f;
         public const float SimulationSpeed = 1.0f;
@@ -77,9 +110,20 @@ namespace ICannotDie.Plugins.Common
             return startColor;
         }
     }
+
     public static class ParticleSystemRendererEditorDefaults
     {
 
+    }
+
+    public static class EmissionModuleEditorDefaults
+    {
+        public const bool Enabled = true;
+        public const float RateOverDistance = 0.0f;
+        public const float RateOverDistanceMultiplier = 1.0f;
+        public const float RateOverTime = 10.0f;
+        public const float RateOverTimeMultiplier = 1.0f;
+        public const float BurstCount = 0.0f;
     }
 
 }

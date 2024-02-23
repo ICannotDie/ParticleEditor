@@ -91,7 +91,7 @@ namespace ICannotDie.Plugins.UI.Editors
 
         public override void Build()
         {
-            MainLabel = CreateLabel("mainLabel", "Main", true);
+            MainLabel = CreateLabel("MainLabel", "Main", true);
 
             _particleEditorScript.CreateToggle(IsLooping, true);
 
@@ -653,7 +653,7 @@ namespace ICannotDie.Plugins.UI.Editors
             SimulationSpace = new JSONStorableStringChooser
             (
                 "SimulationSpace",
-                new List<string>() { "Local", "World" },
+                new List<string>() { SimulationSpaceOptions.Local, SimulationSpaceOptions.World },
                 _particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null
                     ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.simulationSpace.ToString()
                     : ParticleSystemSimulationSpace.Local.ToString(),
@@ -663,7 +663,7 @@ namespace ICannotDie.Plugins.UI.Editors
                     if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
                         var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
-                        main.simulationSpace = selectedSimulationSpace == "Local" ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World;
+                        main.simulationSpace = selectedSimulationSpace == SimulationSpaceOptions.Local ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World;
                     }
                 }
             );
@@ -691,17 +691,17 @@ namespace ICannotDie.Plugins.UI.Editors
             DeltaTime = new JSONStorableStringChooser
             (
                 "DeltaTime",
-                new List<string>() { "Scaled", "Unscaled" },
+                new List<string>() { DeltaTimeOptions.Scaled, DeltaTimeOptions.Unscaled },
                 _particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null
-                    ? (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.useUnscaledTime ? "Unscaled" : "Scaled")
-                    : "Scaled",
-                "Delta Time",
+                    ? (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.useUnscaledTime ? DeltaTimeOptions.Unscaled : DeltaTimeOptions.Scaled)
+                    : DeltaTimeOptions.Scaled,
+                DeltaTimeOptions.Unscaled,
                 (selectedDeltaTime) =>
                 {
                     if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
                         var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
-                        main.useUnscaledTime = selectedDeltaTime != "Scaled";
+                        main.useUnscaledTime = selectedDeltaTime != DeltaTimeOptions.Scaled;
                     }
                 }
             );
@@ -710,7 +710,7 @@ namespace ICannotDie.Plugins.UI.Editors
             ScalingMode = new JSONStorableStringChooser
             (
                 "ScalingMode",
-                new List<string>() { "Hierarchy", "Local", "Shape" },
+                new List<string>() { ScalingModeOptions.Hierarchy, ScalingModeOptions.Local, ScalingModeOptions.Shape },
                 _particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null
                     ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.scalingMode.ToString()
                     : ParticleSystemScalingMode.Local.ToString(),
@@ -723,13 +723,13 @@ namespace ICannotDie.Plugins.UI.Editors
 
                         switch (selectedScalingMode)
                         {
-                            case "Hierarchy":
+                            case ScalingModeOptions.Hierarchy:
                                 main.scalingMode = ParticleSystemScalingMode.Hierarchy;
                                 break;
-                            case "Local":
+                            case ScalingModeOptions.Local:
                                 main.scalingMode = ParticleSystemScalingMode.Local;
                                 break;
-                            case "Shape":
+                            case ScalingModeOptions.Shape:
                                 main.scalingMode = ParticleSystemScalingMode.Shape;
                                 break;
                         }
@@ -757,17 +757,17 @@ namespace ICannotDie.Plugins.UI.Editors
             EmitterVelocityMode = new JSONStorableStringChooser
             (
                 "EmitterVelocityMode",
-                new List<string>() { "Transform", "Rigidbody" },
+                new List<string>() { EmitterVelocityModeOptions.Transform, EmitterVelocityModeOptions.Rigidbody },
                 _particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null
                     ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.emitterVelocityMode.ToString()
-                    : ParticleSystemEmitterVelocityMode.Transform.ToString(),
+                    : ParticleSystemEmitterVelocityMode.Rigidbody.ToString(),
                 "Emitter Velocity Mode",
                 (selectedEmitterVelocityMode) =>
                 {
                     if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
                     {
                         var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
-                        main.emitterVelocityMode = selectedEmitterVelocityMode == "Transform" ? ParticleSystemEmitterVelocityMode.Transform : ParticleSystemEmitterVelocityMode.Rigidbody;
+                        main.emitterVelocityMode = selectedEmitterVelocityMode == EmitterVelocityModeOptions.Rigidbody ? ParticleSystemEmitterVelocityMode.Rigidbody : ParticleSystemEmitterVelocityMode.Transform;
                     }
                 }
             );
@@ -835,7 +835,7 @@ namespace ICannotDie.Plugins.UI.Editors
             StopAction = new JSONStorableStringChooser
             (
                 "StopAction",
-                new List<string>() { "None", "Disable", "Destroy", "Callback" },
+                new List<string>() { ParticleSystemStopActionOptions.None, ParticleSystemStopActionOptions.Disable, ParticleSystemStopActionOptions.Destroy, ParticleSystemStopActionOptions.Callback },
                 _particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null
                     ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.stopAction.ToString()
                     : ParticleSystemStopAction.None.ToString(),
@@ -848,16 +848,16 @@ namespace ICannotDie.Plugins.UI.Editors
 
                         switch (selectedStopAction)
                         {
-                            case "None":
+                            case ParticleSystemStopActionOptions.None:
                                 main.stopAction = ParticleSystemStopAction.None;
                                 break;
-                            case "Disable":
+                            case ParticleSystemStopActionOptions.Disable:
                                 main.stopAction = ParticleSystemStopAction.Disable;
                                 break;
-                            case "Destroy":
+                            case ParticleSystemStopActionOptions.Destroy:
                                 main.stopAction = ParticleSystemStopAction.Destroy;
                                 break;
-                            case "Callback":
+                            case ParticleSystemStopActionOptions.Callback:
                                 main.stopAction = ParticleSystemStopAction.Callback;
                                 break;
                         }

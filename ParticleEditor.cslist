@@ -3,9 +3,12 @@ src\ParticleSystems\ParticleSystemManager.cs
 src\Common\Constants.cs
 src\Common\Utility.cs
 src\Common\Extensions\AtomExtensions.cs
+src\Common\Extensions\TransformExtensions.cs
+src\Common\Extensions\ListExtensions.cs
 src\UI\UIManager.cs
 src\UI\Editors\ParticleSystemEditor.cs
 src\UI\Editors\EditorBase.cs
 src\UI\Editors\MainModuleEditor.cs
 src\UI\Editors\ParticleSystemAtomEditor.cs
 src\UI\Editors\ParticleSystemRendererEditor.cs
+src\UI\Editors\EmissionModuleEditor.cs
