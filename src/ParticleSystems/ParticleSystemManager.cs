@@ -117,10 +117,16 @@ namespace ICannotDie.Plugins.ParticleSystems
             // Find, Set & Build
             FindParticleSystems();
             SetCurrentAtom(atom);
+            SetParticleSystemRendererDefaults(CurrentParticleSystemRenderer);
 
             _particleEditor.UIManager.BuildUI();
 
             Utility.LogMessage("Created Atom");
+        }
+
+        private void SetParticleSystemRendererDefaults(ParticleSystemRenderer currentParticleSystemRenderer)
+        {
+            CurrentParticleSystemRenderer.material = ParticleSystemRendererEditorDefaults.Material(_particleEditor);
         }
 
         private void CreateAndLoadPlugin(Atom atom)
@@ -146,7 +152,35 @@ namespace ICannotDie.Plugins.ParticleSystems
             {
                 // Add a ParticleSystem to the rescaleObject
                 ParticleSystemAtoms.Add(atom);
-                rescaleObject.transform.gameObject.AddComponent<ParticleSystem>();
+                //rescaleObject.transform.gameObject.AddComponent<ParticleSystem>();
+
+
+
+
+                // Add a ParticleSystem to the rescaleObject
+                ParticleSystemAtoms.Add(atom);
+
+                ParticleSystem particleSystem = rescaleObject.transform.gameObject.AddComponent<ParticleSystem>() as ParticleSystem;
+
+                Defer.UntilNextFrame(() =>
+                {
+                    if (particleSystem)
+                    {
+                        Utility.LogMessage(nameof(ParticleSystemManager), nameof(AddParticleSystemToAtom), "particleSystem found");
+
+                        ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>() as ParticleSystemRenderer;
+
+                        if (renderer)
+                        {
+                            Utility.LogMessage(nameof(ParticleSystemManager), nameof(AddParticleSystemToAtom), "renderer found");
+
+                            // Set the default material of the renderer
+                            renderer.material = ParticleSystemRendererEditorDefaults.Material(_particleEditor);
+
+                            Utility.LogMessage(nameof(ParticleSystemManager), nameof(AddParticleSystemToAtom), "renderer default material set");
+                        }
+                    }
+                });
             }
         }
 

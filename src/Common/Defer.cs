@@ -45,5 +45,42 @@ namespace ICannotDie.Plugins.Common
 
             yield return predicate(item);
         }
+
+        public static void UntilLoadingComplete(Action action)
+        {
+            StartCoroutine(UntilLoadingCompleteEnumerator(action));
+        }
+
+        public static IEnumerator UntilLoadingCompleteEnumerator(Action action)
+        {
+            if (action == null)
+            {
+                yield break;
+            }
+
+            while (SuperController.singleton.isLoading)
+            {
+                yield return null;
+            }
+
+            action();
+        }
+
+        public static void UntilLoadingComplete<T>(Predicate<T> predicate, T item)
+        {
+            StartCoroutine(UntilLoadingCompleteEnumerator<T>(predicate, item));
+        }
+
+        public static IEnumerator UntilLoadingCompleteEnumerator<T>(Predicate<T> predicate, T item)
+        {
+            if (predicate == null)
+            {
+                yield break;
+            }
+
+            yield return new WaitForEndOfFrame();
+
+            yield return predicate(item);
+        }
     }
 }

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace ICannotDie.Plugins.Common
 {
 
@@ -119,7 +121,11 @@ namespace ICannotDie.Plugins.Common
 
     public static class ParticleSystemRendererEditorDefaults
     {
-
+        public static Material Material(ParticleEditor particleEditor)
+        {
+            var texturePath = $"{Utility.GetPackagePath(particleEditor)}{Constants.DefaultShaderTextureFolderPath}/{Constants.DefaultShaderTextureName}";
+            return Utility.GetMaterial(ShaderNames.ParticlesAdditive, texturePath);
+        }
     }
 
     public static class EmissionModuleEditorDefaults

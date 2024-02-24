@@ -66,7 +66,7 @@ namespace ICannotDie.Plugins.UI.Editors
                 _particleEditor.ParticleSystemManager.CurrentAtom
                     ? _particleEditor.ParticleSystemManager.CurrentAtom.uid
                     : null,
-                "Particle Systems 2",
+                "Particle Systems",
                 (selectedParticleSystemUid) =>
                 {
                     _particleEditor.ParticleSystemManager.SetCurrentAtom(selectedParticleSystemUid);

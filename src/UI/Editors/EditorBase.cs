@@ -34,21 +34,41 @@ namespace ICannotDie.Plugins.UI.Editors
             return jsonStorableString;
         }
 
+        protected JSONStorableString CreateHeadingLabel(string id, string text, bool isRightSide = false)
+        {
+            var jsonStorableString = new JSONStorableString(id, text);
+            var uiDynamic = _particleEditor.CreateTextField(jsonStorableString, isRightSide);
+            uiDynamic.height = 48f;
+            uiDynamic.backgroundColor = Color.clear;
+            uiDynamic.textColor = Color.black;
+            uiDynamic.UItext.fontSize = 32;
+            uiDynamic.UItext.fontStyle = FontStyle.Bold;
+            uiDynamic.UItext.alignment = TextAnchor.LowerCenter;
+
+            var layoutElement = uiDynamic.GetComponent<LayoutElement>();
+            layoutElement.minHeight = 48f;
+            layoutElement.preferredHeight = 48f;
+
+            return jsonStorableString;
+        }
+
         protected JSONStorableString CreateUrlLabel(string id, string text, bool isRightSide = false)
         {
             var jsonStorableString = new JSONStorableString(id, text);
             var uiDynamic = _particleEditor.CreateTextField(jsonStorableString, isRightSide);
-            uiDynamic.height = 12;
+            uiDynamic.height = 36f;
             uiDynamic.backgroundColor = Color.clear;
             uiDynamic.textColor = Color.black;
-            uiDynamic.UItext.fontSize = 24;
-            uiDynamic.UItext.alignment = TextAnchor.LowerCenter;
+            uiDynamic.UItext.fontSize = 20;
+            uiDynamic.UItext.alignment = TextAnchor.UpperLeft;
+            uiDynamic.UItext.resizeTextForBestFit = true;
 
             var layoutElement = uiDynamic.GetComponent<LayoutElement>();
-            layoutElement.minHeight = 0f;
-            layoutElement.preferredHeight = 42f;
+            layoutElement.minHeight = 24f;
+            layoutElement.preferredHeight = 36f;
 
             return jsonStorableString;
         }
+
     }
 }

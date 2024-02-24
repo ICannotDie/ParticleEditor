@@ -9,6 +9,7 @@ namespace ICannotDie.Plugins.UI.Editors
         public JSONStorableString RendererLabel;
         public UIDynamicButton SelectParticleTextureButton;
         public JSONStorableString MaterialTexturePath;
+        public JSONStorableString MaterialTextureHeadingLabel;
         public JSONStorableString MaterialTextureLabel;
 
         private readonly ParticleEditor _particleEditor;
@@ -23,6 +24,7 @@ namespace ICannotDie.Plugins.UI.Editors
         public override void Clear()
         {
             _particleEditor.RemoveTextField(RendererLabel);
+            _particleEditor.RemoveTextField(MaterialTextureHeadingLabel);
             _particleEditor.RemoveTextField(MaterialTextureLabel);
             _particleEditor.RemoveButton(SelectParticleTextureButton);
         }
@@ -31,14 +33,15 @@ namespace ICannotDie.Plugins.UI.Editors
         {
             //nameof(ParticleSystemRendererEditor)
             //    .Log(Has.EnteredMethod, "Build")
-            //    .Log(With.ValueOf, "ParticleEditorScript", $"Is Null: {(ParticleEditorScript == null).ToString()}")
-            //    .WriteLog(ParticleEditorScript.EnableDebug);
+            //    .Log(With.ValueOf, "_particleEditor", $"Is Null: {(_particleEditor == null).ToString()}")
+            //    .WriteLog(_particleEditor.EnableDebug);
 
             // Renderer Label
             RendererLabel = CreateLabel("RendererLabel", "Renderer", true);
 
             // Material Texture Label
-            MaterialTextureLabel = CreateUrlLabel("MaterialTextureLabel", $"Material Texture: {MaterialTexturePath.val}", true);
+            MaterialTextureHeadingLabel = CreateHeadingLabel("MaterialTextureHeadingLabel", $"Material Texture", true);
+            MaterialTextureLabel = CreateUrlLabel("MaterialTextureLabel", $"{MaterialTexturePath.val}", true);
 
             SelectParticleTextureButton = _particleEditor.CreateButton("Select Particle Texture", true);
             SelectParticleTextureButton.button.onClick.AddListener(() =>
@@ -56,6 +59,7 @@ namespace ICannotDie.Plugins.UI.Editors
                         {
                             MaterialTexturePath.SetVal(path);
                             SetMaterial(ShaderNames.ParticlesAdditive, path);
+                            _particleEditor.UIManager.BuildUI();
                         }
                     },
                     filter: Constants.ShaderMaterialTextureAllowedFileTypes,
@@ -72,7 +76,6 @@ namespace ICannotDie.Plugins.UI.Editors
 
             });
 
-
         }
 
         public override void RegisterStorables()
@@ -84,10 +87,19 @@ namespace ICannotDie.Plugins.UI.Editors
                 string.Empty,
                 (selectedMaterialTexturePath) =>
                 {
-                    SetMaterial(ShaderNames.ParticlesAdditive, selectedMaterialTexturePath);
+                    if (MaterialTexturePath?.val != null)
+                    {
+                        SetMaterial(ShaderNames.ParticlesAdditive, MaterialTexturePath.val);
+                    }
+                    else
+                    {
+                        SetMaterial(ShaderNames.ParticlesAdditive, selectedMaterialTexturePath);
+                    }
                 }
             );
             MaterialTexturePath.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystemRenderer ? _particleEditor.ParticleSystemManager.CurrentParticleSystemRenderer.material.mainTexture.name : GetFullTexturePath());
+
+            Utility.LogMessage(nameof(ParticleSystemRendererEditor), nameof(RegisterStorables), nameof(MaterialTexturePath), " set to ", MaterialTexturePath.val);
 
             _particleEditor.RegisterString(MaterialTexturePath);
         }

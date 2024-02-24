@@ -13,6 +13,7 @@ namespace ICannotDie.Plugins
         public UIManager UIManager { get; private set; }
         public ParticleSystemManager ParticleSystemManager { get; private set; }
         public bool EnableDebug { get; private set; } = true;
+        public bool DeferInit { get; private set; } = false;
 
         public override void Init()
         {
@@ -20,20 +21,23 @@ namespace ICannotDie.Plugins
 
             try
             {
-                UIManager = new UIManager(this);
-                ParticleSystemManager = new ParticleSystemManager(this);
-
-                ParticleSystemManager.Initialise();
-                UIManager.RegisterStorables();
-                UIManager.BuildUI();
-
-                //StartCoroutine(DeferredInit());
+                if (DeferInit)
+                {
+                    StartCoroutine(DeferredInit());
+                }
+                else
+                {
+                    CreateManagers(this);
+                    InitialiseManagers();
+                }
             }
             catch (Exception e)
             {
                 enabled = false;
                 Utility.LogError($"Init: {e}");
             }
+
+            IsInitialised = true;
         }
 
         public IEnumerator DeferredInit()
@@ -51,17 +55,25 @@ namespace ICannotDie.Plugins
                 yield return null;
             }
 
-            UIManager = new UIManager(this);
-            ParticleSystemManager = new ParticleSystemManager(this);
+            CreateManagers(this);
 
             yield return new WaitForEndOfFrame();
 
+            InitialiseManagers();
+        }
+
+        private void CreateManagers(ParticleEditor self)
+        {
+            UIManager = new UIManager(self);
+            ParticleSystemManager = new ParticleSystemManager(self);
+        }
+
+        private void InitialiseManagers()
+        {
             ParticleSystemManager.Initialise();
+            //UIManager.DeregisterStorables();
             UIManager.RegisterStorables();
             UIManager.BuildUI();
-
-            IsInitialised = true;
-
         }
 
     }
