@@ -15,56 +15,58 @@ namespace ICannotDie.Plugins.UI
         private ParticleSystemRendererEditor _particleSystemRendererEditor;
         private EmissionModuleEditor _emissionModuleEditor;
 
-        private readonly Dictionary<System.Type, IEditor> _editors = new Dictionary<System.Type, IEditor>();
+        public readonly Dictionary<System.Type, IEditor> Editors = new Dictionary<System.Type, IEditor>();
 
         public UIManager(ParticleEditor particleEditor)
         {
             _particleEditor = particleEditor;
 
             _particleSystemAtomEditor = new ParticleSystemAtomEditor(_particleEditor);
-            _editors.Add(typeof(ParticleSystemAtomEditor), _particleSystemAtomEditor);
+            Editors.Add(typeof(ParticleSystemAtomEditor), _particleSystemAtomEditor);
 
             _particleSystemEditor = new ParticleSystemEditor(_particleEditor);
-            _editors.Add(typeof(ParticleSystemEditor), _particleSystemEditor);
+            Editors.Add(typeof(ParticleSystemEditor), _particleSystemEditor);
 
             _mainModuleEditor = new MainModuleEditor(_particleEditor);
-            _editors.Add(typeof(MainModuleEditor), _mainModuleEditor);
+            Editors.Add(typeof(MainModuleEditor), _mainModuleEditor);
 
             _particleSystemRendererEditor = new ParticleSystemRendererEditor(_particleEditor);
-            _editors.Add(typeof(ParticleSystemRendererEditor), _particleSystemRendererEditor);
+            Editors.Add(typeof(ParticleSystemRendererEditor), _particleSystemRendererEditor);
 
             _emissionModuleEditor = new EmissionModuleEditor(_particleEditor);
-            _editors.Add(typeof(EmissionModuleEditor), _emissionModuleEditor);
+            Editors.Add(typeof(EmissionModuleEditor), _emissionModuleEditor);
         }
 
         private void Destroy()
         {
-            Utility.LogMessage(nameof(UIManager), nameof(Destroy), "editorsBefore", _editors.Count);
-            _editors.ToList().ForEach(editor => editor.Value.Clear());
-            _editors.ToList().ForEach(editor => editor.Value.DeregisterStorables());
-            Utility.LogMessage(nameof(UIManager), nameof(Destroy), "editorsAfter", _editors.Count);
+            Utility.LogMessage(nameof(UIManager), nameof(Destroy), "editorsBefore", Editors.Count);
+            Editors.ToList().ForEach(editor => editor.Value.Clear());
+            Editors.ToList().ForEach(editor => editor.Value.DeregisterStorables());
+            Utility.LogMessage(nameof(UIManager), nameof(Destroy), "editorsAfter", Editors.Count);
         }
 
         #region UI
 
         public void ClearUI()
         {
-            _editors.ToList().ForEach(editor => editor.Value.Clear());
+            Editors.ToList().ForEach(editor => editor.Value.Clear());
         }
 
         public void BuildUI()
         {
             ClearUI();
 
-            if (_particleEditor.ParticleSystemManager.CurrentAtom)
+            if (_particleEditor?.ParticleSystemManager?.CurrentAtom != null)
             {
                 // If we have a current atom, build all editors
-                _editors.ToList().ForEach(editor => editor.Value.Build());
+                Utility.LogMessage(nameof(UIManager), nameof(BuildUI), "building all editors: ", Editors.Count);
+                Editors.ToList().ForEach(editor => editor.Value.Build());
             }
             else
             {
                 // If we don't have a current atom, only build the atom editor
-                _editors.Single(x => x.Value is ParticleSystemAtomEditor).Value.Build();
+                Utility.LogMessage(nameof(UIManager), nameof(BuildUI), "building atom editor only: ", Editors.Count);
+                Editors.Single(x => x.Value is ParticleSystemAtomEditor).Value.Build();
             }
         }
 
@@ -74,12 +76,12 @@ namespace ICannotDie.Plugins.UI
 
         public void RegisterStorables()
         {
-            _editors.ToList().ForEach(editor => editor.Value.RegisterStorables());
+            Editors.ToList().ForEach(editor => editor.Value.RegisterStorables());
         }
 
         public void DeregisterStorables()
         {
-            _editors.ToList().ForEach(editor => editor.Value.DeregisterStorables());
+            Editors.ToList().ForEach(editor => editor.Value.DeregisterStorables());
         }
         public void Deregister(JSONStorableBool storable)
         {

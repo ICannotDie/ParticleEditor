@@ -31,12 +31,21 @@ namespace ICannotDie.Plugins.ParticleSystems
             {
                 if (_particleEditor?.containingAtom?.GetComponentInChildren<ParticleSystem>())
                 {
+                    // If our containing atom has a particle system component, set that as our current atom 
+                    _particleEditor.HasChildParticleSystem = true;
                     SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault(atom => atom.uid == _particleEditor.containingAtom.uid));
                 }
                 else
                 {
+                    // If our containing atom has no particle system component, set the first in the list as our current atom
+                    _particleEditor.HasChildParticleSystem = false;
                     SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault());
                 }
+            }
+            else
+            {
+                // If we couldn't find any particle systems, set our current atom to null
+                SetCurrentAtom((Atom)null);
             }
 
             RegisterEventHandlers();
@@ -108,8 +117,18 @@ namespace ICannotDie.Plugins.ParticleSystems
                 throw new NullReferenceException("Atom did not spawn");
             }
 
-            // Load a ParticleEditor plugin on the atom
-            //CreateAndLoadPlugin(atom);
+            // If CreatePluginOnAdd is enabled, load a ParticleEditor plugin on the atom we create
+            //IEditor value;
+            //var editor = _particleEditor.UIManager.Editors.TryGetValue(typeof(ParticleSystemAtomEditor), out value);
+            //if (value != null && value as ParticleSystemAtomEditor != null)
+            //{
+            //    ParticleSystemAtomEditor particleSystemAtomEditor = value as ParticleSystemAtomEditor;
+            //    var createPluginOnAdd = particleSystemAtomEditor.CreatePluginOnAdd;
+            //    if (createPluginOnAdd.val)
+            //    {
+            //        CreateAndLoadPlugin(atom);
+            //    }
+            //}
 
             // Add the particle system to the atom
             AddParticleSystemToAtom(atom);
@@ -150,13 +169,6 @@ namespace ICannotDie.Plugins.ParticleSystems
 
             if (rescaleObject != null)
             {
-                // Add a ParticleSystem to the rescaleObject
-                ParticleSystemAtoms.Add(atom);
-                //rescaleObject.transform.gameObject.AddComponent<ParticleSystem>();
-
-
-
-
                 // Add a ParticleSystem to the rescaleObject
                 ParticleSystemAtoms.Add(atom);
 

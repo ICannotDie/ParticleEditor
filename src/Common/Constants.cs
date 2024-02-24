@@ -63,7 +63,7 @@ namespace ICannotDie.Plugins.Common
 
     public static class ParticleSystemAtomEditorDefaults
     {
-
+        public const bool CreatePluginOnAdd = false;
     }
 
     public static class ParticleSystemEditorDefaults
