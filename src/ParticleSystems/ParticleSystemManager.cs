@@ -194,7 +194,14 @@ namespace ICannotDie.Plugins.ParticleSystems
             // Remove the atom from the local list
             ParticleSystemAtoms.Remove(atom);
 
-            SuperController.singleton.StartCoroutine(WaitUntilEndOfFrameCoroutine(nextAtom));
+            //SuperController.singleton.StartCoroutine(WaitUntilEndOfFrameCoroutine(nextAtom));
+            Defer.UntilNextFrame(() =>
+            {
+                // Find, Set & Build
+                FindParticleSystems();
+                SetCurrentAtom(nextAtom);
+                _particleEditor.UIManager.BuildUI();
+            });
 
             Utility.LogMessage(nameof(RemoveAndRebuild), "complete UID:", nextAtom.uid);
         }

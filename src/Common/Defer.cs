@@ -5,10 +5,19 @@ using UnityEngine;
 
 namespace ICannotDie.Plugins.Common
 {
-
     public static class Defer
     {
-        public static IEnumerator UntilNextFrame(Action action)
+        public static void StartCoroutine(IEnumerator coRoutine)
+        {
+            SuperController.singleton.StartCoroutine(coRoutine);
+        }
+
+        public static void UntilNextFrame(Action action)
+        {
+            StartCoroutine(UntilNextFrameEnumerator(action));
+        }
+
+        public static IEnumerator UntilNextFrameEnumerator(Action action)
         {
             if (action == null)
             {
@@ -20,7 +29,12 @@ namespace ICannotDie.Plugins.Common
             action();
         }
 
-        public static IEnumerator UntilNextFrame<T>(Predicate<T> predicate, T item)
+        public static void UntilNextFrame<T>(Predicate<T> predicate, T item)
+        {
+            StartCoroutine(UntilNextFrameEnumerator<T>(predicate, item));
+        }
+
+        public static IEnumerator UntilNextFrameEnumerator<T>(Predicate<T> predicate, T item)
         {
             if (predicate == null)
             {
