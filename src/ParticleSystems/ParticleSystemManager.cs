@@ -64,8 +64,10 @@ namespace ICannotDie.Plugins.ParticleSystems
 
         private void OnAtomRemoved(Atom atom)
         {
+            Utility.LogMessage(nameof(OnAtomRemoved), "UID:", atom.uid);
             if (ParticleSystemAtoms.Any() && ParticleSystemAtoms.Contains(atom))
             {
+                Utility.LogMessage(nameof(OnAtomRemoved), "UID:", atom.uid, "is in", nameof(ParticleSystemAtoms), ". Removing.");
                 RemoveAndRebuild(atom);
             }
         }
@@ -172,17 +174,35 @@ namespace ICannotDie.Plugins.ParticleSystems
 
         private void RemoveAndRebuild(Atom atom)
         {
+            Utility.LogMessage(nameof(RemoveAndRebuild), "UID:", atom.uid);
+
             // Choose a new atom to be set as current, or set null
             // Do this before we change the list to ensure we select correctly
-            Atom nextAtom = _particleEditor.ParticleSystemManager.CurrentAtom;
+            Atom nextAtom = null;
 
-            if (_particleEditor.ParticleSystemManager.CurrentAtom == atom)
+            if (atom == _particleEditor.ParticleSystemManager.CurrentAtom)
             {
                 nextAtom = ParticleSystemAtoms.GetAtomBefore(atom);
             }
+            else
+            {
+                nextAtom = _particleEditor.ParticleSystemManager.CurrentAtom;
+            }
+
+            Utility.LogMessage(nameof(RemoveAndRebuild), "next atom UID:", nextAtom.uid);
 
             // Remove the atom from the local list
             ParticleSystemAtoms.Remove(atom);
+
+            SuperController.singleton.StartCoroutine(WaitUntilEndOfFrameCoroutine(nextAtom));
+
+            Utility.LogMessage(nameof(RemoveAndRebuild), "complete UID:", nextAtom.uid);
+        }
+
+        private IEnumerator WaitUntilEndOfFrameCoroutine(Atom nextAtom)
+        {
+            yield return new WaitForEndOfFrame();
+            Utility.LogMessage(nameof(RemoveAndRebuild), " deffered Find, Set & Build for nextAtom UID:", nextAtom.uid);
 
             // Find, Set & Build
             FindParticleSystems();
@@ -192,6 +212,8 @@ namespace ICannotDie.Plugins.ParticleSystems
 
         public void FindParticleSystems(bool findAll = false)
         {
+            Utility.LogMessage(nameof(FindParticleSystems), " findAll:", findAll);
+
             ParticleSystemAtoms.Clear();
 
             List<ParticleSystem> foundParticleSystems = new List<ParticleSystem>();
@@ -204,8 +226,10 @@ namespace ICannotDie.Plugins.ParticleSystems
             else
             {
                 // Finds active particle systems, not those that are disabled or inside assetbundles
-                foundParticleSystems = _particleEditor.FindParticleSystems();
+                foundParticleSystems = FindObjectsOfType<ParticleSystem>().ToList(); // _particleEditor.FindParticleSystems();
             }
+
+            Utility.LogMessage(nameof(FindParticleSystems), " foundParticleSystems:", foundParticleSystems.Count);
 
             foreach (var particleSystem in foundParticleSystems)
             {

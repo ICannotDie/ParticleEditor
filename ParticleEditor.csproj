@@ -87,6 +87,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\Common\Defer.cs" />
     <Compile Include="src\Common\Extensions\StringExtensions.cs" />
     <Compile Include="src\Common\Extensions\ListExtensions.cs" />
     <Compile Include="src\Common\Extensions\TransformExtensions.cs" />

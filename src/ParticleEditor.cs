@@ -3,7 +3,6 @@ using ICannotDie.Plugins.ParticleSystems;
 using ICannotDie.Plugins.UI;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ICannotDie.Plugins
@@ -64,8 +63,6 @@ namespace ICannotDie.Plugins
             IsInitialised = true;
 
         }
-
-        public List<ParticleSystem> FindParticleSystems() => FindObjectsOfType<ParticleSystem>().ToList();
 
     }
 }
