@@ -16,11 +16,11 @@ namespace ICannotDie.Plugins.ParticleSystems
         public List<Atom> ParticleSystemAtoms { get; private set; } = new List<Atom>();
         public List<string> ParticleSystemUids => ParticleSystemAtoms.Any() ? ParticleSystemAtoms.OrderBy(atom => atom.UidAsInt()).Select(atom => atom.uid).ToList() : new List<string>();
 
-        private ParticleEditor _particleEditorScript;
+        private ParticleEditor _particleEditor;
 
         public ParticleSystemManager(ParticleEditor particleEditor)
         {
-            _particleEditorScript = particleEditor;
+            _particleEditor = particleEditor;
         }
 
         public void Initialise()
@@ -29,16 +29,14 @@ namespace ICannotDie.Plugins.ParticleSystems
 
             if (ParticleSystemAtoms.Any())
             {
-                //if (_particleEditorScript?.containingAtom?.GetComponentInChildren<ParticleSystem>() != null)
-                //{
-                //    SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault(atom => atom.uid == _particleEditorScript.containingAtom.uid));
-                //}
-                //else
-                //{
-                //    SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault());
-                //}
-
-                SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault());
+                if (_particleEditor?.containingAtom?.GetComponentInChildren<ParticleSystem>())
+                {
+                    SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault(atom => atom.uid == _particleEditor.containingAtom.uid));
+                }
+                else
+                {
+                    SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault());
+                }
             }
 
             RegisterEventHandlers();
@@ -60,7 +58,7 @@ namespace ICannotDie.Plugins.ParticleSystems
 
             foreach (var atom in ParticleSystemAtoms)
             {
-                _particleEditorScript.StartCoroutine(RemoveAtomCoroutine(atom.uid));
+                _particleEditor.StartCoroutine(RemoveAtomCoroutine(atom.uid));
             }
         }
 
@@ -118,7 +116,7 @@ namespace ICannotDie.Plugins.ParticleSystems
             FindParticleSystems();
             SetCurrentAtom(atom);
 
-            _particleEditorScript.UiManager.BuildUI();
+            _particleEditor.UIManager.BuildUI();
 
             Utility.LogMessage("Created Atom");
         }
@@ -127,7 +125,7 @@ namespace ICannotDie.Plugins.ParticleSystems
         {
             var pluginManager = atom.GetStorableByID(Constants.PluginManagerName) as MVRPluginManager;
             var plugin = pluginManager.CreatePlugin();
-            var pluginPath = Utility.GetPluginPath(_particleEditorScript);
+            var pluginPath = Utility.GetPluginPath(_particleEditor);
 
             plugin.pluginURLJSON.val = $"{pluginPath}//{Constants.PluginCSListFilename}";
         }
@@ -176,9 +174,9 @@ namespace ICannotDie.Plugins.ParticleSystems
         {
             // Choose a new atom to be set as current, or set null
             // Do this before we change the list to ensure we select correctly
-            Atom nextAtom = _particleEditorScript.ParticleSystemManager.CurrentAtom;
+            Atom nextAtom = _particleEditor.ParticleSystemManager.CurrentAtom;
 
-            if (_particleEditorScript.ParticleSystemManager.CurrentAtom == atom)
+            if (_particleEditor.ParticleSystemManager.CurrentAtom == atom)
             {
                 nextAtom = ParticleSystemAtoms.GetAtomBefore(atom);
             }
@@ -189,7 +187,7 @@ namespace ICannotDie.Plugins.ParticleSystems
             // Find, Set & Build
             FindParticleSystems();
             SetCurrentAtom(nextAtom);
-            _particleEditorScript.UiManager.BuildUI();
+            _particleEditor.UIManager.BuildUI();
         }
 
         public void FindParticleSystems(bool findAll = false)
@@ -206,7 +204,7 @@ namespace ICannotDie.Plugins.ParticleSystems
             else
             {
                 // Finds active particle systems, not those that are disabled or inside assetbundles
-                foundParticleSystems = _particleEditorScript.FindParticleSystems();
+                foundParticleSystems = _particleEditor.FindParticleSystems();
             }
 
             foreach (var particleSystem in foundParticleSystems)

@@ -4,6 +4,10 @@ using System.Linq;
 
 namespace ICannotDie.Plugins.UI.Editors
 {
+    /// <summary>
+    /// Editor for Particle System Atom data.
+    /// Includes the Add, Find, Select & Remove buttons, and the Particle System chooser
+    /// </summary>
     public class ParticleSystemAtomEditor : EditorBase
     {
         public JSONStorableString ParticleSystemAtomsLabel;
@@ -13,69 +17,79 @@ namespace ICannotDie.Plugins.UI.Editors
         public UIDynamicButton SelectParticleSystemAtomButton;
         public UIDynamicButton RemoveSelectedParticleSystemButton;
 
-        public ParticleSystemAtomEditor(ParticleEditor particleEditor, UIManager uiManager)
-        : base(particleEditor, uiManager)
-        {
+        private readonly ParticleEditor _particleEditor;
 
+        public ParticleSystemAtomEditor(ParticleEditor particleEditor) : base(particleEditor)
+        {
+            _particleEditor = particleEditor;
         }
 
         public override void Clear()
         {
-            _particleEditorScript.RemoveTextField(ParticleSystemAtomsLabel);
-            _particleEditorScript.RemoveButton(AddParticleSystemButton);
-            _particleEditorScript.RemoveButton(FindParticleSystemsButton);
-            _particleEditorScript.RemovePopup(ParticleSystemChooser);
-            _particleEditorScript.RemoveButton(SelectParticleSystemAtomButton);
-            _particleEditorScript.RemoveButton(RemoveSelectedParticleSystemButton);
+            _particleEditor.RemoveTextField(ParticleSystemAtomsLabel);
+            _particleEditor.RemoveButton(AddParticleSystemButton);
+            _particleEditor.RemoveButton(FindParticleSystemsButton);
+            _particleEditor.RemovePopup(ParticleSystemChooser);
+            _particleEditor.RemoveButton(SelectParticleSystemAtomButton);
+            _particleEditor.RemoveButton(RemoveSelectedParticleSystemButton);
         }
 
         public override void Build()
         {
+            Utility.LogMessage("Build");
+
             ParticleSystemAtomsLabel = CreateLabel("ParticleSystemAtomsLabel", "Particle System Atoms", false);
 
             // Add Particle System Button
-            AddParticleSystemButton = _particleEditorScript.CreateButton("Add Particle System");
+            AddParticleSystemButton = _particleEditor.CreateButton("Add Particle System");
             AddParticleSystemButton.button.onClick.AddListener(() =>
             {
-                _particleEditorScript.StartCoroutine(_particleEditorScript.ParticleSystemManager.CreateAtomCoroutine());
+                _particleEditor.StartCoroutine(_particleEditor.ParticleSystemManager.CreateAtomCoroutine());
             });
 
             // Find Particle Systems Button
-            FindParticleSystemsButton = _particleEditorScript.CreateButton("Find Particle Systems");
+            FindParticleSystemsButton = _particleEditor.CreateButton("Find Particle Systems");
             FindParticleSystemsButton.button.onClick.AddListener(() =>
             {
-                _particleEditorScript.ParticleSystemManager.FindParticleSystems();
-                _particleEditorScript.UiManager.BuildUI();
+                _particleEditor.ParticleSystemManager.FindParticleSystems();
+                _particleEditor.UIManager.BuildUI();
             });
+
+            _particleEditor.DeregisterStringChooser(ParticleSystemChooser);
 
             ParticleSystemChooser = new JSONStorableStringChooser
             (
                 "ParticleSystemChooser",
-                _particleEditorScript.ParticleSystemManager.ParticleSystemUids.Any() ? _particleEditorScript.ParticleSystemManager.ParticleSystemUids : new List<string>(),
-                _particleEditorScript.ParticleSystemManager.CurrentAtom ? _particleEditorScript.ParticleSystemManager.CurrentAtom.uid : null,
-                "Particle Systems",
+                _particleEditor.ParticleSystemManager.ParticleSystemAtoms.Any()
+                    ? _particleEditor.ParticleSystemManager.ParticleSystemUids
+                    : new List<string>(),
+                _particleEditor.ParticleSystemManager.CurrentAtom
+                    ? _particleEditor.ParticleSystemManager.CurrentAtom.uid
+                    : null,
+                "Particle Systems 2",
                 (selectedParticleSystemUid) =>
                 {
-                    _particleEditorScript.ParticleSystemManager.SetCurrentAtom(selectedParticleSystemUid);
-                    _particleEditorScript.ParticleSystemManager.FindParticleSystems();
-                    _particleEditorScript.UiManager.BuildUI();
+                    _particleEditor.ParticleSystemManager.SetCurrentAtom(selectedParticleSystemUid);
+                    _particleEditor.ParticleSystemManager.FindParticleSystems();
+                    _particleEditor.UIManager.BuildUI();
                 }
             );
 
-            _particleEditorScript.CreatePopup(ParticleSystemChooser);
+            _particleEditor.CreatePopup(ParticleSystemChooser);
+            _particleEditor.RegisterStringChooser(ParticleSystemChooser);
 
             // Select Particle System Atom Button
-            SelectParticleSystemAtomButton = _particleEditorScript.CreateButton("Select Particle System Atom");
+            SelectParticleSystemAtomButton = _particleEditor.CreateButton("Select Particle System Atom");
             SelectParticleSystemAtomButton.button.onClick.AddListener(() =>
             {
-                SuperController.singleton.SelectController(_particleEditorScript.ParticleSystemManager.CurrentAtom.uid, Constants.ControlObjectName);
+                SuperController.singleton.SelectController(_particleEditor.ParticleSystemManager.CurrentAtom.uid, Constants.ControlObjectName);
             });
 
             // Remove Particle System Button
-            RemoveSelectedParticleSystemButton = _particleEditorScript.CreateButton("Remove Selected Particle System");
+            RemoveSelectedParticleSystemButton = _particleEditor.CreateButton("Remove Selected Particle System");
             RemoveSelectedParticleSystemButton.button.onClick.AddListener(() =>
             {
-                _particleEditorScript.StartCoroutine(_particleEditorScript.ParticleSystemManager.RemoveAtomCoroutine(_particleEditorScript.ParticleSystemManager.CurrentAtom.uid));
+                _particleEditor.StartCoroutine(_particleEditor.ParticleSystemManager.RemoveAtomCoroutine(_particleEditor.ParticleSystemManager.CurrentAtom.uid));
             });
         }
 
@@ -85,17 +99,16 @@ namespace ICannotDie.Plugins.UI.Editors
             (
                 "ParticleSystemChooser",
                 new List<string>(),
-                null,
-                "Particle Systems",
-                (string selectedParticleSystemUid) => { }
+                "",
+                "Particle Systems"
             );
 
-            _particleEditorScript.RegisterStringChooser(ParticleSystemChooser);
+            _particleEditor.RegisterStringChooser(ParticleSystemChooser);
         }
 
         public override void DeregisterStorables()
         {
-            _particleEditorScript.DeregisterStringChooser(ParticleSystemChooser);
+            _particleEditor.UIManager.DeregisterStringChooser(ParticleSystemChooser);
         }
     }
 }

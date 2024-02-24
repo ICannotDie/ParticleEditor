@@ -94,7 +94,6 @@ namespace ICannotDie.Plugins.Common
         {
             var filename = GetPluginPath(self);
             var index = filename.IndexOf(":/");
-
             return index >= 0 ? filename.Substring(0, index + 2) : string.Empty;
         }
 

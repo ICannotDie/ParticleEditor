@@ -3,15 +3,13 @@ using UnityEngine.UI;
 
 namespace ICannotDie.Plugins.UI.Editors
 {
-    public abstract class EditorBase
+    public abstract class EditorBase : IEditor
     {
-        protected ParticleEditor _particleEditorScript;
-        protected UIManager _uiManager;
+        private readonly ParticleEditor _particleEditor;
 
-        public EditorBase(ParticleEditor particleEditor, UIManager uiManager)
+        public EditorBase(ParticleEditor particleEditor)
         {
-            _particleEditorScript = particleEditor;
-            _uiManager = uiManager;
+            _particleEditor = particleEditor;
         }
 
         public abstract void Build();
@@ -22,11 +20,28 @@ namespace ICannotDie.Plugins.UI.Editors
         protected JSONStorableString CreateLabel(string id, string text, bool isRightSide = false)
         {
             var jsonStorableString = new JSONStorableString(id, text);
-            var uiDynamic = _particleEditorScript.CreateTextField(jsonStorableString, isRightSide);
+            var uiDynamic = _particleEditor.CreateTextField(jsonStorableString, isRightSide);
             uiDynamic.height = 12;
             uiDynamic.backgroundColor = Color.clear;
             uiDynamic.textColor = Color.black;
             uiDynamic.UItext.fontSize = 36;
+            uiDynamic.UItext.alignment = TextAnchor.LowerCenter;
+
+            var layoutElement = uiDynamic.GetComponent<LayoutElement>();
+            layoutElement.minHeight = 0f;
+            layoutElement.preferredHeight = 42f;
+
+            return jsonStorableString;
+        }
+
+        protected JSONStorableString CreateUrlLabel(string id, string text, bool isRightSide = false)
+        {
+            var jsonStorableString = new JSONStorableString(id, text);
+            var uiDynamic = _particleEditor.CreateTextField(jsonStorableString, isRightSide);
+            uiDynamic.height = 12;
+            uiDynamic.backgroundColor = Color.clear;
+            uiDynamic.textColor = Color.black;
+            uiDynamic.UItext.fontSize = 24;
             uiDynamic.UItext.alignment = TextAnchor.LowerCenter;
 
             var layoutElement = uiDynamic.GetComponent<LayoutElement>();

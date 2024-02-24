@@ -6,32 +6,33 @@ namespace ICannotDie.Plugins.UI
 {
     public class UIManager : JSONStorable
     {
+        private readonly ParticleEditor _particleEditor;
+
         private readonly ParticleSystemAtomEditor _particleSystemAtomEditor;
         private readonly ParticleSystemEditor _particleSystemEditor;
         private readonly MainModuleEditor _mainModuleEditor;
         private readonly ParticleSystemRendererEditor _particleSystemRendererEditor;
         private readonly EmissionModuleEditor _emissionModuleEditor;
 
-        private readonly List<EditorBase> _editors = new List<EditorBase>();
-        private readonly ParticleEditor _particleEditor;
+        private readonly List<IEditor> _editors = new List<IEditor>();
 
         public UIManager(ParticleEditor particleEditor)
         {
             _particleEditor = particleEditor;
 
-            _particleSystemAtomEditor = new ParticleSystemAtomEditor(_particleEditor, this);
+            _particleSystemAtomEditor = new ParticleSystemAtomEditor(_particleEditor);
             _editors.Add(_particleSystemAtomEditor);
 
-            _particleSystemEditor = new ParticleSystemEditor(_particleEditor, this);
+            _particleSystemEditor = new ParticleSystemEditor(_particleEditor);
             _editors.Add(_particleSystemEditor);
 
-            _mainModuleEditor = new MainModuleEditor(_particleEditor, this);
+            _mainModuleEditor = new MainModuleEditor(_particleEditor);
             _editors.Add(_mainModuleEditor);
 
-            _particleSystemRendererEditor = new ParticleSystemRendererEditor(_particleEditor, this);
+            _particleSystemRendererEditor = new ParticleSystemRendererEditor(_particleEditor);
             _editors.Add(_particleSystemRendererEditor);
 
-            _emissionModuleEditor = new EmissionModuleEditor(_particleEditor, this);
+            _emissionModuleEditor = new EmissionModuleEditor(_particleEditor);
             _editors.Add(_emissionModuleEditor);
         }
 
@@ -51,10 +52,12 @@ namespace ICannotDie.Plugins.UI
 
             if (_particleEditor.ParticleSystemManager.CurrentAtom)
             {
+                // If we have a current atom, build all editors
                 _editors.ForEach(editor => editor.Build());
             }
             else
             {
+                // If we don't have a current atom, only build the atom editor
                 _editors.Single(x => x is ParticleSystemAtomEditor).Build();
             }
         }
@@ -76,7 +79,7 @@ namespace ICannotDie.Plugins.UI
 
         public void Deregister(JSONStorableStringChooser storable)
         {
-            if (storable != null) DeregisterStringChooser(storable);
+            DeregisterStringChooser(storable);
         }
 
         public void Deregister(JSONStorableColor storable)

@@ -15,6 +15,12 @@ namespace ICannotDie.Plugins.Common
         public const string DefaultShaderTextureName = "default-particle.png";
     }
 
+    public static class LogAs
+    {
+        public const string Entered = nameof(Entered);
+        public const string Exit = nameof(Exit);
+    }
+
     public static class ShaderNames
     {
         public const string ParticlesAdditive = "Particles/Additive";
@@ -22,35 +28,35 @@ namespace ICannotDie.Plugins.Common
 
     public static class SimulationSpaceOptions
     {
-        public const string Local = "Local";
-        public const string World = "World";
+        public const string Local = nameof(Local);
+        public const string World = nameof(World);
     }
 
     public static class DeltaTimeOptions
     {
-        public const string Scaled = "Scaled";
-        public const string Unscaled = "Unscaled";
+        public const string Scaled = nameof(Scaled);
+        public const string Unscaled = nameof(Unscaled);
     }
 
     public static class ScalingModeOptions
     {
-        public const string Hierarchy = "Hierarchy";
-        public const string Local = "Local";
-        public const string Shape = "Shape";
+        public const string Hierarchy = nameof(Hierarchy);
+        public const string Local = nameof(Local);
+        public const string Shape = nameof(Shape);
     }
 
     public static class EmitterVelocityModeOptions
     {
-        public const string Transform = "Transform";
-        public const string Rigidbody = "Rigidbody";
+        public const string Transform = nameof(Transform);
+        public const string Rigidbody = nameof(Rigidbody);
     }
 
     public static class ParticleSystemStopActionOptions
     {
-        public const string None = "None";
-        public const string Disable = "Disable";
-        public const string Destroy = "Destroy";
-        public const string Callback = "Callback";
+        public const string None = nameof(None);
+        public const string Disable = nameof(Disable);
+        public const string Destroy = nameof(Destroy);
+        public const string Callback = nameof(Callback);
     }
 
     public static class ParticleSystemAtomEditorDefaults

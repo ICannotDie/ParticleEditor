@@ -12,42 +12,43 @@ namespace ICannotDie.Plugins.UI.Editors
         public JSONStorableFloat RateOverTimeMultiplier;
         public JSONStorableFloat BurstCount;
 
-        public EmissionModuleEditor(ParticleEditor particleEditor, UIManager uiManager)
-        : base(particleEditor, uiManager)
-        {
+        private readonly ParticleEditor _particleEditor;
 
+        public EmissionModuleEditor(ParticleEditor particleEditor) : base(particleEditor)
+        {
+            _particleEditor = particleEditor;
         }
 
         public override void Clear()
         {
-            _particleEditorScript.RemoveTextField(EmissionLabel);
-            _particleEditorScript.RemoveToggle(Enabled);
-            _particleEditorScript.RemoveSlider(RateOverDistance);
-            _particleEditorScript.RemoveSlider(RateOverDistanceMultiplier);
-            _particleEditorScript.RemoveSlider(RateOverTime);
-            _particleEditorScript.RemoveSlider(RateOverTimeMultiplier);
-            _particleEditorScript.RemoveSlider(BurstCount);
+            _particleEditor.RemoveTextField(EmissionLabel);
+            _particleEditor.RemoveToggle(Enabled);
+            _particleEditor.RemoveSlider(RateOverDistance);
+            _particleEditor.RemoveSlider(RateOverDistanceMultiplier);
+            _particleEditor.RemoveSlider(RateOverTime);
+            _particleEditor.RemoveSlider(RateOverTimeMultiplier);
+            _particleEditor.RemoveSlider(BurstCount);
         }
 
         public override void Build()
         {
             EmissionLabel = CreateLabel("EmissionLabel", "Emission", true);
 
-            _particleEditorScript.CreateToggle(Enabled, true);
+            _particleEditor.CreateToggle(Enabled, true);
 
-            _particleEditorScript.CreateSlider(RateOverDistance, true);
+            _particleEditor.CreateSlider(RateOverDistance, true);
             RateOverDistance.constrained = false;
 
-            _particleEditorScript.CreateSlider(RateOverDistanceMultiplier, true);
+            _particleEditor.CreateSlider(RateOverDistanceMultiplier, true);
             RateOverDistanceMultiplier.constrained = false;
 
-            _particleEditorScript.CreateSlider(RateOverTime, true);
+            _particleEditor.CreateSlider(RateOverTime, true);
             RateOverTime.constrained = false;
 
-            _particleEditorScript.CreateSlider(RateOverTimeMultiplier, true);
+            _particleEditor.CreateSlider(RateOverTimeMultiplier, true);
             RateOverTimeMultiplier.constrained = false;
 
-            _particleEditorScript.CreateSlider(BurstCount, true);
+            _particleEditor.CreateSlider(BurstCount, true);
             BurstCount.slider.wholeNumbers = true;
         }
 
@@ -60,14 +61,14 @@ namespace ICannotDie.Plugins.UI.Editors
                 EmissionModuleEditorDefaults.Enabled,
                 (selectedEnabled) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var emission = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.emission;
+                        var emission = _particleEditor.ParticleSystemManager.CurrentParticleSystem.emission;
                         emission.enabled = selectedEnabled;
                     }
                 }
             );
-            Enabled.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.emission.enabled : EmissionModuleEditorDefaults.Enabled);
+            Enabled.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.emission.enabled : EmissionModuleEditorDefaults.Enabled);
 
             // Rate Over Distance Slider - MinMaxCurve
             RateOverDistance = new JSONStorableFloat
@@ -76,16 +77,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 EmissionModuleEditorDefaults.RateOverDistance,
                 (selectedRateOverDistance) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var emission = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.emission;
+                        var emission = _particleEditor.ParticleSystemManager.CurrentParticleSystem.emission;
                         emission.rateOverDistance = selectedRateOverDistance;
                     }
                 },
                 0f,
                 100.0f
             );
-            RateOverDistance.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.emission.rateOverDistance.constant : EmissionModuleEditorDefaults.RateOverDistance);
+            RateOverDistance.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.emission.rateOverDistance.constant : EmissionModuleEditorDefaults.RateOverDistance);
 
             // Rate Over Distance Multiplier Slider
             RateOverDistanceMultiplier = new JSONStorableFloat
@@ -94,16 +95,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 EmissionModuleEditorDefaults.RateOverDistanceMultiplier,
                 (selectedRateOverDistanceMultiplierS) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var emission = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.emission;
+                        var emission = _particleEditor.ParticleSystemManager.CurrentParticleSystem.emission;
                         emission.rateOverDistanceMultiplier = selectedRateOverDistanceMultiplierS;
                     }
                 },
                 0f,
                 100.0f
             );
-            RateOverDistanceMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.emission.rateOverDistanceMultiplier : EmissionModuleEditorDefaults.RateOverDistanceMultiplier);
+            RateOverDistanceMultiplier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.emission.rateOverDistanceMultiplier : EmissionModuleEditorDefaults.RateOverDistanceMultiplier);
 
             // Rate Over Time Slider - MinMaxCurve
             RateOverTime = new JSONStorableFloat
@@ -112,16 +113,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 EmissionModuleEditorDefaults.RateOverTime,
                 (selectedRateOverTime) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var emission = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.emission;
+                        var emission = _particleEditor.ParticleSystemManager.CurrentParticleSystem.emission;
                         emission.rateOverTime = selectedRateOverTime;
                     }
                 },
                 0f,
                 100.0f
             );
-            RateOverTime.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.emission.rateOverTime.constant : EmissionModuleEditorDefaults.RateOverTime);
+            RateOverTime.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.emission.rateOverTime.constant : EmissionModuleEditorDefaults.RateOverTime);
 
             // Rate Over Time Multiplier Slider
             RateOverTimeMultiplier = new JSONStorableFloat
@@ -130,16 +131,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 EmissionModuleEditorDefaults.RateOverTimeMultiplier,
                 (selectedRateOverTimeMultiplierS) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var emission = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.emission;
+                        var emission = _particleEditor.ParticleSystemManager.CurrentParticleSystem.emission;
                         emission.rateOverTimeMultiplier = selectedRateOverTimeMultiplierS;
                     }
                 },
                 0f,
                 100.0f
             );
-            RateOverTimeMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.emission.rateOverTimeMultiplier : EmissionModuleEditorDefaults.RateOverTimeMultiplier);
+            RateOverTimeMultiplier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.emission.rateOverTimeMultiplier : EmissionModuleEditorDefaults.RateOverTimeMultiplier);
 
             // Burst Count - TODO: Implement full burst system
             BurstCount = new JSONStorableFloat
@@ -148,34 +149,34 @@ namespace ICannotDie.Plugins.UI.Editors
                 EmissionModuleEditorDefaults.BurstCount,
                 (selectedBurstCount) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var emission = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.emission;
+                        var emission = _particleEditor.ParticleSystemManager.CurrentParticleSystem.emission;
                         emission.burstCount = (int)selectedBurstCount;
                     }
                 },
                 0f,
                 100.0f
             );
-            BurstCount.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.emission.burstCount : EmissionModuleEditorDefaults.BurstCount);
+            BurstCount.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.emission.burstCount : EmissionModuleEditorDefaults.BurstCount);
 
 
-            _particleEditorScript.RegisterBool(Enabled);
-            _particleEditorScript.RegisterFloat(RateOverDistance);
-            _particleEditorScript.RegisterFloat(RateOverDistanceMultiplier);
-            _particleEditorScript.RegisterFloat(RateOverTime);
-            _particleEditorScript.RegisterFloat(RateOverTimeMultiplier);
-            _particleEditorScript.RegisterFloat(BurstCount);
+            _particleEditor.RegisterBool(Enabled);
+            _particleEditor.RegisterFloat(RateOverDistance);
+            _particleEditor.RegisterFloat(RateOverDistanceMultiplier);
+            _particleEditor.RegisterFloat(RateOverTime);
+            _particleEditor.RegisterFloat(RateOverTimeMultiplier);
+            _particleEditor.RegisterFloat(BurstCount);
         }
 
         public override void DeregisterStorables()
         {
-            _particleEditorScript.DeregisterBool(Enabled);
-            _particleEditorScript.DeregisterFloat(RateOverDistance);
-            _particleEditorScript.DeregisterFloat(RateOverDistanceMultiplier);
-            _particleEditorScript.DeregisterFloat(RateOverTime);
-            _particleEditorScript.DeregisterFloat(RateOverTimeMultiplier);
-            _particleEditorScript.DeregisterFloat(BurstCount);
+            _particleEditor.DeregisterBool(Enabled);
+            _particleEditor.DeregisterFloat(RateOverDistance);
+            _particleEditor.DeregisterFloat(RateOverDistanceMultiplier);
+            _particleEditor.DeregisterFloat(RateOverTime);
+            _particleEditor.DeregisterFloat(RateOverTimeMultiplier);
+            _particleEditor.DeregisterFloat(BurstCount);
         }
     }
 }

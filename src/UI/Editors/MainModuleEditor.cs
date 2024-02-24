@@ -43,147 +43,148 @@ namespace ICannotDie.Plugins.UI.Editors
         public UIDynamicButton ReseedButton;
         public JSONStorableStringChooser StopAction;
 
-        public MainModuleEditor(ParticleEditor particleEditor, UIManager uiManager)
-        : base(particleEditor, uiManager)
-        {
+        private readonly ParticleEditor _particleEditor;
 
+        public MainModuleEditor(ParticleEditor particleEditor) : base(particleEditor)
+        {
+            _particleEditor = particleEditor;
         }
 
         public override void Clear()
         {
-            _particleEditorScript.RemoveTextField(MainLabel);
-            _particleEditorScript.RemoveToggle(IsLooping);
-            _particleEditorScript.RemoveToggle(Prewarm);
-            _particleEditorScript.RemoveSlider(Duration);
-            _particleEditorScript.RemoveSlider(StartDelay);
-            _particleEditorScript.RemoveSlider(StartDelayMultiplier);
-            _particleEditorScript.RemoveSlider(StartLifetime);
-            _particleEditorScript.RemoveSlider(StartLifetimeMultiplier);
-            _particleEditorScript.RemoveSlider(StartSpeed);
-            _particleEditorScript.RemoveSlider(StartSpeedMultiplier);
-            _particleEditorScript.RemoveSlider(StartSize);
-            _particleEditorScript.RemoveSlider(StartSizeMultiplier);
-            _particleEditorScript.RemoveToggle(StartRotation3D);
-            _particleEditorScript.RemoveSlider(StartRotationX);
-            _particleEditorScript.RemoveSlider(StartRotationXMultiplier);
-            _particleEditorScript.RemoveSlider(StartRotationY);
-            _particleEditorScript.RemoveSlider(StartRotationYMultiplier);
-            _particleEditorScript.RemoveSlider(StartRotationZ);
-            _particleEditorScript.RemoveSlider(StartRotationZMultiplier);
-            _particleEditorScript.RemoveSlider(StartRotation);
-            _particleEditorScript.RemoveSlider(StartRotationMultiplier);
-            _particleEditorScript.RemoveSlider(FlipRotation);
-            _particleEditorScript.RemoveColorPicker(StartColor);
-            _particleEditorScript.RemoveSlider(GravityModifier);
-            _particleEditorScript.RemoveSlider(GravityModifierMultiplier);
-            _particleEditorScript.RemovePopup(SimulationSpace);
-            _particleEditorScript.RemoveSlider(SimulationSpeed);
-            _particleEditorScript.RemovePopup(DeltaTime);
-            _particleEditorScript.RemovePopup(ScalingMode);
-            _particleEditorScript.RemoveToggle(PlayOnAwake);
-            _particleEditorScript.RemovePopup(EmitterVelocityMode);
-            _particleEditorScript.RemoveSlider(MaxParticles);
-            _particleEditorScript.RemoveToggle(AutoRandomSeed);
-            _particleEditorScript.RemoveSlider(Seed);
-            _particleEditorScript.RemoveButton(ReseedButton);
-            _particleEditorScript.RemovePopup(StopAction);
+            _particleEditor.RemoveTextField(MainLabel);
+            _particleEditor.RemoveToggle(IsLooping);
+            _particleEditor.RemoveToggle(Prewarm);
+            _particleEditor.RemoveSlider(Duration);
+            _particleEditor.RemoveSlider(StartDelay);
+            _particleEditor.RemoveSlider(StartDelayMultiplier);
+            _particleEditor.RemoveSlider(StartLifetime);
+            _particleEditor.RemoveSlider(StartLifetimeMultiplier);
+            _particleEditor.RemoveSlider(StartSpeed);
+            _particleEditor.RemoveSlider(StartSpeedMultiplier);
+            _particleEditor.RemoveSlider(StartSize);
+            _particleEditor.RemoveSlider(StartSizeMultiplier);
+            _particleEditor.RemoveToggle(StartRotation3D);
+            _particleEditor.RemoveSlider(StartRotationX);
+            _particleEditor.RemoveSlider(StartRotationXMultiplier);
+            _particleEditor.RemoveSlider(StartRotationY);
+            _particleEditor.RemoveSlider(StartRotationYMultiplier);
+            _particleEditor.RemoveSlider(StartRotationZ);
+            _particleEditor.RemoveSlider(StartRotationZMultiplier);
+            _particleEditor.RemoveSlider(StartRotation);
+            _particleEditor.RemoveSlider(StartRotationMultiplier);
+            _particleEditor.RemoveSlider(FlipRotation);
+            _particleEditor.RemoveColorPicker(StartColor);
+            _particleEditor.RemoveSlider(GravityModifier);
+            _particleEditor.RemoveSlider(GravityModifierMultiplier);
+            _particleEditor.RemovePopup(SimulationSpace);
+            _particleEditor.RemoveSlider(SimulationSpeed);
+            _particleEditor.RemovePopup(DeltaTime);
+            _particleEditor.RemovePopup(ScalingMode);
+            _particleEditor.RemoveToggle(PlayOnAwake);
+            _particleEditor.RemovePopup(EmitterVelocityMode);
+            _particleEditor.RemoveSlider(MaxParticles);
+            _particleEditor.RemoveToggle(AutoRandomSeed);
+            _particleEditor.RemoveSlider(Seed);
+            _particleEditor.RemoveButton(ReseedButton);
+            _particleEditor.RemovePopup(StopAction);
         }
 
         public override void Build()
         {
             MainLabel = CreateLabel("MainLabel", "Main", true);
 
-            _particleEditorScript.CreateToggle(IsLooping, true);
+            _particleEditor.CreateToggle(IsLooping, true);
 
-            _particleEditorScript.CreateToggle(Prewarm, true);
+            _particleEditor.CreateToggle(Prewarm, true);
 
-            _particleEditorScript.CreateSlider(Duration, true);
+            _particleEditor.CreateSlider(Duration, true);
             Duration.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartDelay, true);
+            _particleEditor.CreateSlider(StartDelay, true);
             StartDelay.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartDelayMultiplier, true);
+            _particleEditor.CreateSlider(StartDelayMultiplier, true);
             StartDelayMultiplier.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartLifetime, true);
+            _particleEditor.CreateSlider(StartLifetime, true);
             StartLifetime.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartLifetimeMultiplier, true);
+            _particleEditor.CreateSlider(StartLifetimeMultiplier, true);
             StartLifetimeMultiplier.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartSpeed, true);
+            _particleEditor.CreateSlider(StartSpeed, true);
             StartSpeed.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartSpeedMultiplier, true);
+            _particleEditor.CreateSlider(StartSpeedMultiplier, true);
             StartSpeedMultiplier.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartSize, true);
+            _particleEditor.CreateSlider(StartSize, true);
             StartSize.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartSizeMultiplier, true);
+            _particleEditor.CreateSlider(StartSizeMultiplier, true);
             StartSizeMultiplier.constrained = false;
 
-            _particleEditorScript.CreateToggle(StartRotation3D, true);
+            _particleEditor.CreateToggle(StartRotation3D, true);
 
-            _particleEditorScript.CreateSlider(StartRotationX, true);
+            _particleEditor.CreateSlider(StartRotationX, true);
             StartRotationX.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartRotationXMultiplier, true);
+            _particleEditor.CreateSlider(StartRotationXMultiplier, true);
             StartRotationXMultiplier.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartRotationY, true);
+            _particleEditor.CreateSlider(StartRotationY, true);
             StartRotationY.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartRotationYMultiplier, true);
+            _particleEditor.CreateSlider(StartRotationYMultiplier, true);
             StartRotationYMultiplier.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartRotationZ, true);
+            _particleEditor.CreateSlider(StartRotationZ, true);
             StartRotationZ.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartRotationZMultiplier, true);
+            _particleEditor.CreateSlider(StartRotationZMultiplier, true);
             StartRotationZMultiplier.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartRotation, true);
+            _particleEditor.CreateSlider(StartRotation, true);
             StartRotation.constrained = false;
 
-            _particleEditorScript.CreateSlider(StartRotationMultiplier, true);
+            _particleEditor.CreateSlider(StartRotationMultiplier, true);
             StartRotationMultiplier.constrained = false;
 
-            _particleEditorScript.CreateSlider(FlipRotation, true);
+            _particleEditor.CreateSlider(FlipRotation, true);
             FlipRotation.constrained = false;
 
-            _particleEditorScript.CreateColorPicker(StartColor, true);
+            _particleEditor.CreateColorPicker(StartColor, true);
 
-            _particleEditorScript.CreateSlider(GravityModifier, true);
+            _particleEditor.CreateSlider(GravityModifier, true);
             GravityModifier.constrained = false;
 
-            _particleEditorScript.CreateSlider(GravityModifierMultiplier, true);
+            _particleEditor.CreateSlider(GravityModifierMultiplier, true);
             GravityModifierMultiplier.constrained = false;
 
-            _particleEditorScript.CreatePopup(SimulationSpace, true);
+            _particleEditor.CreatePopup(SimulationSpace, true);
 
-            _particleEditorScript.CreateSlider(SimulationSpeed, true);
+            _particleEditor.CreateSlider(SimulationSpeed, true);
             SimulationSpeed.constrained = false;
 
-            _particleEditorScript.CreatePopup(DeltaTime, true);
+            _particleEditor.CreatePopup(DeltaTime, true);
 
-            _particleEditorScript.CreatePopup(ScalingMode, true);
+            _particleEditor.CreatePopup(ScalingMode, true);
 
-            _particleEditorScript.CreateToggle(PlayOnAwake, true);
+            _particleEditor.CreateToggle(PlayOnAwake, true);
 
-            _particleEditorScript.CreatePopup(EmitterVelocityMode, true);
+            _particleEditor.CreatePopup(EmitterVelocityMode, true);
 
-            _particleEditorScript.CreateSlider(MaxParticles, true);
+            _particleEditor.CreateSlider(MaxParticles, true);
             MaxParticles.constrained = false;
             MaxParticles.slider.wholeNumbers = true;
 
-            _particleEditorScript.CreateToggle(AutoRandomSeed, true);
+            _particleEditor.CreateToggle(AutoRandomSeed, true);
 
-            _particleEditorScript.CreateSlider(Seed, true);
+            _particleEditor.CreateSlider(Seed, true);
             Seed.slider.wholeNumbers = true;
 
-            ReseedButton = _particleEditorScript.CreateButton("Reseed", true);
+            ReseedButton = _particleEditor.CreateButton("Reseed", true);
             ReseedButton.button.onClick.AddListener(() =>
             {
                 if (AutoRandomSeed != null && Seed != null)
@@ -193,7 +194,7 @@ namespace ICannotDie.Plugins.UI.Editors
                 }
             });
 
-            _particleEditorScript.CreatePopup(StopAction, true);
+            _particleEditor.CreatePopup(StopAction, true);
         }
 
         public override void RegisterStorables()
@@ -204,14 +205,14 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.IsLooping,
                 (selectedIsLooping) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.loop = selectedIsLooping;
                     }
                 }
             );
-            IsLooping.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.loop : MainModuleEditorDefaults.IsLooping);
+            IsLooping.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.loop : MainModuleEditorDefaults.IsLooping);
 
             // Prewarm Toggle
             Prewarm = new JSONStorableBool
@@ -220,14 +221,14 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.Prewarm,
                 (selectedPrewarm) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.prewarm = selectedPrewarm;
                     }
                 }
             );
-            Prewarm.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.prewarm : MainModuleEditorDefaults.Prewarm);
+            Prewarm.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.prewarm : MainModuleEditorDefaults.Prewarm);
 
             // Duration Slider
             Duration = new JSONStorableFloat
@@ -236,15 +237,15 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.Duration,
                 (selectedDuration) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
 
-                        if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem.isPlaying)
+                        if (_particleEditor.ParticleSystemManager.CurrentParticleSystem.isPlaying)
                         {
-                            _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.Stop();
+                            _particleEditor.ParticleSystemManager.CurrentParticleSystem.Stop();
                             main.duration = selectedDuration;
-                            _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.Play();
+                            _particleEditor.ParticleSystemManager.CurrentParticleSystem.Play();
                         }
                         else
                         {
@@ -255,7 +256,7 @@ namespace ICannotDie.Plugins.UI.Editors
                 0f,
                 60.0f
             );
-            Duration.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.duration : MainModuleEditorDefaults.Duration);
+            Duration.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.duration : MainModuleEditorDefaults.Duration);
 
             // Start Delay Slider - MinMaxCurve
             StartDelay = new JSONStorableFloat
@@ -264,16 +265,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartDelay,
                 (selectedStartDelay) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startDelay = selectedStartDelay;
                     }
                 },
                 0f,
                 60.0f
             );
-            StartDelay.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startDelay.constant : MainModuleEditorDefaults.StartDelay);
+            StartDelay.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startDelay.constant : MainModuleEditorDefaults.StartDelay);
 
             // Start Delay Multiplier Slider
             StartDelayMultiplier = new JSONStorableFloat
@@ -282,16 +283,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartDelayMultiplier,
                 (selectedStartDelayMultiplierS) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startDelayMultiplier = selectedStartDelayMultiplierS;
                     }
                 },
                 0f,
                 100.0f
             );
-            StartDelayMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startDelayMultiplier : MainModuleEditorDefaults.StartDelayMultiplier);
+            StartDelayMultiplier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startDelayMultiplier : MainModuleEditorDefaults.StartDelayMultiplier);
 
             // Start Lifetime Slider - MinMaxCurve
             StartLifetime = new JSONStorableFloat
@@ -300,16 +301,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartLifetime,
                 (selectedstartLifetims) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startLifetime = selectedstartLifetims;
                     }
                 },
                 0f,
                 60.0f
             );
-            StartLifetime.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startLifetime.constant : MainModuleEditorDefaults.StartLifetime);
+            StartLifetime.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startLifetime.constant : MainModuleEditorDefaults.StartLifetime);
 
             // Start Lifetime Multiplier Slider
             StartLifetimeMultiplier = new JSONStorableFloat
@@ -318,16 +319,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartLifetimeMultiplier,
                 (selectedStartLifetimeMultiplier) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startLifetimeMultiplier = selectedStartLifetimeMultiplier;
                     }
                 },
                 0f,
                 100.0f
             );
-            StartLifetimeMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startLifetimeMultiplier : MainModuleEditorDefaults.StartLifetimeMultiplier);
+            StartLifetimeMultiplier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startLifetimeMultiplier : MainModuleEditorDefaults.StartLifetimeMultiplier);
 
             // Start Speed Slider - MinMaxCurve
             StartSpeed = new JSONStorableFloat
@@ -336,16 +337,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartSpeed,
                 (selectedStartSpeed) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startSpeed = selectedStartSpeed;
                     }
                 },
                 0f,
                 60.0f
             );
-            StartSpeed.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startSpeed.constant : MainModuleEditorDefaults.StartSpeed);
+            StartSpeed.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startSpeed.constant : MainModuleEditorDefaults.StartSpeed);
 
             // Start Speed Multiplier Slider
             StartSpeedMultiplier = new JSONStorableFloat
@@ -354,16 +355,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartSpeedMultiplier,
                 (selectedStartSpeedMultiplier) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startSpeedMultiplier = selectedStartSpeedMultiplier;
                     }
                 },
                 0f,
                 100.0f
             );
-            StartSpeedMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startSpeedMultiplier : MainModuleEditorDefaults.StartSpeedMultiplier);
+            StartSpeedMultiplier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startSpeedMultiplier : MainModuleEditorDefaults.StartSpeedMultiplier);
 
             // Start Size Slider
             StartSize = new JSONStorableFloat
@@ -372,16 +373,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartSize,
                 (selectedStartSize) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startSize = selectedStartSize;
                     }
                 },
                 0f,
                 10.0f
             );
-            StartSize.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startSize.constant : MainModuleEditorDefaults.StartSize);
+            StartSize.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startSize.constant : MainModuleEditorDefaults.StartSize);
 
             // Start Size Multiplier Slider
             StartSizeMultiplier = new JSONStorableFloat
@@ -390,16 +391,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartSizeMultiplier,
                 (selectedStartSizeMultiplier) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startSizeMultiplier = selectedStartSizeMultiplier;
                     }
                 },
                 0f,
                 10.0f
             );
-            StartSizeMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startSizeMultiplier : MainModuleEditorDefaults.StartSizeMultiplier);
+            StartSizeMultiplier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startSizeMultiplier : MainModuleEditorDefaults.StartSizeMultiplier);
 
             // Start Rotation 3D Toggle
             StartRotation3D = new JSONStorableBool
@@ -408,14 +409,14 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartRotation3D,
                 (selectedStartRotation3D) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startRotation3D = selectedStartRotation3D;
                     }
                 }
             );
-            StartRotation3D.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startRotation3D : MainModuleEditorDefaults.StartRotation3D);
+            StartRotation3D.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startRotation3D : MainModuleEditorDefaults.StartRotation3D);
 
             // Start Rotation X Slider - MinMaxCurve
             StartRotationX = new JSONStorableFloat
@@ -424,16 +425,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartRotationX,
                 (selectedStartRotationX) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startRotationX = selectedStartRotationX;
                     }
                 },
                 0f,
                 360.0f
             );
-            StartRotationX.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startRotationX.constant : MainModuleEditorDefaults.StartRotationX);
+            StartRotationX.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startRotationX.constant : MainModuleEditorDefaults.StartRotationX);
 
             // Start Rotation X Multiplier Slider
             StartRotationXMultiplier = new JSONStorableFloat
@@ -442,16 +443,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartRotationXMultiplier,
                 (selectedStartRotationXMultiplier) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startRotationXMultiplier = selectedStartRotationXMultiplier;
                     }
                 },
                 0f,
                 100.0f
             );
-            StartRotationXMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startRotationXMultiplier : MainModuleEditorDefaults.StartRotationXMultiplier);
+            StartRotationXMultiplier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startRotationXMultiplier : MainModuleEditorDefaults.StartRotationXMultiplier);
 
             // Start Rotation Y Slider - MinMaxCurve
             StartRotationY = new JSONStorableFloat
@@ -460,16 +461,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartRotationY,
                 (selectedStartRotationY) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startRotationY = selectedStartRotationY;
                     }
                 },
                 0f,
                 360.0f
             );
-            StartRotationY.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startRotationY.constant : MainModuleEditorDefaults.StartRotationY);
+            StartRotationY.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startRotationY.constant : MainModuleEditorDefaults.StartRotationY);
 
             // Start Rotation Y Multiplier Slider
             StartRotationYMultiplier = new JSONStorableFloat
@@ -478,16 +479,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartRotationYMultiplier,
                 (selectedStartRotationYMultiplier) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startRotationYMultiplier = selectedStartRotationYMultiplier;
                     }
                 },
                 0f,
                 100.0f
             );
-            StartRotationYMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startRotationYMultiplier : MainModuleEditorDefaults.StartRotationYMultiplier);
+            StartRotationYMultiplier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startRotationYMultiplier : MainModuleEditorDefaults.StartRotationYMultiplier);
 
             // Start Rotation Z Slider - MinMaxCurve
             StartRotationZ = new JSONStorableFloat
@@ -496,16 +497,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartRotationZ,
                 (selectedStartRotationZ) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startRotationZ = selectedStartRotationZ;
                     }
                 },
                 0f,
                 360.0f
             );
-            StartRotationZ.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startRotationZ.constant : MainModuleEditorDefaults.StartRotationZ);
+            StartRotationZ.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startRotationZ.constant : MainModuleEditorDefaults.StartRotationZ);
 
             // Start Rotation Z Multiplier Slider
             StartRotationZMultiplier = new JSONStorableFloat
@@ -514,16 +515,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartRotationZMultiplier,
                 (selectedStartRotationZMultiplier) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startRotationZMultiplier = selectedStartRotationZMultiplier;
                     }
                 },
                 0f,
                 100.0f
             );
-            StartRotationZMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startRotationZMultiplier : MainModuleEditorDefaults.StartRotationZMultiplier);
+            StartRotationZMultiplier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startRotationZMultiplier : MainModuleEditorDefaults.StartRotationZMultiplier);
 
             // Start Rotation Slider - MinMaxCurve
             StartRotation = new JSONStorableFloat
@@ -532,16 +533,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartRotation,
                 (selectedStartRotation) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startRotation = selectedStartRotation;
                     }
                 },
                 0f,
                 360.0f
             );
-            StartRotation.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startRotation.constant : MainModuleEditorDefaults.StartRotation);
+            StartRotation.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startRotation.constant : MainModuleEditorDefaults.StartRotation);
 
             // Start Rotation Multiplier Slider
             StartRotationMultiplier = new JSONStorableFloat
@@ -550,16 +551,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartRotationMultiplier,
                 (selectedStartRotationMultiplier) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.startRotationMultiplier = selectedStartRotationMultiplier;
                     }
                 },
                 0f,
                 100.0f
             );
-            StartRotationMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startRotationMultiplier : MainModuleEditorDefaults.StartRotationMultiplier);
+            StartRotationMultiplier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startRotationMultiplier : MainModuleEditorDefaults.StartRotationMultiplier);
 
             // Flip Rotation Slider
             FlipRotation = new JSONStorableFloat
@@ -568,16 +569,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.FlipRotation,
                 (selectedFlipRotation) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.flipRotation = selectedFlipRotation;
                     }
                 },
                 0f,
                 1.0f
             );
-            FlipRotation.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.flipRotation : MainModuleEditorDefaults.FlipRotation);
+            FlipRotation.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.flipRotation : MainModuleEditorDefaults.FlipRotation);
 
             // Start Color Picker - MinMaxGradient
             StartColor = new JSONStorableColor
@@ -586,9 +587,9 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.StartColor(),
                 (H, S, V) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         var color = HSVColorPicker.HSVToRGB(H, S, V);
                         main.startColor = new ParticleSystem.MinMaxGradient(color, color);
                     }
@@ -597,10 +598,10 @@ namespace ICannotDie.Plugins.UI.Editors
 
             var colorToSetTo = new HSVColor();
 
-            if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+            if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
             {
                 float H, S, V;
-                Color.RGBToHSV(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.startColor.color, out H, out S, out V);
+                Color.RGBToHSV(_particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startColor.color, out H, out S, out V);
                 colorToSetTo.H = H;
                 colorToSetTo.S = S;
                 colorToSetTo.V = V;
@@ -620,16 +621,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.GravityModifier,
                 (selectedGravityModifier) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.gravityModifier = selectedGravityModifier;
                     }
                 },
                 -100f,
                 100.0f
             );
-            GravityModifier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.gravityModifier.constant : MainModuleEditorDefaults.GravityModifier);
+            GravityModifier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.gravityModifier.constant : MainModuleEditorDefaults.GravityModifier);
 
             // Gravity Modifier Multiplier Slider
             GravityModifierMultiplier = new JSONStorableFloat
@@ -638,31 +639,31 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.GravityModifierMultiplier,
                 (selectedGravityModifierMultiplier) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.gravityModifierMultiplier = selectedGravityModifierMultiplier;
                     }
                 },
                 0f,
                 100.0f
             );
-            GravityModifierMultiplier.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.gravityModifierMultiplier : MainModuleEditorDefaults.GravityModifierMultiplier);
+            GravityModifierMultiplier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.gravityModifierMultiplier : MainModuleEditorDefaults.GravityModifierMultiplier);
 
             // Simulation Space Popup - TODO: Support for Custom Simulation Space
             SimulationSpace = new JSONStorableStringChooser
             (
                 "SimulationSpace",
                 new List<string>() { SimulationSpaceOptions.Local, SimulationSpaceOptions.World },
-                _particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null
-                    ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.simulationSpace.ToString()
+                _particleEditor.ParticleSystemManager.CurrentParticleSystem
+                    ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.simulationSpace.ToString()
                     : ParticleSystemSimulationSpace.Local.ToString(),
                 "Simulation Space",
                 (selectedSimulationSpace) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.simulationSpace = selectedSimulationSpace == SimulationSpaceOptions.Local ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World;
                     }
                 }
@@ -675,16 +676,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.SimulationSpeed,
                 (selectedSimulationSpeed) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.simulationSpeed = selectedSimulationSpeed;
                     }
                 },
                 0f,
                 10.0f
             );
-            SimulationSpeed.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.simulationSpeed : MainModuleEditorDefaults.SimulationSpeed);
+            SimulationSpeed.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.simulationSpeed : MainModuleEditorDefaults.SimulationSpeed);
             SimulationSpeed.constrained = false;
 
             // Delta Time Popup
@@ -692,15 +693,15 @@ namespace ICannotDie.Plugins.UI.Editors
             (
                 "DeltaTime",
                 new List<string>() { DeltaTimeOptions.Scaled, DeltaTimeOptions.Unscaled },
-                _particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null
-                    ? (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.useUnscaledTime ? DeltaTimeOptions.Unscaled : DeltaTimeOptions.Scaled)
+                _particleEditor.ParticleSystemManager.CurrentParticleSystem
+                    ? (_particleEditor.ParticleSystemManager.CurrentParticleSystem.main.useUnscaledTime ? DeltaTimeOptions.Unscaled : DeltaTimeOptions.Scaled)
                     : DeltaTimeOptions.Scaled,
                 DeltaTimeOptions.Unscaled,
                 (selectedDeltaTime) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.useUnscaledTime = selectedDeltaTime != DeltaTimeOptions.Scaled;
                     }
                 }
@@ -711,15 +712,15 @@ namespace ICannotDie.Plugins.UI.Editors
             (
                 "ScalingMode",
                 new List<string>() { ScalingModeOptions.Hierarchy, ScalingModeOptions.Local, ScalingModeOptions.Shape },
-                _particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null
-                    ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.scalingMode.ToString()
+                _particleEditor.ParticleSystemManager.CurrentParticleSystem
+                    ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.scalingMode.ToString()
                     : ParticleSystemScalingMode.Local.ToString(),
                 "Scaling Mode",
                 (selectedScalingMode) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
 
                         switch (selectedScalingMode)
                         {
@@ -744,29 +745,29 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.PlayOnAwake,
                 (playOnAwake) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.playOnAwake = playOnAwake;
                     }
                 }
             );
-            PlayOnAwake.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.playOnAwake : MainModuleEditorDefaults.PlayOnAwake);
+            PlayOnAwake.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.playOnAwake : MainModuleEditorDefaults.PlayOnAwake);
 
             // Emitter Velocity Mode Popup
             EmitterVelocityMode = new JSONStorableStringChooser
             (
                 "EmitterVelocityMode",
                 new List<string>() { EmitterVelocityModeOptions.Transform, EmitterVelocityModeOptions.Rigidbody },
-                _particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null
-                    ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.emitterVelocityMode.ToString()
+                _particleEditor.ParticleSystemManager.CurrentParticleSystem
+                    ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.emitterVelocityMode.ToString()
                     : ParticleSystemEmitterVelocityMode.Rigidbody.ToString(),
                 "Emitter Velocity Mode",
                 (selectedEmitterVelocityMode) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.emitterVelocityMode = selectedEmitterVelocityMode == EmitterVelocityModeOptions.Rigidbody ? ParticleSystemEmitterVelocityMode.Rigidbody : ParticleSystemEmitterVelocityMode.Transform;
                     }
                 }
@@ -779,16 +780,16 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.MaxParticles,
                 (selectedMaxParticles) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
                         main.maxParticles = (int)selectedMaxParticles;
                     }
                 },
                 0f,
                 10000.0f
             );
-            MaxParticles.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.maxParticles : MainModuleEditorDefaults.MaxParticles);
+            MaxParticles.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.maxParticles : MainModuleEditorDefaults.MaxParticles);
 
             // Auto Random Seed Toggle
             AutoRandomSeed = new JSONStorableBool
@@ -797,9 +798,9 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.AutoRandomSeed,
                 (selectedAutoRandomSeed) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.useAutoRandomSeed = selectedAutoRandomSeed;
+                        _particleEditor.ParticleSystemManager.CurrentParticleSystem.useAutoRandomSeed = selectedAutoRandomSeed;
 
                         if (Seed != null && selectedAutoRandomSeed == true)
                         {
@@ -808,7 +809,7 @@ namespace ICannotDie.Plugins.UI.Editors
                     }
                 }
             );
-            AutoRandomSeed.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.useAutoRandomSeed : MainModuleEditorDefaults.AutoRandomSeed);
+            AutoRandomSeed.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.useAutoRandomSeed : MainModuleEditorDefaults.AutoRandomSeed);
 
             // Seed Slider - this is a uint in the Unity docs, but in the Unity editor the Reseed button can go negative, which is not possible for unsigned integers...
             var uintNegativeMaxAsFloat = (float)uint.MaxValue * -1;
@@ -820,31 +821,31 @@ namespace ICannotDie.Plugins.UI.Editors
                 MainModuleEditorDefaults.Seed,
                 (selectedSeed) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.randomSeed = (uint)selectedSeed;
+                        _particleEditor.ParticleSystemManager.CurrentParticleSystem.randomSeed = (uint)selectedSeed;
                     }
                 },
                 uintNegativeMaxAsFloat,
                 uintPositiveMaxAsFloat
             );
 
-            Seed.SetVal(_particleEditorScript.ParticleSystemManager.CurrentParticleSystem ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.randomSeed : MainModuleEditorDefaults.Seed);
+            Seed.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.randomSeed : MainModuleEditorDefaults.Seed);
 
             // Stop Action Popup
             StopAction = new JSONStorableStringChooser
             (
                 "StopAction",
                 new List<string>() { ParticleSystemStopActionOptions.None, ParticleSystemStopActionOptions.Disable, ParticleSystemStopActionOptions.Destroy, ParticleSystemStopActionOptions.Callback },
-                _particleEditorScript?.ParticleSystemManager?.CurrentParticleSystem != null
-                    ? _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main.stopAction.ToString()
+                _particleEditor.ParticleSystemManager.CurrentParticleSystem
+                    ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.stopAction.ToString()
                     : ParticleSystemStopAction.None.ToString(),
                 "Stop Action",
                 (selectedStopAction) =>
                 {
-                    if (_particleEditorScript.ParticleSystemManager.CurrentParticleSystem)
+                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                     {
-                        var main = _particleEditorScript.ParticleSystemManager.CurrentParticleSystem.main;
+                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
 
                         switch (selectedStopAction)
                         {
@@ -865,77 +866,77 @@ namespace ICannotDie.Plugins.UI.Editors
                 }
             );
 
-            _particleEditorScript.RegisterBool(IsLooping);
-            _particleEditorScript.RegisterBool(Prewarm);
-            _particleEditorScript.RegisterFloat(Duration);
-            _particleEditorScript.RegisterFloat(StartDelay);
-            _particleEditorScript.RegisterFloat(StartDelayMultiplier);
-            _particleEditorScript.RegisterFloat(StartLifetime);
-            _particleEditorScript.RegisterFloat(StartLifetimeMultiplier);
-            _particleEditorScript.RegisterFloat(StartSpeed);
-            _particleEditorScript.RegisterFloat(StartSpeedMultiplier);
-            _particleEditorScript.RegisterFloat(StartSize);
-            _particleEditorScript.RegisterBool(StartRotation3D);
-            _particleEditorScript.RegisterFloat(StartRotationX);
-            _particleEditorScript.RegisterFloat(StartRotationXMultiplier);
-            _particleEditorScript.RegisterFloat(StartRotationY);
-            _particleEditorScript.RegisterFloat(StartRotationYMultiplier);
-            _particleEditorScript.RegisterFloat(StartRotationZ);
-            _particleEditorScript.RegisterFloat(StartRotationZMultiplier);
-            _particleEditorScript.RegisterFloat(StartRotation);
-            _particleEditorScript.RegisterFloat(StartRotationMultiplier);
-            _particleEditorScript.RegisterFloat(FlipRotation);
-            _particleEditorScript.RegisterColor(StartColor);
-            _particleEditorScript.RegisterFloat(GravityModifier);
-            _particleEditorScript.RegisterFloat(GravityModifierMultiplier);
-            _particleEditorScript.RegisterStringChooser(SimulationSpace);
-            _particleEditorScript.RegisterFloat(SimulationSpeed);
-            _particleEditorScript.RegisterStringChooser(DeltaTime);
-            _particleEditorScript.RegisterStringChooser(ScalingMode);
-            _particleEditorScript.RegisterBool(PlayOnAwake);
-            _particleEditorScript.RegisterStringChooser(EmitterVelocityMode);
-            _particleEditorScript.RegisterFloat(MaxParticles);
-            _particleEditorScript.RegisterBool(AutoRandomSeed);
-            _particleEditorScript.RegisterFloat(Seed);
-            _particleEditorScript.RegisterStringChooser(StopAction);
+            _particleEditor.RegisterBool(IsLooping);
+            _particleEditor.RegisterBool(Prewarm);
+            _particleEditor.RegisterFloat(Duration);
+            _particleEditor.RegisterFloat(StartDelay);
+            _particleEditor.RegisterFloat(StartDelayMultiplier);
+            _particleEditor.RegisterFloat(StartLifetime);
+            _particleEditor.RegisterFloat(StartLifetimeMultiplier);
+            _particleEditor.RegisterFloat(StartSpeed);
+            _particleEditor.RegisterFloat(StartSpeedMultiplier);
+            _particleEditor.RegisterFloat(StartSize);
+            _particleEditor.RegisterBool(StartRotation3D);
+            _particleEditor.RegisterFloat(StartRotationX);
+            _particleEditor.RegisterFloat(StartRotationXMultiplier);
+            _particleEditor.RegisterFloat(StartRotationY);
+            _particleEditor.RegisterFloat(StartRotationYMultiplier);
+            _particleEditor.RegisterFloat(StartRotationZ);
+            _particleEditor.RegisterFloat(StartRotationZMultiplier);
+            _particleEditor.RegisterFloat(StartRotation);
+            _particleEditor.RegisterFloat(StartRotationMultiplier);
+            _particleEditor.RegisterFloat(FlipRotation);
+            _particleEditor.RegisterColor(StartColor);
+            _particleEditor.RegisterFloat(GravityModifier);
+            _particleEditor.RegisterFloat(GravityModifierMultiplier);
+            _particleEditor.RegisterStringChooser(SimulationSpace);
+            _particleEditor.RegisterFloat(SimulationSpeed);
+            _particleEditor.RegisterStringChooser(DeltaTime);
+            _particleEditor.RegisterStringChooser(ScalingMode);
+            _particleEditor.RegisterBool(PlayOnAwake);
+            _particleEditor.RegisterStringChooser(EmitterVelocityMode);
+            _particleEditor.RegisterFloat(MaxParticles);
+            _particleEditor.RegisterBool(AutoRandomSeed);
+            _particleEditor.RegisterFloat(Seed);
+            _particleEditor.RegisterStringChooser(StopAction);
         }
 
         public override void DeregisterStorables()
         {
-            _particleEditorScript.DeregisterBool(IsLooping);
-            _particleEditorScript.DeregisterBool(Prewarm);
-            _particleEditorScript.DeregisterFloat(Duration);
-            _particleEditorScript.DeregisterFloat(StartDelay);
-            _particleEditorScript.DeregisterFloat(StartDelayMultiplier);
-            _particleEditorScript.DeregisterFloat(StartLifetime);
-            _particleEditorScript.DeregisterFloat(StartLifetimeMultiplier);
-            _particleEditorScript.DeregisterFloat(StartSpeed);
-            _particleEditorScript.DeregisterFloat(StartSpeedMultiplier);
-            _particleEditorScript.DeregisterFloat(StartSize);
-            _particleEditorScript.DeregisterFloat(StartSizeMultiplier);
-            _particleEditorScript.DeregisterBool(StartRotation3D);
-            _particleEditorScript.DeregisterFloat(StartRotationX);
-            _particleEditorScript.DeregisterFloat(StartRotationXMultiplier);
-            _particleEditorScript.DeregisterFloat(StartRotationY);
-            _particleEditorScript.DeregisterFloat(StartRotationYMultiplier);
-            _particleEditorScript.DeregisterFloat(StartRotationZ);
-            _particleEditorScript.DeregisterFloat(StartRotationZMultiplier);
-            _particleEditorScript.DeregisterFloat(StartRotation);
-            _particleEditorScript.DeregisterFloat(StartRotationMultiplier);
-            _particleEditorScript.DeregisterFloat(FlipRotation);
-            _particleEditorScript.DeregisterColor(StartColor);
-            _particleEditorScript.DeregisterFloat(GravityModifier);
-            _particleEditorScript.DeregisterFloat(GravityModifierMultiplier);
-            _particleEditorScript.DeregisterStringChooser(SimulationSpace);
-            _particleEditorScript.DeregisterFloat(SimulationSpeed);
-            _particleEditorScript.DeregisterStringChooser(DeltaTime);
-            _particleEditorScript.DeregisterStringChooser(ScalingMode);
-            _particleEditorScript.DeregisterBool(PlayOnAwake);
-            _particleEditorScript.DeregisterStringChooser(EmitterVelocityMode);
-            _particleEditorScript.DeregisterFloat(MaxParticles);
-            _particleEditorScript.DeregisterBool(AutoRandomSeed);
-            _particleEditorScript.DeregisterFloat(Seed);
-            _particleEditorScript.DeregisterStringChooser(StopAction);
+            _particleEditor.DeregisterBool(IsLooping);
+            _particleEditor.DeregisterBool(Prewarm);
+            _particleEditor.DeregisterFloat(Duration);
+            _particleEditor.DeregisterFloat(StartDelay);
+            _particleEditor.DeregisterFloat(StartDelayMultiplier);
+            _particleEditor.DeregisterFloat(StartLifetime);
+            _particleEditor.DeregisterFloat(StartLifetimeMultiplier);
+            _particleEditor.DeregisterFloat(StartSpeed);
+            _particleEditor.DeregisterFloat(StartSpeedMultiplier);
+            _particleEditor.DeregisterFloat(StartSize);
+            _particleEditor.DeregisterFloat(StartSizeMultiplier);
+            _particleEditor.DeregisterBool(StartRotation3D);
+            _particleEditor.DeregisterFloat(StartRotationX);
+            _particleEditor.DeregisterFloat(StartRotationXMultiplier);
+            _particleEditor.DeregisterFloat(StartRotationY);
+            _particleEditor.DeregisterFloat(StartRotationYMultiplier);
+            _particleEditor.DeregisterFloat(StartRotationZ);
+            _particleEditor.DeregisterFloat(StartRotationZMultiplier);
+            _particleEditor.DeregisterFloat(StartRotation);
+            _particleEditor.DeregisterFloat(StartRotationMultiplier);
+            _particleEditor.DeregisterFloat(FlipRotation);
+            _particleEditor.DeregisterColor(StartColor);
+            _particleEditor.DeregisterFloat(GravityModifier);
+            _particleEditor.DeregisterFloat(GravityModifierMultiplier);
+            _particleEditor.DeregisterStringChooser(SimulationSpace);
+            _particleEditor.DeregisterFloat(SimulationSpeed);
+            _particleEditor.DeregisterStringChooser(DeltaTime);
+            _particleEditor.DeregisterStringChooser(ScalingMode);
+            _particleEditor.DeregisterBool(PlayOnAwake);
+            _particleEditor.DeregisterStringChooser(EmitterVelocityMode);
+            _particleEditor.DeregisterFloat(MaxParticles);
+            _particleEditor.DeregisterBool(AutoRandomSeed);
+            _particleEditor.DeregisterFloat(Seed);
+            _particleEditor.DeregisterStringChooser(StopAction);
         }
     }
 
