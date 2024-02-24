@@ -1,10 +1,8 @@
 using ICannotDie.Plugins.Common;
-using ICannotDie.Plugins.Common.Extensions;
 using ICannotDie.Plugins.ParticleSystems;
 using ICannotDie.Plugins.UI;
 using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 
 namespace ICannotDie.Plugins
@@ -67,30 +65,30 @@ namespace ICannotDie.Plugins
             InitialiseManagers();
         }
 
-        public override void InitUI()
-        {
-            base.InitUI();
+        //public override void InitUI()
+        //{
+        //    base.InitUI();
 
-            Defer.UntilNextFrame(() =>
-            {
-                Utility.LogMessage(nameof(ParticleEditor), nameof(InitUI), "called");
+        //    Defer.UntilNextFrame(() =>
+        //    {
+        //        Utility.LogMessage(nameof(ParticleEditor), nameof(InitUI), "called");
 
-                ParticleSystemManager.FindParticleSystems(this);
+        //        ParticleSystemManager.FindParticleSystems(this);
 
-                if (ParticleSystemManager.ParticleSystemAtoms.Any(x => x.uid == ParticleSystemManager.CurrentAtom.uid))
-                {
-                    // Our current atom is still in the list after a refresh
-                    Utility.LogMessage(nameof(ParticleEditor), nameof(InitUI), "our current atom is still in the list after a find");
-                }
-                else
-                {
-                    // Our current atom is not in the list after a refresh, choose another atom and set it as current
-                    Utility.LogMessage(nameof(ParticleEditor), nameof(InitUI), "our current atom is not in the list after a find");
-                    var nextAtom = ParticleSystemManager.ParticleSystemAtoms.GetAtomBefore(ParticleSystemManager.CurrentAtom);
-                    Utility.LogMessage(nameof(ParticleEditor), nameof(InitUI), "nextAtom:", nextAtom.uid);
-                }
-            });
-        }
+        //        if (ParticleSystemManager.ParticleSystemAtoms.Any(x => x.uid == ParticleSystemManager.CurrentAtom.uid))
+        //        {
+        //            // Our current atom is still in the list after a refresh
+        //            Utility.LogMessage(nameof(ParticleEditor), nameof(InitUI), "our current atom is still in the list after a find");
+        //        }
+        //        else
+        //        {
+        //            // Our current atom is not in the list after a refresh, choose another atom and set it as current
+        //            Utility.LogMessage(nameof(ParticleEditor), nameof(InitUI), "our current atom is not in the list after a find");
+        //            var nextAtom = ParticleSystemManager.ParticleSystemAtoms.GetAtomBefore(ParticleSystemManager.CurrentAtom);
+        //            Utility.LogMessage(nameof(ParticleEditor), nameof(InitUI), "nextAtom:", nextAtom.uid);
+        //        }
+        //    });
+        //}
 
         private void CreateManagers(ParticleEditor self)
         {

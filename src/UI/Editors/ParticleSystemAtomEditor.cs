@@ -38,10 +38,6 @@ namespace ICannotDie.Plugins.UI.Editors
 
         public override void Build()
         {
-
-
-            Utility.LogMessage("Building in Full Mode");
-
             ParticleSystemAtomsLabel = CreateLabel("ParticleSystemAtomsLabel", "Particle System Atoms", false);
 
             // Create Plugin On Add Toggle
@@ -69,7 +65,7 @@ namespace ICannotDie.Plugins.UI.Editors
                 _particleEditor.UIManager.BuildUI();
             });
 
-            _particleEditor.DeregisterStringChooser(ParticleSystemChooser);
+            //_particleEditor.DeregisterStringChooser(ParticleSystemChooser);
 
             ParticleSystemChooser = new JSONStorableStringChooser
             (
@@ -109,8 +105,6 @@ namespace ICannotDie.Plugins.UI.Editors
                     _particleEditor.StartCoroutine(_particleEditor.ParticleSystemManager.RemoveAtomCoroutine(_particleEditor.ParticleSystemManager.CurrentAtom.uid));
                 });
             }
-
-            Utility.LogMessage("Building everything else");
         }
 
         public override void RegisterStorables()

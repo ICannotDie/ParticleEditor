@@ -31,11 +31,6 @@ namespace ICannotDie.Plugins.UI.Editors
 
         public override void Build()
         {
-            //nameof(ParticleSystemRendererEditor)
-            //    .Log(Has.EnteredMethod, "Build")
-            //    .Log(With.ValueOf, "_particleEditor", $"Is Null: {(_particleEditor == null).ToString()}")
-            //    .WriteLog(_particleEditor.EnableDebug);
-
             // Renderer Label
             RendererLabel = CreateLabel("RendererLabel", "Renderer", true);
 
