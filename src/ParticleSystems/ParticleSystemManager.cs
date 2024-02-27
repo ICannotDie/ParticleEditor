@@ -1,5 +1,6 @@
 using ICannotDie.Plugins.Common;
 using ICannotDie.Plugins.Common.Extensions;
+using ICannotDie.Plugins.UI.Editors;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace ICannotDie.Plugins.ParticleSystems
 {
     public class ParticleSystemManager : MonoBehaviour
     {
+        JSONStorableString CurrentAtomUid;
+
         public Atom CurrentAtom { get; private set; }
         public ParticleSystem CurrentParticleSystem => CurrentAtom != null ? CurrentAtom.GetComponentInChildren<ParticleSystem>() : null;
         public ParticleSystemRenderer CurrentParticleSystemRenderer => CurrentParticleSystem != null ? CurrentParticleSystem.GetComponent<ParticleSystemRenderer>() : null;
@@ -27,28 +30,60 @@ namespace ICannotDie.Plugins.ParticleSystems
         {
             FindParticleSystems();
 
-            if (ParticleSystemAtoms.Any())
+            var atomToSetAsCurrent = GetAtomToSetAsCurrent();
+
+            // Register storables
+            CurrentAtomUid = new JSONStorableString("CurrentAtomUid", null);
+            _particleEditor.RegisterString(CurrentAtomUid);
+
+            SetCurrentAtom(atomToSetAsCurrent);
+
+            // If we have a current atom set, but it has no particle systems, add one to it.
+            // Only dot this if our current atom is also our containing atom
+            if (CurrentAtom && !CurrentParticleSystem && CurrentAtom.uid == _particleEditor.containingAtom.uid)
             {
-                if (_particleEditor?.containingAtom?.GetComponentInChildren<ParticleSystem>())
-                {
-                    // If our containing atom has a particle system component, set that as our current atom 
-                    _particleEditor.HasChildParticleSystem = true;
-                    SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault(atom => atom.uid == _particleEditor.containingAtom.uid));
-                }
-                else
-                {
-                    // If our containing atom has no particle system component, set the first in the list as our current atom
-                    _particleEditor.HasChildParticleSystem = false;
-                    SetCurrentAtom(ParticleSystemAtoms.FirstOrDefault());
-                }
-            }
-            else
-            {
-                // If we couldn't find any particle systems, set our current atom to null
-                SetCurrentAtom((Atom)null);
+                AddParticleSystemToAtom(CurrentAtom);
             }
 
             RegisterEventHandlers();
+        }
+
+        public Atom GetAtomToSetAsCurrent()
+        {
+            var containingAtom = (Atom)null;
+
+            if (_particleEditor && _particleEditor.containingAtom)
+            {
+                containingAtom = _particleEditor.containingAtom;
+            }
+
+            if (ParticleSystemAtoms.Any())
+            {
+                // Try to set to our stored current atom
+                if (CurrentAtomUid != null && CurrentAtomUid.val != null)
+                {
+                    // We had a current atom set, try and find it
+                    var storedCurrentAtom = _particleEditor.GetAtomById(CurrentAtomUid.val);
+                    if (storedCurrentAtom != null)
+                    {
+                        // Is it in the list of ParticleSystem atoms?
+                        if (ParticleSystemAtoms.Any(x => x.uid == storedCurrentAtom.uid))
+                        {
+                            return storedCurrentAtom;
+                        }
+                    }
+                }
+
+                // Try to set to our containing atom if it has a particle system
+                if (_particleEditor?.containingAtom?.GetComponentInChildren<ParticleSystem>())
+                {
+                    // If our containing atom has a particle system component, set that as our current atom
+                    return ParticleSystemAtoms.DefaultIfEmpty<Atom>(null).FirstOrDefault(atom => atom.uid == _particleEditor.containingAtom.uid);
+                }
+            }
+
+            // If all else fails, set our own atom as our current atom
+            return containingAtom;
         }
 
         public void RegisterEventHandlers()
@@ -88,10 +123,12 @@ namespace ICannotDie.Plugins.ParticleSystems
             if (atom != null)
             {
                 CurrentAtom = atom;
+                CurrentAtomUid.SetVal(atom.uid);
             }
             else
             {
                 CurrentAtom = null;
+                CurrentAtomUid.SetVal(null);
             }
         }
 
@@ -118,17 +155,17 @@ namespace ICannotDie.Plugins.ParticleSystems
             }
 
             // If CreatePluginOnAdd is enabled, load a ParticleEditor plugin on the atom we create
-            //IEditor value;
-            //var editor = _particleEditor.UIManager.Editors.TryGetValue(typeof(ParticleSystemAtomEditor), out value);
-            //if (value != null && value as ParticleSystemAtomEditor != null)
-            //{
-            //    ParticleSystemAtomEditor particleSystemAtomEditor = value as ParticleSystemAtomEditor;
-            //    var createPluginOnAdd = particleSystemAtomEditor.CreatePluginOnAdd;
-            //    if (createPluginOnAdd.val)
-            //    {
-            //        CreateAndLoadPlugin(atom);
-            //    }
-            //}
+            IEditor value;
+            var editor = _particleEditor.UIManager.Editors.TryGetValue(typeof(ParticleSystemAtomEditor), out value);
+            if (value != null && value as ParticleSystemAtomEditor != null)
+            {
+                ParticleSystemAtomEditor particleSystemAtomEditor = value as ParticleSystemAtomEditor;
+                var createPluginOnAdd = particleSystemAtomEditor.CreatePluginOnAdd;
+                if (createPluginOnAdd.val)
+                {
+                    CreateAndLoadPlugin(atom);
+                }
+            }
 
             // Add the particle system to the atom
             AddParticleSystemToAtom(atom);
@@ -297,6 +334,20 @@ namespace ICannotDie.Plugins.ParticleSystems
             }
 
             ParticleSystemAtoms = ParticleSystemAtoms.OrderBy(atom => atom.UidAsInt()).ToList();
+
+            // Check if we have particle systems on our containing atom
+            if (_particleEditor && _particleEditor.containingAtom)
+            {
+                var particleSystems = _particleEditor.containingAtom.GetComponentInChildren<ParticleSystem>();
+                if (particleSystems)
+                {
+                    _particleEditor.HasChildParticleSystem = true;
+                }
+            }
+            else
+            {
+                _particleEditor.HasChildParticleSystem = false;
+            }
         }
 
     }

@@ -75,6 +75,8 @@ namespace ICannotDie.Plugins.UI.Editors
 
         public override void RegisterStorables()
         {
+            Utility.LogMessage(nameof(ParticleSystemRendererEditor), nameof(RegisterStorables), "starting");
+
             // Material Texture Path
             MaterialTexturePath = new JSONStorableString
             (
@@ -82,7 +84,7 @@ namespace ICannotDie.Plugins.UI.Editors
                 string.Empty,
                 (selectedMaterialTexturePath) =>
                 {
-                    if (MaterialTexturePath?.val != null)
+                    if (MaterialTexturePath.val != null)
                     {
                         SetMaterial(ShaderNames.ParticlesAdditive, MaterialTexturePath.val);
                     }
@@ -92,9 +94,19 @@ namespace ICannotDie.Plugins.UI.Editors
                     }
                 }
             );
-            MaterialTexturePath.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystemRenderer ? _particleEditor.ParticleSystemManager.CurrentParticleSystemRenderer.material.mainTexture.name : GetFullTexturePath());
 
-            Utility.LogMessage(nameof(ParticleSystemRendererEditor), nameof(RegisterStorables), nameof(MaterialTexturePath), " set to ", MaterialTexturePath.val);
+            Utility.LogMessage(nameof(ParticleSystemRendererEditor), nameof(RegisterStorables), "setting value");
+
+            if (_particleEditor && _particleEditor.ParticleSystemManager && _particleEditor.ParticleSystemManager.CurrentParticleSystemRenderer)
+            {
+                MaterialTexturePath.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystemRenderer.material.mainTexture.name);
+            }
+            else
+            {
+                MaterialTexturePath.SetVal(GetFullTexturePath());
+            }
+
+            Utility.LogMessage(nameof(ParticleSystemRendererEditor), nameof(RegisterStorables), nameof(MaterialTexturePath), "set to"); //, MaterialTexturePath.val);
 
             _particleEditor.RegisterString(MaterialTexturePath);
         }
