@@ -1,6 +1,11 @@
 using ICannotDie.Plugins.Common;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
+using static UnityEngine.ParticleSystem;
 
 namespace ICannotDie.Plugins.UI.Editors
 {
@@ -14,7 +19,16 @@ namespace ICannotDie.Plugins.UI.Editors
         public JSONStorableFloat StartDelayMultiplier;
         public JSONStorableFloat StartLifetime;
         public JSONStorableFloat StartLifetimeMultiplier;
-        public JSONStorableFloat StartSpeed;
+        public JSONStorableStringChooser StartSpeedCurveMode;
+        public JSONStorableFloat StartSpeedMin;
+        public JSONStorableFloat StartSpeedMax;
+        public JSONStorableString StartSpeedCurveMinKeys;
+        public UIDynamicTextField StartSpeedCurveMinKeysTextField;
+        public InputField StartSpeedCurveMinKeysInputField;
+        public JSONStorableString StartSpeedCurveMaxKeys;
+        public UIDynamicTextField StartSpeedCurveMaxKeysTextField;
+        public InputField StartSpeedCurveMaxKeysInputField;
+        public JSONStorableFloat StartSpeedCurveMultiplier;
         public JSONStorableFloat StartSpeedMultiplier;
         public JSONStorableFloat StartSize;
         public JSONStorableFloat StartSizeMultiplier;
@@ -60,7 +74,15 @@ namespace ICannotDie.Plugins.UI.Editors
             _particleEditor.RemoveSlider(StartDelayMultiplier);
             _particleEditor.RemoveSlider(StartLifetime);
             _particleEditor.RemoveSlider(StartLifetimeMultiplier);
-            _particleEditor.RemoveSlider(StartSpeed);
+            _particleEditor.RemovePopup(StartSpeedCurveMode);
+            _particleEditor.RemoveSlider(StartSpeedMin);
+            _particleEditor.RemoveSlider(StartSpeedMax);
+            _particleEditor.RemoveTextField(StartSpeedCurveMinKeys);
+            //_particleEditor.RemoveTextField(StartSpeedCurveMinKeysTextField);
+            _particleEditor.RemoveTextField(StartSpeedCurveMaxKeys);
+            //_particleEditor.RemoveTextField(StartSpeedCurveMaxKeysTextField);
+            _particleEditor.RemoveTextField(MainLabel);
+            _particleEditor.RemoveSlider(StartSpeedCurveMultiplier);
             _particleEditor.RemoveSlider(StartSpeedMultiplier);
             _particleEditor.RemoveSlider(StartSize);
             _particleEditor.RemoveSlider(StartSizeMultiplier);
@@ -113,8 +135,78 @@ namespace ICannotDie.Plugins.UI.Editors
             _particleEditor.CreateSlider(StartLifetimeMultiplier, true);
             StartLifetimeMultiplier.constrained = false;
 
-            _particleEditor.CreateSlider(StartSpeed, true);
-            StartSpeed.constrained = false;
+            _particleEditor.CreatePopup(StartSpeedCurveMode, true);
+
+            var curveMode = StartSpeedCurveMode.val;
+            var mode = (ParticleSystemCurveMode)Enum.Parse(typeof(ParticleSystemCurveMode), curveMode);
+
+            if (mode == ParticleSystemCurveMode.Constant)
+            {
+                _particleEditor.CreateSlider(StartSpeedMin, true);
+                StartSpeedMin.constrained = false;
+            }
+            else if (mode == ParticleSystemCurveMode.TwoConstants)
+            {
+                _particleEditor.CreateSlider(StartSpeedMin, true);
+                StartSpeedMin.constrained = false;
+
+                _particleEditor.CreateSlider(StartSpeedMax, true);
+                StartSpeedMax.constrained = false;
+            }
+            else if (mode == ParticleSystemCurveMode.Curve)
+            {
+                // Min curve keys
+                StartSpeedCurveMinKeysTextField = _particleEditor.CreateTextField(StartSpeedCurveMinKeys, true);
+                StartSpeedCurveMinKeysTextField.height = 18;
+                StartSpeedCurveMinKeysTextField.backgroundColor = Color.white;
+
+                StartSpeedCurveMinKeysInputField = StartSpeedCurveMinKeysTextField.gameObject.AddComponent<InputField>();
+                StartSpeedCurveMinKeysInputField.textComponent = StartSpeedCurveMinKeysTextField.UItext;
+                StartSpeedCurveMinKeysInputField.text = StartSpeedCurveMinKeys.val;
+                StartSpeedCurveMinKeysInputField.textComponent.fontSize = 36;
+
+                var layoutElementMin = StartSpeedCurveMinKeysTextField.GetComponent<LayoutElement>();
+                layoutElementMin.minHeight = 0f;
+                layoutElementMin.preferredHeight = 48f;
+
+                // Curve multiplier
+                _particleEditor.CreateSlider(StartSpeedCurveMultiplier, true);
+                StartSpeedCurveMultiplier.constrained = false;
+            }
+            else if (mode == ParticleSystemCurveMode.TwoCurves)
+            {
+                // Min curve keys
+                StartSpeedCurveMinKeysTextField = _particleEditor.CreateTextField(StartSpeedCurveMinKeys, true);
+                StartSpeedCurveMinKeysTextField.height = 18;
+                StartSpeedCurveMinKeysTextField.backgroundColor = Color.white;
+
+                StartSpeedCurveMinKeysInputField = StartSpeedCurveMinKeysTextField.gameObject.AddComponent<InputField>();
+                StartSpeedCurveMinKeysInputField.textComponent = StartSpeedCurveMinKeysTextField.UItext;
+                StartSpeedCurveMinKeysInputField.text = StartSpeedCurveMinKeys.val;
+                StartSpeedCurveMinKeysInputField.textComponent.fontSize = 36;
+
+                var layoutElementMin = StartSpeedCurveMinKeysTextField.GetComponent<LayoutElement>();
+                layoutElementMin.minHeight = 0f;
+                layoutElementMin.preferredHeight = 48f;
+
+                // MAx curve keys
+                StartSpeedCurveMaxKeysTextField = _particleEditor.CreateTextField(StartSpeedCurveMaxKeys, true);
+                StartSpeedCurveMaxKeysTextField.height = 18;
+                StartSpeedCurveMaxKeysTextField.backgroundColor = Color.white;
+
+                StartSpeedCurveMaxKeysInputField = StartSpeedCurveMaxKeysTextField.gameObject.AddComponent<InputField>();
+                StartSpeedCurveMaxKeysInputField.textComponent = StartSpeedCurveMaxKeysTextField.UItext;
+                StartSpeedCurveMaxKeysInputField.text = StartSpeedCurveMaxKeys.val;
+                StartSpeedCurveMaxKeysInputField.textComponent.fontSize = 36;
+
+                var layoutElementMax = StartSpeedCurveMinKeysTextField.GetComponent<LayoutElement>();
+                layoutElementMax.minHeight = 0f;
+                layoutElementMax.preferredHeight = 48f;
+
+                // Curve multiplier
+                _particleEditor.CreateSlider(StartSpeedCurveMultiplier, true);
+                StartSpeedCurveMultiplier.constrained = false;
+            }
 
             _particleEditor.CreateSlider(StartSpeedMultiplier, true);
             StartSpeedMultiplier.constrained = false;
@@ -330,23 +422,137 @@ namespace ICannotDie.Plugins.UI.Editors
             );
             StartLifetimeMultiplier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startLifetimeMultiplier : MainModuleEditorDefaults.StartLifetimeMultiplier);
 
-            // Start Speed Slider - MinMaxCurve
-            StartSpeed = new JSONStorableFloat
-            (
-                "Start Speed",
-                MainModuleEditorDefaults.StartSpeed,
-                (selectedStartSpeed) =>
+
+            // Start Speed Curve Mode Chooser - MinMaxCurve
+            StartSpeedCurveMode = new JSONStorableStringChooser
+                (
+                "StartSpeedCurveMode",
+                new List<string>()
                 {
-                    if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
-                    {
-                        var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
-                        main.startSpeed = selectedStartSpeed;
-                    }
+                    ParticleSystemCurveMode.Constant.ToString(),
+                    ParticleSystemCurveMode.TwoConstants.ToString(),
+                    ParticleSystemCurveMode.Curve.ToString(),
+                    ParticleSystemCurveMode.TwoCurves.ToString()
                 },
+                new List<string>()
+                {
+                    "Constant",
+                    "Random Between Two Constants",
+                    "Curve",
+                    "Two Curves"
+                },
+                MainModuleEditorDefaults.StartSpeedCurveMode.ToString(),
+                "Start Speed Curve Mode",
+                (string selectedStartSpeedCurveMode) =>
+                    {
+                        if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
+                        {
+                            //var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
+
+                            //var curve = new MinMaxCurve();
+
+                            //if (selectedStartSpeedCurveMode == ParticleSystemCurveMode.Constant.ToString())
+                            //{
+                            //    curve = new MinMaxCurve(StartSpeedMin.val)
+                            //    {
+                            //        mode = ParticleSystemCurveMode.Constant
+                            //    };
+                            //}
+                            //else if (selectedStartSpeedCurveMode == ParticleSystemCurveMode.TwoConstants.ToString())
+                            //{
+                            //    curve = new MinMaxCurve(StartSpeedMin.val, StartSpeedMax.val)
+                            //    {
+                            //        mode = ParticleSystemCurveMode.TwoConstants
+                            //    };
+                            //}
+                            //else if (selectedStartSpeedCurveMode == ParticleSystemCurveMode.Curve.ToString())
+                            //{
+                            //    // A simple linear curve.
+                            //    AnimationCurve linearCurve;
+                            //    linearCurve = new AnimationCurve();
+                            //    linearCurve.AddKey(0.0f, 0.0f);
+                            //    linearCurve.AddKey(1.0f, 1.0f);
+
+                            //    curve = new MinMaxCurve(StartSpeedMultiplier.val, linearCurve);
+                            //}
+                            //else if (selectedStartSpeedCurveMode == ParticleSystemCurveMode.TwoCurves.ToString())
+                            //{
+                            //    // A horizontal straight line at value 1.
+                            //    AnimationCurve minCurve;
+                            //    minCurve = new AnimationCurve();
+                            //    minCurve.AddKey(0.0f, 1.0f);
+                            //    minCurve.AddKey(1.0f, 1.0f);
+
+                            //    // A horizontal straight line at value 0.5.
+                            //    AnimationCurve maxCurve;
+                            //    maxCurve = new AnimationCurve();
+                            //    maxCurve.AddKey(0.0f, 0.5f);
+                            //    maxCurve.AddKey(1.0f, 0.5f);
+
+                            //    curve = new MinMaxCurve(StartSpeedMultiplier.val, minCurve, maxCurve);
+                            //}
+
+                            //main.startSpeed = curve;
+
+                            RebuildStartSpeedMinMaxCurve();
+
+                            _particleEditor.UIManager.BuildUI();
+                        }
+                    }
+                );
+            //StartSpeedCurveMode.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startSpeed.mode.ToString() : MainModuleEditorDefaults.StartSpeedCurveMode.ToString());
+
+            // Start Speed Min Slider - MinMaxCurve
+            StartSpeedMin = new JSONStorableFloat
+            (
+                "Start Speed Min",
+                MainModuleEditorDefaults.StartSpeedMin,
+                (JSONStorableFloat selectedStartSpeedMin) => { RebuildStartSpeedMinMaxCurve(); },
                 0f,
                 60.0f
             );
-            StartSpeed.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startSpeed.constant : MainModuleEditorDefaults.StartSpeed);
+            StartSpeedMin.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startSpeed.constant : MainModuleEditorDefaults.StartSpeedMin);
+
+            // Start Max Slider - MinMaxCurve
+            StartSpeedMax = new JSONStorableFloat
+            (
+                "Start Speed Max",
+                MainModuleEditorDefaults.StartSpeedMax,
+                (JSONStorableFloat selectedStartSpeedMax) => { RebuildStartSpeedMinMaxCurve(); },
+                0f,
+                60.0f
+            );
+            StartSpeedMax.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startSpeed.constantMax : MainModuleEditorDefaults.StartSpeedMax);
+
+            // Start Speed Curve Min Keys String
+            StartSpeedCurveMinKeys = new JSONStorableString
+            (
+                "StartSpeedCurveMinKeys",
+                MainModuleEditorDefaults.StartSpeedCurveMinKeys,
+                (JSONStorableString selectedStartSpeedCurveMinKeys) => { RebuildStartSpeedMinMaxCurve(); }
+            );
+            //StartSpeedCurveMinKeys.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startSpeed.curveMin.keys.Select(x => $"{x.time},{x.value}").Join(":") : MainModuleEditorDefaults.StartSpeedCurveMinKeys);
+
+            // Start Speed Curve Max Keys String
+            StartSpeedCurveMaxKeys = new JSONStorableString
+            (
+                "StartSpeedCurveMaxKeys",
+                MainModuleEditorDefaults.StartSpeedCurveMaxKeys,
+                (JSONStorableString selectedStartSpeedCurveMaxKeys) => { RebuildStartSpeedMinMaxCurve(); }
+            );
+            //StartSpeedCurveMaxKeys.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startSpeed.curveMax.keys.Select(x => $"{x.time},{x.value}").Join(":") : MainModuleEditorDefaults.StartSpeedCurveMaxKeys);
+
+
+            // Start Speed Curve Multiplier Slider
+            StartSpeedCurveMultiplier = new JSONStorableFloat
+            (
+                "Start Speed Curve Multiplier",
+                MainModuleEditorDefaults.StartSpeedMultiplier,
+                (JSONStorableFloat selectedStartSpeedCurveMultiplier) => { RebuildStartSpeedMinMaxCurve(); },
+                0f,
+                100.0f
+            );
+            StartSpeedCurveMultiplier.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.main.startSpeed.curveMultiplier : MainModuleEditorDefaults.StartSpeedCurveMultiplier);
 
             // Start Speed Multiplier Slider
             StartSpeedMultiplier = new JSONStorableFloat
@@ -873,7 +1079,12 @@ namespace ICannotDie.Plugins.UI.Editors
             _particleEditor.RegisterFloat(StartDelayMultiplier);
             _particleEditor.RegisterFloat(StartLifetime);
             _particleEditor.RegisterFloat(StartLifetimeMultiplier);
-            _particleEditor.RegisterFloat(StartSpeed);
+            _particleEditor.RegisterStringChooser(StartSpeedCurveMode);
+            _particleEditor.RegisterFloat(StartSpeedMin);
+            _particleEditor.RegisterFloat(StartSpeedMax);
+            _particleEditor.RegisterString(StartSpeedCurveMinKeys);
+            _particleEditor.RegisterString(StartSpeedCurveMaxKeys);
+            _particleEditor.RegisterFloat(StartSpeedCurveMultiplier);
             _particleEditor.RegisterFloat(StartSpeedMultiplier);
             _particleEditor.RegisterFloat(StartSize);
             _particleEditor.RegisterBool(StartRotation3D);
@@ -910,7 +1121,12 @@ namespace ICannotDie.Plugins.UI.Editors
             _particleEditor.DeregisterFloat(StartDelayMultiplier);
             _particleEditor.DeregisterFloat(StartLifetime);
             _particleEditor.DeregisterFloat(StartLifetimeMultiplier);
-            _particleEditor.DeregisterFloat(StartSpeed);
+            _particleEditor.DeregisterStringChooser(StartSpeedCurveMode);
+            _particleEditor.DeregisterFloat(StartSpeedMin);
+            _particleEditor.DeregisterFloat(StartSpeedMax);
+            _particleEditor.DeregisterString(StartSpeedCurveMinKeys);
+            _particleEditor.DeregisterString(StartSpeedCurveMaxKeys);
+            _particleEditor.DeregisterFloat(StartSpeedCurveMultiplier);
             _particleEditor.DeregisterFloat(StartSpeedMultiplier);
             _particleEditor.DeregisterFloat(StartSize);
             _particleEditor.DeregisterFloat(StartSizeMultiplier);
@@ -937,6 +1153,83 @@ namespace ICannotDie.Plugins.UI.Editors
             _particleEditor.DeregisterBool(AutoRandomSeed);
             _particleEditor.DeregisterFloat(Seed);
             _particleEditor.DeregisterStringChooser(StopAction);
+        }
+
+        private void RebuildStartSpeedMinMaxCurve()
+        {
+            if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
+            {
+                var minMaxCurve = new MinMaxCurve();
+
+                var constant = MainModuleEditorDefaults.StartSpeedMin;
+                if (StartSpeedMin != null) constant = StartSpeedMin.val;
+
+                var constantMin = MainModuleEditorDefaults.StartSpeedMin;
+                if (StartSpeedMin != null) constantMin = StartSpeedMin.val;
+
+                var constantMax = MainModuleEditorDefaults.StartSpeedMax;
+                if (StartSpeedMax != null) constantMax = StartSpeedMax.val;
+
+                var minCurve = CurveFromDelimitedString(MainModuleEditorDefaults.StartSpeedCurveMinKeys);
+                if (StartSpeedCurveMinKeys != null) minCurve = CurveFromDelimitedString(StartSpeedCurveMinKeys.val);
+
+                var maxCurve = CurveFromDelimitedString(MainModuleEditorDefaults.StartSpeedCurveMaxKeys);
+                if (StartSpeedCurveMaxKeys != null) maxCurve = CurveFromDelimitedString(StartSpeedCurveMaxKeys.val);
+
+                var curveMultiplier = MainModuleEditorDefaults.StartSpeedCurveMultiplier;
+                if (StartSpeedCurveMultiplier != null) curveMultiplier = StartSpeedCurveMultiplier.val;
+
+                var mode = MainModuleEditorDefaults.StartSpeedCurveMode;
+                if (StartSpeedCurveMode != null) mode = (ParticleSystemCurveMode)Enum.Parse(typeof(ParticleSystemCurveMode), StartSpeedCurveMode.val);
+
+                minMaxCurve.constant = constant;
+                minMaxCurve.constantMin = constantMin;
+                minMaxCurve.constantMax = constantMax;
+                minMaxCurve.curveMin = minCurve;
+                minMaxCurve.curveMax = maxCurve;
+                minMaxCurve.curveMultiplier = curveMultiplier;
+                minMaxCurve.mode = mode;
+
+                var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
+
+                main.startSpeed = minMaxCurve;
+            }
+        }
+
+        private AnimationCurve CurveFromDelimitedString(string delimitedString)
+        {
+            var curve = new AnimationCurve();
+
+            if (string.IsNullOrEmpty(delimitedString))
+            {
+                return curve;
+            }
+
+            var split = delimitedString.Split(':');
+
+            foreach (var key in split)
+            {
+                var values = key.Split(',').Cast<float>().ToList();
+
+                curve.AddKey(values[0], values[1]);
+            }
+
+            return curve;
+        }
+
+        private string DelimitedStringFromCurve(AnimationCurve curve)
+        {
+            var result = new StringBuilder();
+
+            if (curve != null)
+            {
+                foreach (var key in curve.keys)
+                {
+                    result.AppendFormat("{0},{1}:", key.time, key.value);
+                }
+            }
+
+            return result.ToString().TrimEnd(':');
         }
     }
 

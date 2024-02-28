@@ -81,7 +81,12 @@ namespace ICannotDie.Plugins.Common
         public const float StartDelayMultiplier = 1.0f;
         public const float StartLifetime = 5.0f;
         public const float StartLifetimeMultiplier = 1.0f;
-        public const float StartSpeed = 5.0f;
+        public const ParticleSystemCurveMode StartSpeedCurveMode = ParticleSystemCurveMode.Constant;
+        public const float StartSpeedMin = 5.0f;
+        public const float StartSpeedMax = 10.0f;
+        public const string StartSpeedCurveMinKeys = "";
+        public const string StartSpeedCurveMaxKeys = "";
+        public const float StartSpeedCurveMultiplier = 1.0f;
         public const float StartSpeedMultiplier = 1.0f;
         public const float StartSize = 1.0f;
         public const float StartSizeMultiplier = 1.0f;
