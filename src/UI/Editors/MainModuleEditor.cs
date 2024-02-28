@@ -447,53 +447,6 @@ namespace ICannotDie.Plugins.UI.Editors
                     {
                         if (_particleEditor.ParticleSystemManager.CurrentParticleSystem)
                         {
-                            //var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
-
-                            //var curve = new MinMaxCurve();
-
-                            //if (selectedStartSpeedCurveMode == ParticleSystemCurveMode.Constant.ToString())
-                            //{
-                            //    curve = new MinMaxCurve(StartSpeedMin.val)
-                            //    {
-                            //        mode = ParticleSystemCurveMode.Constant
-                            //    };
-                            //}
-                            //else if (selectedStartSpeedCurveMode == ParticleSystemCurveMode.TwoConstants.ToString())
-                            //{
-                            //    curve = new MinMaxCurve(StartSpeedMin.val, StartSpeedMax.val)
-                            //    {
-                            //        mode = ParticleSystemCurveMode.TwoConstants
-                            //    };
-                            //}
-                            //else if (selectedStartSpeedCurveMode == ParticleSystemCurveMode.Curve.ToString())
-                            //{
-                            //    // A simple linear curve.
-                            //    AnimationCurve linearCurve;
-                            //    linearCurve = new AnimationCurve();
-                            //    linearCurve.AddKey(0.0f, 0.0f);
-                            //    linearCurve.AddKey(1.0f, 1.0f);
-
-                            //    curve = new MinMaxCurve(StartSpeedMultiplier.val, linearCurve);
-                            //}
-                            //else if (selectedStartSpeedCurveMode == ParticleSystemCurveMode.TwoCurves.ToString())
-                            //{
-                            //    // A horizontal straight line at value 1.
-                            //    AnimationCurve minCurve;
-                            //    minCurve = new AnimationCurve();
-                            //    minCurve.AddKey(0.0f, 1.0f);
-                            //    minCurve.AddKey(1.0f, 1.0f);
-
-                            //    // A horizontal straight line at value 0.5.
-                            //    AnimationCurve maxCurve;
-                            //    maxCurve = new AnimationCurve();
-                            //    maxCurve.AddKey(0.0f, 0.5f);
-                            //    maxCurve.AddKey(1.0f, 0.5f);
-
-                            //    curve = new MinMaxCurve(StartSpeedMultiplier.val, minCurve, maxCurve);
-                            //}
-
-                            //main.startSpeed = curve;
-
                             RebuildStartSpeedMinMaxCurve();
 
                             _particleEditor.UIManager.BuildUI();
@@ -1161,34 +1114,85 @@ namespace ICannotDie.Plugins.UI.Editors
             {
                 var minMaxCurve = new MinMaxCurve();
 
-                var constant = MainModuleEditorDefaults.StartSpeedMin;
-                if (StartSpeedMin != null) constant = StartSpeedMin.val;
+                //ParticleSystemCurveMode mode = ParticleSystemCurveMode.Constant;
 
-                var constantMin = MainModuleEditorDefaults.StartSpeedMin;
-                if (StartSpeedMin != null) constantMin = StartSpeedMin.val;
+                if (StartSpeedCurveMode != null)
+                {
+                    switch ((ParticleSystemCurveMode)Enum.Parse(typeof(ParticleSystemCurveMode), StartSpeedCurveMode.val))
+                    {
+                        case ParticleSystemCurveMode.Constant:
 
-                var constantMax = MainModuleEditorDefaults.StartSpeedMax;
-                if (StartSpeedMax != null) constantMax = StartSpeedMax.val;
+                            minMaxCurve = new MinMaxCurve
+                                (
+                                StartSpeedMin != null ? StartSpeedMin.val : MainModuleEditorDefaults.StartSpeedMin
+                                );
 
-                var minCurve = CurveFromDelimitedString(MainModuleEditorDefaults.StartSpeedCurveMinKeys);
-                if (StartSpeedCurveMinKeys != null) minCurve = CurveFromDelimitedString(StartSpeedCurveMinKeys.val);
+                            //mode = ParticleSystemCurveMode.Constant;
+                            //minMaxCurve.constant = StartSpeedMin != null ? StartSpeedMin.val : MainModuleEditorDefaults.StartSpeedMin;
+                            break;
+                        case ParticleSystemCurveMode.TwoConstants:
 
-                var maxCurve = CurveFromDelimitedString(MainModuleEditorDefaults.StartSpeedCurveMaxKeys);
-                if (StartSpeedCurveMaxKeys != null) maxCurve = CurveFromDelimitedString(StartSpeedCurveMaxKeys.val);
+                            minMaxCurve = new MinMaxCurve
+                                (
+                                StartSpeedMin != null ? StartSpeedMin.val : MainModuleEditorDefaults.StartSpeedMin, StartSpeedMax != null ? StartSpeedMax.val : MainModuleEditorDefaults.StartSpeedMax
+                                );
 
-                var curveMultiplier = MainModuleEditorDefaults.StartSpeedCurveMultiplier;
-                if (StartSpeedCurveMultiplier != null) curveMultiplier = StartSpeedCurveMultiplier.val;
+                            //mode = ParticleSystemCurveMode.TwoConstants;
+                            //minMaxCurve.constantMin = StartSpeedMin != null ? StartSpeedMin.val : MainModuleEditorDefaults.StartSpeedMin;
+                            //minMaxCurve.constantMax = StartSpeedMax != null ? StartSpeedMax.val : MainModuleEditorDefaults.StartSpeedMax;
+                            break;
+                        case ParticleSystemCurveMode.Curve:
 
-                var mode = MainModuleEditorDefaults.StartSpeedCurveMode;
-                if (StartSpeedCurveMode != null) mode = (ParticleSystemCurveMode)Enum.Parse(typeof(ParticleSystemCurveMode), StartSpeedCurveMode.val);
+                            minMaxCurve = new MinMaxCurve
+                                (
+                                StartSpeedCurveMultiplier != null ? StartSpeedCurveMultiplier.val : MainModuleEditorDefaults.StartSpeedCurveMultiplier,
+                                StartSpeedCurveMinKeys != null ? CurveFromDelimitedString(StartSpeedCurveMinKeys.val) : CurveFromDelimitedString(MainModuleEditorDefaults.StartSpeedCurveMinKeys)
+                                );
 
-                minMaxCurve.constant = constant;
-                minMaxCurve.constantMin = constantMin;
-                minMaxCurve.constantMax = constantMax;
-                minMaxCurve.curveMin = minCurve;
-                minMaxCurve.curveMax = maxCurve;
-                minMaxCurve.curveMultiplier = curveMultiplier;
-                minMaxCurve.mode = mode;
+                            //mode = ParticleSystemCurveMode.Curve;
+                            //minMaxCurve.curveMin = StartSpeedCurveMinKeys != null ? CurveFromDelimitedString(StartSpeedCurveMinKeys.val) : CurveFromDelimitedString(MainModuleEditorDefaults.StartSpeedCurveMinKeys);
+                            //minMaxCurve.curveMultiplier = StartSpeedCurveMultiplier != null ? StartSpeedCurveMultiplier.val : MainModuleEditorDefaults.StartSpeedCurveMultiplier;
+                            break;
+                        case ParticleSystemCurveMode.TwoCurves:
+
+                            minMaxCurve = new MinMaxCurve
+                                (
+                                StartSpeedCurveMultiplier != null ? StartSpeedCurveMultiplier.val : MainModuleEditorDefaults.StartSpeedCurveMultiplier,
+                                StartSpeedCurveMinKeys != null ? CurveFromDelimitedString(StartSpeedCurveMinKeys.val) : CurveFromDelimitedString(MainModuleEditorDefaults.StartSpeedCurveMinKeys),
+                                StartSpeedCurveMaxKeys != null ? CurveFromDelimitedString(StartSpeedCurveMaxKeys.val) : CurveFromDelimitedString(MainModuleEditorDefaults.StartSpeedCurveMaxKeys)
+                                );
+
+                            //mode = ParticleSystemCurveMode.TwoCurves;
+                            //minMaxCurve.curveMin = StartSpeedCurveMinKeys != null ? CurveFromDelimitedString(StartSpeedCurveMinKeys.val) : CurveFromDelimitedString(MainModuleEditorDefaults.StartSpeedCurveMinKeys);
+                            //minMaxCurve.curveMax = StartSpeedCurveMaxKeys != null ? CurveFromDelimitedString(StartSpeedCurveMaxKeys.val) : CurveFromDelimitedString(MainModuleEditorDefaults.StartSpeedCurveMaxKeys);
+                            break;
+                    }
+                }
+
+                //minMaxCurve.mode = mode;
+
+                //var constantMin = MainModuleEditorDefaults.StartSpeedMin;
+                //if (StartSpeedMin != null) constantMin = StartSpeedMin.val;
+
+                //var constantMax = MainModuleEditorDefaults.StartSpeedMax;
+                //if (StartSpeedMax != null) constantMax = StartSpeedMax.val;
+
+                //var minCurve = CurveFromDelimitedString(MainModuleEditorDefaults.StartSpeedCurveMinKeys);
+                //if (StartSpeedCurveMinKeys != null) minCurve = CurveFromDelimitedString(StartSpeedCurveMinKeys.val);
+
+                //var maxCurve = CurveFromDelimitedString(MainModuleEditorDefaults.StartSpeedCurveMaxKeys);
+                //if (StartSpeedCurveMaxKeys != null) maxCurve = CurveFromDelimitedString(StartSpeedCurveMaxKeys.val);
+
+                //var curveMultiplier = MainModuleEditorDefaults.StartSpeedCurveMultiplier;
+                //if (StartSpeedCurveMultiplier != null) curveMultiplier = StartSpeedCurveMultiplier.val;
+
+                //minMaxCurve.constant = constant;
+                //minMaxCurve.constantMin = constantMin;
+                //minMaxCurve.constantMax = constantMax;
+                //minMaxCurve.curveMin = minCurve;
+                //minMaxCurve.curveMax = maxCurve;
+                //minMaxCurve.curveMultiplier = curveMultiplier;
+
 
                 var main = _particleEditor.ParticleSystemManager.CurrentParticleSystem.main;
 
