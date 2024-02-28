@@ -196,10 +196,10 @@ namespace ICannotDie.Plugins.ParticleSystems
 
         private void AddParticleSystemToAtom(Atom atom)
         {
-            if (atom.type != Constants.EmptyAtomTypeName)
-            {
-                throw new ArgumentException(nameof(atom));
-            }
+            //if (atom.type != Constants.EmptyAtomTypeName)
+            //{
+            //    throw new ArgumentException(nameof(atom));
+            //}
 
             // Gets the Empty atom's rescaleObject
             var rescaleObject = atom.transform.GetChildByName(Constants.RescaleObjectName);

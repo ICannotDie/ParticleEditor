@@ -1,6 +1,7 @@
 using ICannotDie.Plugins.Common;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace ICannotDie.Plugins.UI.Editors
 {
@@ -18,6 +19,8 @@ namespace ICannotDie.Plugins.UI.Editors
         public UIDynamicButton SelectParticleSystemAtomButton;
         public UIDynamicButton RemoveSelectedParticleSystemButton;
 
+        public UIDynamicButton DebugButton;
+
         private readonly ParticleEditor _particleEditor;
 
         public ParticleSystemAtomEditor(ParticleEditor particleEditor) : base(particleEditor)
@@ -34,6 +37,11 @@ namespace ICannotDie.Plugins.UI.Editors
             _particleEditor.RemovePopup(ParticleSystemChooser);
             _particleEditor.RemoveButton(SelectParticleSystemAtomButton);
             _particleEditor.RemoveButton(RemoveSelectedParticleSystemButton);
+
+            if (_particleEditor.EnableDebug)
+            {
+                _particleEditor.RemoveButton(DebugButton);
+            }
         }
 
         public override void Build()
@@ -75,6 +83,69 @@ namespace ICannotDie.Plugins.UI.Editors
                 RemoveSelectedParticleSystemButton.button.onClick.AddListener(() =>
                 {
                     _particleEditor.StartCoroutine(_particleEditor.ParticleSystemManager.RemoveAtomCoroutine(_particleEditor.ParticleSystemManager.CurrentAtom.uid));
+                });
+            }
+
+            if (_particleEditor.EnableDebug)
+            {
+                // Debug Button
+                DebugButton = _particleEditor.CreateButton("Test mesh renderer");
+                DebugButton.button.onClick.AddListener(() =>
+                {
+                    if (_particleEditor && _particleEditor.ParticleSystemManager && _particleEditor.ParticleSystemManager.CurrentParticleSystemRenderer)
+                    {
+
+
+
+                    }
+
+                    var particleSystem = _particleEditor.ParticleSystemManager.CurrentParticleSystem;
+                    var renderer = _particleEditor.ParticleSystemManager.CurrentParticleSystemRenderer;
+                    var meshes = _particleEditor.containingAtom.GetComponentsInChildren<Mesh>();
+                    var meshRenderers = _particleEditor.containingAtom.GetComponentsInChildren<MeshRenderer>();
+                    var skinnedMeshRenderers = _particleEditor.containingAtom.GetComponentsInChildren<SkinnedMeshRenderer>();
+
+                    var shape = particleSystem.shape;
+
+                    shape.enabled = true;
+
+                    Utility.LogMessage($"{meshes.Count()} meshes found");
+                    Utility.LogMessage($"{meshRenderers.Count()} meshRenderers found");
+                    Utility.LogMessage($"{skinnedMeshRenderers.Count()} skinnedMeshRenderers found");
+
+                    shape.shapeType = ParticleSystemShapeType.MeshRenderer;
+                    shape.meshShapeType = ParticleSystemMeshShapeType.Triangle;
+                    shape.meshRenderer = meshRenderers[0];
+
+                    if (shape.meshRenderer = meshRenderers[0])
+                    {
+                        shape.meshRenderer = meshRenderers[1];
+                    }
+                    else if (shape.meshRenderer = meshRenderers[1])
+                    {
+                        shape.meshRenderer = meshRenderers[2];
+                    }
+                    else if (shape.meshRenderer = meshRenderers[2])
+                    {
+                        shape.meshRenderer = meshRenderers[3];
+                    }
+                    else if (shape.meshRenderer = meshRenderers[3])
+                    {
+                        shape.meshRenderer = meshRenderers[0];
+                    }
+
+
+                    //shape.shapeType = ParticleSystemShapeType.SkinnedMeshRenderer;
+                    //shape.meshShapeType = ParticleSystemMeshShapeType.Triangle;
+                    //shape.skinnedMeshRenderer = skinnedMeshRenderers[0];
+
+
+
+                    //renderer.mesh = mesh;
+                    //renderer.renderMode = ParticleSystemRenderMode.Mesh;
+
+                    //renderer.mesh = null;
+                    //renderer.renderMode = ParticleSystemRenderMode.Billboard;
                 });
             }
         }
