@@ -120,7 +120,7 @@ namespace ICannotDie.Plugins.UI.Editors
                     }
                 },
                 0f,
-                100.0f
+                1000.0f
             );
             RateOverTime.SetVal(_particleEditor.ParticleSystemManager.CurrentParticleSystem ? _particleEditor.ParticleSystemManager.CurrentParticleSystem.emission.rateOverTime.constant : EmissionModuleEditorDefaults.RateOverTime);
 

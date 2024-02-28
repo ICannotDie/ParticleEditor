@@ -20,6 +20,7 @@ namespace ICannotDie.Plugins.UI.Editors
         public UIDynamicButton RemoveSelectedParticleSystemButton;
 
         public UIDynamicButton DebugButton;
+        public UIDynamicButton DebugButton2;
 
         private readonly ParticleEditor _particleEditor;
 
@@ -41,6 +42,7 @@ namespace ICannotDie.Plugins.UI.Editors
             if (_particleEditor.EnableDebug)
             {
                 _particleEditor.RemoveButton(DebugButton);
+                _particleEditor.RemoveButton(DebugButton2);
             }
         }
 
@@ -146,6 +148,52 @@ namespace ICannotDie.Plugins.UI.Editors
 
                     //renderer.mesh = null;
                     //renderer.renderMode = ParticleSystemRenderMode.Billboard;
+                });
+
+                DebugButton2 = _particleEditor.CreateButton("Test lights");
+                DebugButton2.button.onClick.AddListener(() =>
+                {
+                    if (_particleEditor && _particleEditor.ParticleSystemManager && _particleEditor.ParticleSystemManager.CurrentParticleSystemRenderer)
+                    {
+
+
+
+                    }
+
+                    var particleSystem = _particleEditor.ParticleSystemManager.CurrentParticleSystem;
+                    var renderer = _particleEditor.ParticleSystemManager.CurrentParticleSystemRenderer;
+                    var meshes = _particleEditor.containingAtom.GetComponentsInChildren<Mesh>();
+                    var meshRenderers = _particleEditor.containingAtom.GetComponentsInChildren<MeshRenderer>();
+                    var skinnedMeshRenderers = _particleEditor.containingAtom.GetComponentsInChildren<SkinnedMeshRenderer>();
+
+                    var lights = particleSystem.lights;
+                    lights.enabled = false;
+                    //lights.maxLights = 8;
+                    //lights.useRandomDistribution = true;
+
+                    //var lightObject = new GameObject("light");
+                    //var light = lightObject.AddComponent<Light>();
+                    //light.enabled = true;
+                    //light.color = Color.white;
+                    //light.intensity = 2;
+                    //light.range = 50;
+
+                    //lights.light = light;
+
+                    var noise = particleSystem.noise;
+                    noise.enabled = true;
+
+                    noise.frequency = 0.1f;
+                    noise.scrollSpeed = 0.2f;
+                    noise.strength = 0.5f;
+                    noise.sizeAmount = 1.0f;
+                    noise.rotationAmount = 1.0f;
+                    noise.octaveCount = 3;
+                    noise.octaveScale = 1.0f;
+                    noise.octaveMultiplier = 1.0f;
+                    noise.quality = ParticleSystemNoiseQuality.High;
+                    noise.damping = true;
+
                 });
             }
         }
