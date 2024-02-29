@@ -65,6 +65,20 @@ namespace ICannotDie.Plugins
             InitialiseManagers();
         }
 
+        private void Destroy()
+        {
+            Utility.LogMessage(nameof(ParticleEditor), nameof(Destroy), "starting");
+
+            var particleSystems = containingAtom.GetComponentsInChildren<ParticleSystem>();
+            foreach (var particleSystem in particleSystems)
+            {
+                Utility.LogMessage(nameof(ParticleEditor), nameof(Destroy), "destroying", particleSystem.name);
+                Destroy(particleSystem);
+            }
+
+            Utility.LogMessage(nameof(ParticleEditor), nameof(Destroy), "complete");
+        }
+
         //public override void InitUI()
         //{
         //    base.InitUI();

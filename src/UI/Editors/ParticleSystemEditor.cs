@@ -21,16 +21,34 @@ namespace ICannotDie.Plugins.UI.Editors
 
         public override void Clear()
         {
+            if (!_particleEditor)
+            {
+                return;
+            }
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(ParticleSystemEditor), nameof(Clear), "starting");
+
             _particleEditor.RemoveTextField(ParticleSystemLabel);
             _particleEditor.RemoveToggle(IsPlaying);
             _particleEditor.RemoveToggle(IsStopped);
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(ParticleSystemEditor), nameof(Clear), "complete");
         }
 
         public override void Build()
         {
+            if (!_particleEditor)
+            {
+                return;
+            }
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(ParticleSystemEditor), nameof(Build), "starting");
+
             ParticleSystemLabel = CreateLabel("ParticleSystemLabel", "Particle System", true);
             _particleEditor.CreateToggle(IsPlaying, true);
             _particleEditor.CreateToggle(IsStopped, true);
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(ParticleSystemEditor), nameof(Build), "complete");
         }
 
         public override void RegisterStorables()

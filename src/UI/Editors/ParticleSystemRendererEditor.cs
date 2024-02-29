@@ -23,14 +23,30 @@ namespace ICannotDie.Plugins.UI.Editors
 
         public override void Clear()
         {
+            if (!_particleEditor)
+            {
+                return;
+            }
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(ParticleSystemRendererEditor), nameof(Clear), "starting");
+
             _particleEditor.RemoveTextField(RendererLabel);
             _particleEditor.RemoveTextField(MaterialTextureHeadingLabel);
             _particleEditor.RemoveTextField(MaterialTextureLabel);
             _particleEditor.RemoveButton(SelectParticleTextureButton);
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(ParticleSystemRendererEditor), nameof(Clear), "complete");
         }
 
         public override void Build()
         {
+            if (!_particleEditor)
+            {
+                return;
+            }
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(ParticleSystemRendererEditor), nameof(Build), "starting");
+
             // Renderer Label
             RendererLabel = CreateLabel("RendererLabel", "Renderer", true);
 
@@ -70,6 +86,8 @@ namespace ICannotDie.Plugins.UI.Editors
                 );
 
             });
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(ParticleSystemRendererEditor), nameof(Build), "complete");
 
         }
 

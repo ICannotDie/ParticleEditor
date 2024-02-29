@@ -21,6 +21,13 @@ namespace ICannotDie.Plugins.UI.Editors
 
         public override void Clear()
         {
+            if (!_particleEditor)
+            {
+                return;
+            }
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(EmissionModuleEditor), nameof(Clear), "starting");
+
             _particleEditor.RemoveTextField(EmissionLabel);
             _particleEditor.RemoveToggle(Enabled);
             _particleEditor.RemoveSlider(RateOverDistance);
@@ -28,10 +35,19 @@ namespace ICannotDie.Plugins.UI.Editors
             _particleEditor.RemoveSlider(RateOverTime);
             _particleEditor.RemoveSlider(RateOverTimeMultiplier);
             _particleEditor.RemoveSlider(BurstCount);
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(EmissionModuleEditor), nameof(Clear), "complete");
         }
 
         public override void Build()
         {
+            if (!_particleEditor)
+            {
+                return;
+            }
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(EmissionModuleEditor), nameof(Build), "starting");
+
             EmissionLabel = CreateLabel("EmissionLabel", "Emission", true);
 
             _particleEditor.CreateToggle(Enabled, true);
@@ -50,6 +66,8 @@ namespace ICannotDie.Plugins.UI.Editors
 
             _particleEditor.CreateSlider(BurstCount, true);
             BurstCount.slider.wholeNumbers = true;
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(EmissionModuleEditor), nameof(Build), "complete");
         }
 
         public override void RegisterStorables()

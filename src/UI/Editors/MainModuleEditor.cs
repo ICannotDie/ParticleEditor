@@ -66,6 +66,13 @@ namespace ICannotDie.Plugins.UI.Editors
 
         public override void Clear()
         {
+            if (!_particleEditor)
+            {
+                return;
+            }
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(MainModuleEditor), nameof(Clear), "starting");
+
             _particleEditor.RemoveTextField(MainLabel);
             _particleEditor.RemoveToggle(IsLooping);
             _particleEditor.RemoveToggle(Prewarm);
@@ -110,10 +117,19 @@ namespace ICannotDie.Plugins.UI.Editors
             _particleEditor.RemoveSlider(Seed);
             _particleEditor.RemoveButton(ReseedButton);
             _particleEditor.RemovePopup(StopAction);
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(MainModuleEditor), nameof(Clear), "complete");
         }
 
         public override void Build()
         {
+            if (!_particleEditor)
+            {
+                return;
+            }
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(MainModuleEditor), nameof(Build), "starting");
+
             MainLabel = CreateLabel("MainLabel", "Main", true);
 
             _particleEditor.CreateToggle(IsLooping, true);
@@ -287,6 +303,8 @@ namespace ICannotDie.Plugins.UI.Editors
             });
 
             _particleEditor.CreatePopup(StopAction, true);
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(MainModuleEditor), nameof(Build), "complete");
         }
 
         public override void RegisterStorables()

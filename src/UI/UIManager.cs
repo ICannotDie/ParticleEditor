@@ -49,7 +49,9 @@ namespace ICannotDie.Plugins.UI
 
         public void ClearUI()
         {
+            Utility.LogMessage(nameof(UIManager), nameof(ClearUI), "clearing all editors: ", Editors.Count);
             Editors.ToList().ForEach(editor => editor.Value.Clear());
+            Utility.LogMessage(nameof(UIManager), nameof(ClearUI), "cleared all editors: ", Editors.Count);
         }
 
         public void BuildUI()
@@ -68,6 +70,8 @@ namespace ICannotDie.Plugins.UI
                 Utility.LogMessage(nameof(UIManager), nameof(BuildUI), "building atom editor only: ", Editors.Count);
                 Editors.Single(x => x.Value is ParticleSystemAtomEditor).Value.Build();
             }
+
+            Utility.LogMessage(nameof(UIManager), nameof(BuildUI), "build complete for editors: ", Editors.Count);
         }
 
         #endregion
@@ -76,13 +80,18 @@ namespace ICannotDie.Plugins.UI
 
         public void RegisterStorables()
         {
+            Utility.LogMessage(nameof(UIManager), nameof(RegisterStorables), "starting for all editors: ", Editors.Count);
             Editors.ToList().ForEach(editor => editor.Value.RegisterStorables());
+            Utility.LogMessage(nameof(UIManager), nameof(RegisterStorables), "complete for all editors: ", Editors.Count);
         }
 
         public void DeregisterStorables()
         {
+            Utility.LogMessage(nameof(UIManager), nameof(DeregisterStorables), "starting for all editors: ", Editors.Count);
             Editors.ToList().ForEach(editor => editor.Value.DeregisterStorables());
+            Utility.LogMessage(nameof(UIManager), nameof(DeregisterStorables), "complete for all editors: ", Editors.Count);
         }
+
         public void Deregister(JSONStorableBool storable)
         {
             if (storable != null) DeregisterBool(storable);

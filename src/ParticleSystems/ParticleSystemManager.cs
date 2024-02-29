@@ -13,6 +13,7 @@ namespace ICannotDie.Plugins.ParticleSystems
     {
         JSONStorableString CurrentAtomUid;
 
+        public bool HasCurrentAtom => CurrentAtom != null;
         public Atom CurrentAtom { get; private set; }
         public ParticleSystem CurrentParticleSystem => CurrentAtom != null ? CurrentAtom.GetComponentInChildren<ParticleSystem>() : null;
         public ParticleSystemRenderer CurrentParticleSystemRenderer => CurrentParticleSystem != null ? CurrentParticleSystem.GetComponent<ParticleSystemRenderer>() : null;
@@ -257,25 +258,59 @@ namespace ICannotDie.Plugins.ParticleSystems
 
         private void RemoveAndRebuild(Atom atom)
         {
+            if (atom == null)
+            {
+                return;
+            }
+
+            if (!_particleEditor && !_particleEditor.ParticleSystemManager)
+            {
+                return;
+            }
+
             Utility.LogMessage(nameof(RemoveAndRebuild), "UID:", atom.uid);
 
             // Choose a new atom to be set as current, or set null
             // Do this before we change the list to ensure we select correctly
+            Atom currentAtom = _particleEditor.ParticleSystemManager.CurrentAtom;
             Atom nextAtom = null;
 
-            if (atom == _particleEditor.ParticleSystemManager.CurrentAtom)
+            // The atom we're removing is our current atom, we need to find a new current atom
+            if (atom == currentAtom)
             {
-                nextAtom = ParticleSystemAtoms.GetAtomBefore(atom);
+                Utility.LogMessage(nameof(RemoveAndRebuild), "attempting to remove self UID:", atom.uid, "particle system atoms count:", ParticleSystemAtoms.Count);
+
+                //// If there is another atom in the list, check for which we should pick
+                //if (ParticleSystemAtoms.Count > 1 && ParticleSystemAtoms.Contains(atom))
+                //{
+                //    Utility.LogMessage(nameof(RemoveAndRebuild), "getting next atom in list before UID:", atom.uid);
+                //    nextAtom = ParticleSystemAtoms.GetAtomBefore(atom);
+                //}
+
+                Utility.LogMessage(nameof(RemoveAndRebuild), "checking if nextAtom is ourselves UID:", atom.uid, "nextAtom: UID", nextAtom.uid);
+
+                // If we now have a nextAtom, check if it's ourselves
+                // If it is, set nextAtom to null, we're being removed so we don't want to set to ourselves
+                if (nextAtom != null && atom == nextAtom)
+                {
+                    Utility.LogMessage(nameof(RemoveAndRebuild), "resetting nextAtom to null");
+                    // Our current atom is the only one left in the list, set null instead
+                    nextAtom = null;
+                }
             }
             else
             {
-                nextAtom = _particleEditor.ParticleSystemManager.CurrentAtom;
+                Utility.LogMessage(nameof(RemoveAndRebuild), "setting nextAtom to currentAtom");
+                nextAtom = currentAtom;
             }
 
             Utility.LogMessage(nameof(RemoveAndRebuild), "next atom UID:", nextAtom.uid);
 
             // Remove the atom from the local list
-            ParticleSystemAtoms.Remove(atom);
+            if (ParticleSystemAtoms != null)
+            {
+                ParticleSystemAtoms.Remove(atom);
+            }
 
             //SuperController.singleton.StartCoroutine(WaitUntilEndOfFrameCoroutine(nextAtom));
             Defer.UntilNextFrame(() =>
@@ -283,7 +318,8 @@ namespace ICannotDie.Plugins.ParticleSystems
                 // Find, Set & Build
                 FindParticleSystems();
                 SetCurrentAtom(nextAtom);
-                _particleEditor.UIManager.BuildUI();
+
+                if (_particleEditor.UIManager) _particleEditor.UIManager.BuildUI();
             });
 
             Utility.LogMessage(nameof(RemoveAndRebuild), "complete UID:", nextAtom.uid);
@@ -304,7 +340,7 @@ namespace ICannotDie.Plugins.ParticleSystems
         {
             Utility.LogMessage(nameof(FindParticleSystems), " findAll:", findAll);
 
-            ParticleSystemAtoms.Clear();
+            if (ParticleSystemAtoms != null && ParticleSystemAtoms.Any()) ParticleSystemAtoms.Clear();
 
             List<ParticleSystem> foundParticleSystems = new List<ParticleSystem>();
 
@@ -329,11 +365,11 @@ namespace ICannotDie.Plugins.ParticleSystems
 
                 if (atom != null && allowedAtomTypes.Contains(atom.type))
                 {
-                    ParticleSystemAtoms.Add(atom);
+                    if (ParticleSystemAtoms != null && ParticleSystemAtoms.Any()) ParticleSystemAtoms.Add(atom);
                 }
             }
 
-            ParticleSystemAtoms = ParticleSystemAtoms.OrderBy(atom => atom.UidAsInt()).ToList();
+            if (ParticleSystemAtoms != null && ParticleSystemAtoms.Any()) ParticleSystemAtoms = ParticleSystemAtoms.OrderBy(atom => atom.UidAsInt()).ToList();
 
             // Check if we have particle systems on our containing atom
             if (_particleEditor && _particleEditor.containingAtom)

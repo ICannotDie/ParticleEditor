@@ -31,7 +31,15 @@ namespace ICannotDie.Plugins.UI.Editors
 
         public override void Clear()
         {
+            if (!_particleEditor)
+            {
+                return;
+            }
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(ParticleSystemAtomEditor), nameof(Clear), "starting");
+
             _particleEditor.RemoveToggle(CreatePluginOnAdd);
+            _particleEditor.RemoveTextField(ParticleSystemAtomsLabel);
             _particleEditor.RemoveTextField(ParticleSystemAtomsLabel);
             _particleEditor.RemoveButton(AddParticleSystemButton);
             _particleEditor.RemoveButton(FindParticleSystemsButton);
@@ -44,10 +52,19 @@ namespace ICannotDie.Plugins.UI.Editors
                 _particleEditor.RemoveButton(DebugButton);
                 _particleEditor.RemoveButton(DebugButton2);
             }
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(ParticleSystemAtomEditor), nameof(Clear), "complete");
         }
 
         public override void Build()
         {
+            if (!_particleEditor)
+            {
+                return;
+            }
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(ParticleSystemAtomEditor), nameof(Build), "starting");
+
             ParticleSystemAtomsLabel = CreateLabel("ParticleSystemAtomsLabel", "Particle System Atoms", false);
 
             _particleEditor.CreateToggle(CreatePluginOnAdd);
@@ -196,6 +213,8 @@ namespace ICannotDie.Plugins.UI.Editors
 
                 });
             }
+
+            Utility.LogForDebug(_particleEditor.enabled, nameof(ParticleSystemAtomEditor), nameof(Build), "complete");
         }
 
         public override void RegisterStorables()
